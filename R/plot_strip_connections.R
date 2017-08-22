@@ -1,5 +1,10 @@
+#' @import dplyr ggplot2 purrr
 #' @export
 plot_strip_connections <- function(task1, task2) {
+  # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
+  task1$milestone_network <- task1$milestone_network %>% arrange(from, to)
+  task2$milestone_network <- task2$milestone_network %>% arrange(from, to)
+
   empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
 
   strip_plot <- plot_strip(task1, task2)

@@ -1,3 +1,4 @@
+#' @import dplyr ggplot2 purrr
 #' @export
 plot_strip <- function(task1, task2, margin=0.2) {
   task1$milestone_network <- task1$milestone_network %>%

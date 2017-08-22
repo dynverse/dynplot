@@ -1,3 +1,4 @@
+#' @import dplyr ggplot2 purrr
 #' @export
 make_connection_plotdata <- function(milestone_network, orientation = 1) {
   milestone_network <- milestone_network %>% arrange(from, to)
@@ -50,7 +51,8 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
         connection_to_pos = edge_from_pos,
         connection_from_level = milestone_to_levels[[edge$from]],
         connection_to_level = level,
-        connections = connections
+        connections = connections,
+        edge_id = edge_id
       )
     }
 
@@ -61,7 +63,8 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
         connection_to_pos = milestone_from_poss[[edge$to]],
         connection_from_level = level,
         connection_to_level = milestone_from_levels[[edge$to]],
-        connections = connections
+        connections = connections,
+        edge_id = edge_id
       )
     }
   }
@@ -73,6 +76,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
   tibble::lst(states, connections)
 }
 
+#' @import dplyr ggplot2 purrr
 #' @export
 plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
   if (!is.null(milestone_network)) {
@@ -97,4 +101,38 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
   }
 
   plot
+}
+
+add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, connections, edge_id) {
+  max_bound <- max(connection_from_pos, connection_to_pos)
+  min_bound <- min(connection_from_pos, connection_to_pos)
+
+  if (nrow(connections) > 0) {
+    available_levels <- connections %>%
+      group_by(level) %>%
+      summarise(
+        available = all((pmax(from_pos, to_pos) < min_bound) | (pmin(from_pos, to_pos) > max_bound))
+      ) %>%
+      filter(available) %>%
+      pull(level)
+
+    if(length(available_levels) > 0) {
+      level <- min(available_levels)
+    } else {
+      level <- max(connections$level) + 1
+    }
+  } else {
+    level = 0
+  }
+
+  connections <- connections %>% add_row(
+    from_pos = connection_from_pos,
+    to_pos = connection_to_pos,
+    from_level = connection_from_level,
+    to_level = connection_to_level,
+    level = level,
+    edge_id = edge_id
+  )
+
+  connections
 }
