@@ -91,9 +91,9 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
 
 
   if(orientation == -1) {
-    plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.1, 0))
+    plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, 0))
   } else {
-    plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(0, max_limit+0.1))
+    plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(0, max_limit+0.5))
   }
 
   plot
