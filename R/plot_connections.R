@@ -1,8 +1,6 @@
 #' @import dplyr ggplot2 purrr
 #' @export
-make_connection_plotdata <- function(milestone_network, orientation = 1) {
-  milestone_network <- milestone_network %>% arrange(from, to)
-
+make_connection_plotdata <- function(milestone_network, orientation = 1, margin=0.1) {
   allmilestones <- unique(c(milestone_network$from, milestone_network$to))
 
   # these four objects will remember the from and to positions and levels for every milestone, to be used for connections
@@ -15,7 +13,6 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
   states <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer())
   connections <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from_level=integer(), to_level=integer())
 
-  margin <- 0.2
   last_edge_to_pos <- 0
 
   for (edge_id in seq_len(nrow(milestone_network))) {
@@ -52,7 +49,8 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
         connection_from_level = milestone_to_levels[[edge$from]],
         connection_to_level = level,
         connections = connections,
-        edge_id = edge_id
+        edge_id = edge_id,
+        margin = margin
       )
     }
 
@@ -64,7 +62,8 @@ make_connection_plotdata <- function(milestone_network, orientation = 1) {
         connection_from_level = level,
         connection_to_level = milestone_from_levels[[edge$to]],
         connections = connections,
-        edge_id = edge_id
+        edge_id = edge_id,
+        margin = margin
       )
     }
   }
@@ -103,7 +102,7 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
   plot
 }
 
-add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, connections, edge_id) {
+add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, connections, edge_id, margin) {
   max_bound <- max(connection_from_pos, connection_to_pos)
   min_bound <- min(connection_from_pos, connection_to_pos)
 
@@ -115,14 +114,20 @@ add_connection <- function(connection_from_pos, connection_to_pos, connection_fr
       ) %>%
       filter(available) %>%
       pull(level)
-
-    if(length(available_levels) > 0) {
-      level <- min(available_levels)
-    } else {
-      level <- max(connections$level) + 1
-    }
   } else {
-    level = 0
+    available_levels <- c(0, 1)
+  }
+
+  # avoid that connections can go through states
+  # check whether the distance is equal to the margin ==> direct level-0 connections are allowed
+  if (abs(abs(connection_from_pos - connection_to_pos) - margin) > 0.0000000001) {
+    available_levels <- available_levels[available_levels != connection_from_level]
+  }
+
+  if(length(available_levels) > 0) {
+    level <- min(available_levels)
+  } else {
+    level <- max(connections$level) + 1
   }
 
   connections <- connections %>% add_row(
