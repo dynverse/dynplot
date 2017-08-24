@@ -3,7 +3,7 @@
 plot_strip <- function(task1, task2, margin=0.1, reorder = TRUE) {
   if (reorder) {
     task1$milestone_network <- optimize_order(task1$milestone_network)
-    task2$milestone_network <- optimize_order(task2$milestone_network)
+    task2$milestone_network <- map_order(task2, task1)
   }
 
   milestone_network1 <- task1$milestone_network %>%
