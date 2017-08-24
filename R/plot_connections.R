@@ -15,7 +15,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   milestone_from_levels <- map(allmilestones, ~list()) %>% set_names(allmilestones)
   milestone_to_levels <- map(allmilestones, ~list()) %>% set_names(allmilestones)
 
-  states <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer())
+  states <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from=character(), to=character())
   connections <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from_level=integer(), to_level=integer())
 
   last_edge_to_pos <- 0
@@ -30,7 +30,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
     level <- 0
 
-    states <- states %>% add_row(from_pos=edge_from_pos, to_pos=edge_to_pos, level=0, edge_id=edge_id)
+    states <- states %>% add_row(from_pos=edge_from_pos, to_pos=edge_to_pos, level=0, edge_id=edge_id, from=edge$from, to=edge$to)
 
     ## CONNECTIONS EDGE(S) -----------------------
     # add positions of these milestones
@@ -89,6 +89,7 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
     geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$connections, linetype="longdash") +
     geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$connections, linetype="longdash") +
     geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$connections, linetype="longdash", arrow=arrow(length=unit(0.30,"cm"), ends="last", type = "closed")) +
+    geom_point(aes(from_pos, level, color=edge_id), data=plotdata$states %>% filter(from == first(from))) +
     theme_clean()
 
 
