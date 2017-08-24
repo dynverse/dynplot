@@ -125,8 +125,6 @@ add_connection <- function(connection_from_pos, connection_to_pos, connection_fr
     available_levels <- available_levels[available_levels != connection_from_level]
   }
 
-  print(available_levels)
-
   if(length(available_levels) > 0) {
     level <- min(available_levels)
   } else {

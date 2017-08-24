@@ -11,8 +11,6 @@ plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.05, reor
     }
   }
 
-  print(task2$milestone_network)
-
   empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
 
   strip_plot <- plot_strip(task1, task2, reorder = FALSE, margin=margin)
