@@ -91,7 +91,7 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
     geom_segment(aes(from_pos, level, xend=to_pos, yend=level, color=edge_id), data=plotdata$states, arrow=arrow(length=unit(0.30,"cm"), ends="last", type = "closed")) +
     geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$connections, linetype="longdash") +
     geom_point(aes(from_pos, level, color=edge_id), data=plotdata$states %>% filter(from == first(from))) +
-    geom_point(aes(to_pos, level, color=edge_id), data=plotdata$states %>% filter(!(to %in% from)), shape=124) +
+    geom_point(aes(to_pos, level, color=edge_id), data=plotdata$states %>% filter(!(to %in% from)), shape=15) +
     theme_clean()
 
   if(orientation == -1) {
