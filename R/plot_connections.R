@@ -1,7 +1,8 @@
 milestone_network <- readRDS("net.rds")
 
 
-#' @import dplyr ggplot2 purrr magrittr
+#' @import dplyr ggplot2 purrr
+#' @importFrom magrittr %<>%
 #' @export
 make_connection_plotdata <- function(milestone_network, orientation = 1, margin=0.05) {
   allmilestones <- unique(c(milestone_network$from, milestone_network$to))
