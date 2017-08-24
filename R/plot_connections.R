@@ -92,8 +92,6 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
     geom_point(aes(from_pos, level, color=edge_id), data=plotdata$states %>% filter(from == first(from))) +
     theme_clean()
 
-
-
   if(orientation == -1) {
     plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, 0))
   } else {
