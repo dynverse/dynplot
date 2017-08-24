@@ -1,6 +1,6 @@
 #' @import dplyr ggplot2 purrr
 #' @export
-plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.1, reorder_second_by="mapping") {
+plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
     task1$milestone_network <- optimize_order(task1$milestone_network)
@@ -10,6 +10,8 @@ plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.1, reord
       task2$milestone_network <- optimize_order(task2$milestone_network)
     }
   }
+
+  print(task2$milestone_network)
 
   empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
 
