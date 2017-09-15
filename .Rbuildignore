@@ -3,3 +3,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^scripts$
+^\.travis\.yml$
+^net\.rds$

@@ -4,7 +4,8 @@
 \alias{plot_connections}
 \title{Plot connections}
 \usage{
-plot_connections(milestone_network, orientation = 1, plotdata = NULL)
+plot_connections(milestone_network, orientation = 1, plotdata = NULL,
+  margin = 0.05)
 }
 \arguments{
 \item{milestone_network}{The milestone network}
@@ -12,6 +13,8 @@ plot_connections(milestone_network, orientation = 1, plotdata = NULL)
 \item{orientation}{?? TODO: Zouter/wouters}
 
 \item{plotdata}{?? TODO: Zouter/wouters}
+
+\item{margin}{The margin to add}
 }
 \description{
 Plot connections

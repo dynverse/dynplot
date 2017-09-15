@@ -1,6 +1,3 @@
-# # dafuq?
-# milestone_network <- readRDS("net.rds")
-
 #' Make connection plotdata
 #'
 #' @param milestone_network The milestone network
@@ -80,17 +77,17 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   tibble::lst(states, connections)
 }
 
-
 #' Plot connections
 #'
 #' @param milestone_network The milestone network
 #' @param orientation ?? TODO: Zouter/wouters
 #' @param plotdata ?? TODO: Zouter/wouters
+#' @param margin The margin to add
 #'
 #' @export
-plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
+plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05) {
   if (!is.null(milestone_network)) {
-    plotdata <- make_connection_plotdata(milestone_network, orientation)
+    plotdata <- make_connection_plotdata(milestone_network, orientation, margin=margin)
   }
 
   max_limit <- if(nrow(plotdata$connections)) {max(plotdata$connections$level)} else {0}

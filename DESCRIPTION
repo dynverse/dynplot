@@ -17,6 +17,7 @@ Imports:
   ggplot2,
   magrittr,
   methods,
+  pheatmap,
   purrr,
   tibble,
   tidyr
