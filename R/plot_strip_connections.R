@@ -1,4 +1,13 @@
-#' @import dplyr ggplot2 purrr
+#' Plot strip connections
+#'
+#' @param task1 The first task
+#' @param task2 The second task
+#' @param reorder ?? TODO: Zouter/wouters
+#' @param margin The margin to add
+#' @param reorder_second_by ?? TODO: Zouter/wouters
+#'
+#' @export
+#' @importFrom cowplot plot_grid
 #' @export
 plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
   if (reorder) {

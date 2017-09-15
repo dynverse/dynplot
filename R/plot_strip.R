@@ -1,4 +1,10 @@
-#' @import dplyr ggplot2 purrr
+#' Plot strip
+#'
+#' @param task1 The first task
+#' @param task2 The second task
+#' @param margin The margin to add
+#' @param reorder ?? TODO: Zouter/wouters
+#'
 #' @export
 plot_strip <- function(task1, task2, margin=0.05, reorder = TRUE) {
   if (reorder) {

@@ -2,10 +2,17 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{order_cells}
 \alias{order_cells}
-\title{order the cells according to their progression, assign tented cells to the highest percentage}
+\title{Order the cells according to their progression,
+ assign tented cells to the highest percentage}
 \usage{
 order_cells(milestone_network, progressions)
 }
+\arguments{
+\item{milestone_network}{The milestone network}
+
+\item{progressions}{The progressions}
+}
 \description{
-order the cells according to their progression, assign tented cells to the highest percentage
+Order the cells according to their progression,
+ assign tented cells to the highest percentage
 }

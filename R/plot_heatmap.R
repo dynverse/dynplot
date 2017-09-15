@@ -1,4 +1,8 @@
-#' order the cells according to their progression, assign tented cells to the highest percentage
+#' Order the cells according to their progression,
+#'  assign tented cells to the highest percentage
+#'
+#' @param milestone_network The milestone network
+#' @param progressions The progressions
 order_cells <- function(milestone_network, progressions) {
   milestone_network <- milestone_network %>%
     mutate(

@@ -1,8 +1,12 @@
-milestone_network <- readRDS("net.rds")
+# # dafuq?
+# milestone_network <- readRDS("net.rds")
 
-
-#' @import dplyr ggplot2 purrr
-#' @importFrom magrittr %<>%
+#' Make connection plotdata
+#'
+#' @param milestone_network The milestone network
+#' @param orientation ?? TODO: Zouter/wouters
+#' @param margin ?? TODO: Zouter/wouters
+#'
 #' @export
 make_connection_plotdata <- function(milestone_network, orientation = 1, margin=0.05) {
   allmilestones <- unique(c(milestone_network$from, milestone_network$to))
@@ -22,7 +26,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   last_edge_to_pos <- 0
 
   for (edge_id in seq_len(nrow(milestone_network))) {
-    edge <- dyneval:::extract_row_to_list(milestone_network, edge_id)
+    edge <- extract_row_to_list(milestone_network, edge_id)
 
     # STATE EDGE --------------------------------
     edge_from_pos <- if(last_edge_to_pos == 0) 0 else last_edge_to_pos + margin
@@ -76,7 +80,13 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   tibble::lst(states, connections)
 }
 
-#' @import dplyr ggplot2 purrr
+
+#' Plot connections
+#'
+#' @param milestone_network The milestone network
+#' @param orientation ?? TODO: Zouter/wouters
+#' @param plotdata ?? TODO: Zouter/wouters
+#'
 #' @export
 plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
   if (!is.null(milestone_network)) {
