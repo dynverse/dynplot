@@ -2,6 +2,7 @@
 
 export(make_connection_plotdata)
 export(plot_connections)
+export(plot_genes)
 export(plot_heatmap)
 export(plot_strip)
 export(plot_strip_connections)
