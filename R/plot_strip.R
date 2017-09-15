@@ -6,22 +6,13 @@ plot_strip <- function(task1, task2, margin=0.05, reorder = TRUE) {
     task2$milestone_network <- map_order(task2, task1)
   }
 
-  margin1 <- sum(task1$milestone_network$length) * margin
-  margin2 <- sum(task2$milestone_network$length) * margin
+  linearized1 <- linearize_cells(task1$milestone_network, task1$progression, margin)
+  milestone_network1 <- linearized1$milestone_network
+  prog1 <- linearized1$prog %>% rename_at(vars(-cell_id), ~paste0(., 1))
 
-  milestone_network1 <- task1$milestone_network %>%
-    mutate(
-      cumstart = c(0, cumsum(length)[-length(length)]) + margin1 * (seq_len(n())-1),
-      cumend = c(cumsum(length)) + margin1 * (seq_len(n())-1)
-    )
-  milestone_network2 <- task2$milestone_network %>%
-    mutate(
-      cumstart = c(0, cumsum(length)[-length(length)]) + margin2 * (seq_len(n())-1),
-      cumend = c(cumsum(length)) + margin2 * (seq_len(n())-1)
-    )
-
-  prog1 <- task1$progression %>% left_join(milestone_network1, by=c("from", "to")) %>% mutate(cumpercentage=percentage*length + cumstart) %>% rename_at(vars(-cell_id), ~paste0(., 1))
-  prog2 <- task2$progression %>% left_join(milestone_network2, by=c("from", "to")) %>% mutate(cumpercentage=percentage*length + cumstart) %>% rename_at(vars(-cell_id), ~paste0(., 2))
+  linearized2 <- linearize_cells(task2$milestone_network, task2$progression, margin)
+  milestone_network2 <- linearized2$milestone_network
+  prog2 <- linearized2$prog%>% rename_at(vars(-cell_id), ~paste0(., 2))
 
   prog <- full_join(prog1, prog2, by=c("cell_id"))
 

@@ -15,8 +15,15 @@ order_cells <- function(milestone_network, progressions) {
     mutate(cumpercentage=percentage*length + cumstart) %>%
     arrange(cumpercentage)
 
-  lst(
-    order = ordered_progression %>% pull(cell_id),
-    edge_id = ordered_progression %>% pull(edge_id)
-  )
+  ordered_progression %>% select(cell_id, edge_id) %>% ungroup() %>%  mutate(position=seq_len(n()), edge_id=factor(edge_id))
+}
+
+
+#' @export
+plot_heatmap <- function(task) {
+  milestone_network <- optimize_order(task$milestone_network)
+  cell_order <- order_cells(milestone_network, task$progressions)
+  counts <- task$counts[cell_order$cell_id, ]
+  gaps <- which(diff(cell_order$edge_id) != 0)
+  pheatmap::pheatmap(t(counts), gaps_col = gaps, cluster_col=FALSE)
 }

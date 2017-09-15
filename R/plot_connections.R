@@ -1,6 +1,3 @@
-milestone_network <- readRDS("net.rds")
-
-
 #' @import dplyr ggplot2 purrr
 #' @importFrom magrittr %<>%
 #' @export
@@ -22,7 +19,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   last_edge_to_pos <- 0
 
   for (edge_id in seq_len(nrow(milestone_network))) {
-    edge <- dyneval:::extract_row_to_list(milestone_network, edge_id)
+    edge <- dynutils:::extract_row_to_list(milestone_network, edge_id)
 
     # STATE EDGE --------------------------------
     edge_from_pos <- if(last_edge_to_pos == 0) 0 else last_edge_to_pos + margin
@@ -78,9 +75,9 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
 #' @import dplyr ggplot2 purrr
 #' @export
-plot_connections <- function(milestone_network, orientation=1, plotdata=NULL) {
+plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05) {
   if (!is.null(milestone_network)) {
-    plotdata <- make_connection_plotdata(milestone_network, orientation)
+    plotdata <- make_connection_plotdata(milestone_network, orientation, margin=margin)
   }
 
   max_limit <- if(nrow(plotdata$connections)) {max(plotdata$connections$level)} else {0}
