@@ -26,3 +26,5 @@ Imports:
   testthat,
   tibble,
   tidyr
+Remotes:
+  rcannood/dynutils
