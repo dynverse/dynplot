@@ -26,5 +26,8 @@ Imports:
   testthat,
   tibble,
   tidyr
+Suggests:
+  dyntoy
 Remotes:
+  rcannood/dyntoy,
   rcannood/dynutils
