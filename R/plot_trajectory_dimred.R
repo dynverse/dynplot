@@ -1,5 +1,6 @@
+#' @importFrom dynutils is_ti_data_wrapper
 check_or_perform_dimred <- function(object, insert_phantom_edges) {
-  if (is_ti_data_wrapper(object)) {
+  if (dynutils::is_ti_data_wrapper(object)) {
     dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges)
   } else if (is_ti_dimred_wrapper(object)) {
     dimred_object <- object
@@ -20,6 +21,8 @@ check_or_perform_dimred <- function(object, insert_phantom_edges) {
 #' @importFrom igraph graph_from_data_frame layout_with_kk
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices col2rgb rainbow rgb
+#' @importFrom dynutils scale_minmax scale_uniform
+#' @importFrom stats setNames
 #'
 #' @export
 dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
@@ -52,7 +55,7 @@ dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
     milestone_percentages %>%
     group_by(cell_id) %>%
     summarise(colour = mix_colours(milestone_id, percentage)) %$%
-    setNames(colour, cell_id)
+    stats::setNames(colour, cell_id)
 
   # add phantom links, ifneedbe
   if (insert_phantom_edges) {
@@ -76,7 +79,7 @@ dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
     } else {
       igraph::layout.auto(gr)
     }
-  layout <- layout %>% scale_uniform()
+  layout <- layout %>% dynutils::scale_uniform()
   dimnames(layout) <- list(milestone_ids, paste0("Comp", seq_len(ncol(layout))))
   space_milest_df <- layout %>% as.data.frame() %>% rownames_to_column()
 

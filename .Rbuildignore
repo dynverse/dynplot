@@ -5,3 +5,4 @@
 ^scripts$
 ^\.travis\.yml$
 ^net\.rds$
+^\.git$

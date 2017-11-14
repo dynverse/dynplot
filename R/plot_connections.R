@@ -4,6 +4,8 @@
 #' @param orientation ?? TODO: Zouter/wouters
 #' @param margin ?? TODO: Zouter/wouters
 #'
+#' @importFrom dynutils extract_row_to_list
+#'
 #' @export
 make_connection_plotdata <- function(milestone_network, orientation = 1, margin=0.05) {
   allmilestones <- unique(c(milestone_network$from, milestone_network$to))
@@ -23,7 +25,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   last_edge_to_pos <- 0
 
   for (edge_id in seq_len(nrow(milestone_network))) {
-    edge <- extract_row_to_list(milestone_network, edge_id)
+    edge <- dynutils::extract_row_to_list(milestone_network, edge_id)
 
     # STATE EDGE --------------------------------
     edge_from_pos <- if(last_edge_to_pos == 0) 0 else last_edge_to_pos + margin

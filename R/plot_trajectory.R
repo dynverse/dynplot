@@ -63,7 +63,7 @@ plot_default <- function(object, insert_phantom_edges = TRUE) {
       scale_fill_identity()
   })
 
-  process_dyneval_plot(g, object$id)
+  process_dynplot(g, object$id)
 }
 
 #' Plot a dimensionality reduced trajectory
@@ -92,5 +92,5 @@ plot_combined <- function(original_object, new_object, insert_phantom_edges = TR
       scale_fill_identity()
   })
 
-  process_dyneval_plot(g, paste0(original_object$id, " vs. ", new_object$id))
+  process_dynplot(g, paste0(original_object$id, " vs. ", new_object$id))
 }

@@ -13,12 +13,16 @@ RoxygenNote: 6.0.1
 Imports:
   cowplot,
   dplyr,
+  dynutils,
   GA,
   ggplot2,
+  igraph,
   magrittr,
   methods,
   pheatmap,
   purrr,
+  RColorBrewer,
+  reshape2,
   testthat,
   tibble,
   tidyr
