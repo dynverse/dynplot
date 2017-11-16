@@ -29,5 +29,5 @@ Imports:
 Suggests:
   dyntoy
 Remotes:
-  rcannood/dyntoy,
-  rcannood/dynutils
+  rcannood/dynutils,
+  Zouter/dyntoy
