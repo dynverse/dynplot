@@ -27,7 +27,9 @@ Imports:
   tibble,
   tidyr
 Suggests:
-  dyntoy
+  dyntoy,
+  dynmethods
 Remotes:
+  rcannood/dynmethods,
   rcannood/dynutils,
   Zouter/dyntoy
