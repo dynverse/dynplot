@@ -3,6 +3,8 @@ sudo: required
 dist: trusty
 bioc_required: true
 cache: packages
+env:
+  - R_MAX_NUM_DLLS=250
 addons:
   apt:
     packages:
@@ -14,4 +16,5 @@ addons:
       - libudunits2-dev
 install:
  - R -e 'install.packages("devtools")'
- - R -e 'devtools::install(dependencies = TRUE, upgrade_dependencies = TRUE)'
+ - R -e 'setRepositories(ind = 1:2)'
+ - R -e 'devtools::install(dependencies = T, upgrade = T)'
