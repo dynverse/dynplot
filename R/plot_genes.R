@@ -13,7 +13,7 @@ plot_genes <- function(task, genes=colnames(task$counts), margin=0.05) {
 
   milestone_network <- optimize_order(task$milestone_network)
   linearized <- linearize_cells(milestone_network, task$progressions, one_edge = TRUE, margin=margin)
-  prog <- linearized$prog
+  prog <- linearized$progressions
   milestone_network <- linearized$milestone_network
 
   plotdata <- counts %>% left_join(task$cell_grouping, by="cell_id") %>% left_join(prog, by="cell_id")

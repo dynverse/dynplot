@@ -14,11 +14,11 @@ plot_strip <- function(task1, task2, margin=0.05, reorder = TRUE) {
 
   linearized1 <- linearize_cells(task1$milestone_network, task1$progression, margin)
   milestone_network1 <- linearized1$milestone_network
-  prog1 <- linearized1$prog %>% rename_at(vars(-cell_id), ~paste0(., 1))
+  prog1 <- linearized1$progressions %>% rename_at(vars(-cell_id), ~paste0(., 1))
 
   linearized2 <- linearize_cells(task2$milestone_network, task2$progression, margin)
   milestone_network2 <- linearized2$milestone_network
-  prog2 <- linearized2$prog%>% rename_at(vars(-cell_id), ~paste0(., 2))
+  prog2 <- linearized2$progressions %>% rename_at(vars(-cell_id), ~paste0(., 2))
 
   prog <- full_join(prog1, prog2, by=c("cell_id"))
 

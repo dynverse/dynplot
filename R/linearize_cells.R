@@ -22,10 +22,9 @@ linearize_cells <- function(milestone_network, progressions, margin=0.05, one_ed
       ungroup()
   }
 
-  prog <- progressions %>%
+  progressions <- progressions %>%
     left_join(milestone_network, by=c("from", "to")) %>%
     mutate(cumpercentage = cumstart + percentage * (cumend-cumstart))
 
-
-  lst(milestone_network, prog)
+  lst(milestone_network, progressions)
 }
