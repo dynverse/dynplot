@@ -28,7 +28,8 @@ Imports:
   tidyr
 Suggests:
   dyntoy,
-  dynmethods
+  dynmethods,
+  ggrepel
 Remotes:
   rcannood/dynmethods,
   rcannood/dynutils,

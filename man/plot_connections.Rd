@@ -5,7 +5,7 @@
 \title{Plot connections}
 \usage{
 plot_connections(milestone_network, orientation = 1, plotdata = NULL,
-  margin = 0.05)
+  margin = 0.05, cell_progressions = NULL, cell_colors = NULL)
 }
 \arguments{
 \item{milestone_network}{The milestone network}
@@ -15,6 +15,8 @@ plot_connections(milestone_network, orientation = 1, plotdata = NULL,
 \item{plotdata}{?? TODO: Zouter/wouters}
 
 \item{margin}{The margin to add}
+
+\item{cell_progressions}{Progressions for adding individual cells}
 }
 \description{
 Plot connections

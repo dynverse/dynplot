@@ -84,18 +84,23 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @param orientation ?? TODO: Zouter/wouters
 #' @param plotdata ?? TODO: Zouter/wouters
 #' @param margin The margin to add
-#' @param progressions Progressions for adding individual cells
+#' @param cell_progressions Progressions for adding individual cells
 #'
 #' @export
-plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05, progressions=NULL) {
+plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05, cell_progressions=NULL, cell_colors = NULL) {
   if (!is.null(milestone_network)) {
     plotdata <- make_connection_plotdata(milestone_network, orientation, margin=margin)
   }
 
   # add cells
-  if(!is.null(progressions)) {
-    cell_positions <- progressions %>% left_join(plotdata$states, by=c("from", "to")) %>%
+  if(!is.null(cell_progressions)) {
+    cell_positions <- cell_progressions %>% left_join(plotdata$states, by=c("from", "to")) %>%
       mutate(position = from_pos + (to_pos - from_pos) * percentage)
+
+    cell_positions$color <- "white"
+    if(!is.null(cell_colors)) {
+      cell_positions$color = cell_colors[cell_positions$cell_id]
+    }
   }
 
   # get x limit
@@ -111,7 +116,8 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, ma
     theme_clean()
 
   if (!is.null(cell_positions)) {
-    plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id), data=cell_positions, direction="x", nudge_y=-orientation)
+    requireNamespace("ggrepel")
+    plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
     min_limit <- -1
   } else {
     min_limit <- 0
