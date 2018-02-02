@@ -44,7 +44,6 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
     milestone_to_poss[[edge$to]] %<>% c(edge_to_pos)
     milestone_to_levels[[edge$to]] %<>% c(level)
 
-    # first check whether a connection is needed
     ## CONNECTION FROM FROM
     for (i in seq_along(milestone_to_poss[[edge$from]])) {
       connections <- add_connection(
@@ -85,13 +84,21 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @param orientation ?? TODO: Zouter/wouters
 #' @param plotdata ?? TODO: Zouter/wouters
 #' @param margin The margin to add
+#' @param progressions Progressions for adding individual cells
 #'
 #' @export
-plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05) {
+plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05, progressions=NULL) {
   if (!is.null(milestone_network)) {
     plotdata <- make_connection_plotdata(milestone_network, orientation, margin=margin)
   }
 
+  # add cells
+  if(!is.null(progressions)) {
+    cell_positions <- progressions %>% left_join(plotdata$states, by=c("from", "to")) %>%
+      mutate(position = from_pos + (to_pos - from_pos) * percentage)
+  }
+
+  # get x limit
   max_limit <- if(nrow(plotdata$connections)) {max(plotdata$connections$level)} else {0}
 
   plot <- ggplot() +
@@ -103,10 +110,17 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, ma
     geom_point(aes(to_pos, level, color=edge_id), data=plotdata$states %>% filter(!(to %in% from)), shape=15) +
     theme_clean()
 
-  if(orientation == -1) {
-    plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, 0))
+  if (!is.null(cell_positions)) {
+    plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id), data=cell_positions, direction="x", nudge_y=-orientation)
+    min_limit <- -1
   } else {
-    plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(0, max_limit+0.5))
+    min_limit <- 0
+  }
+
+  if(orientation == -1) {
+    plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, min_limit))
+  } else {
+    plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(min_limit, max_limit+0.5))
   }
 
   plot
