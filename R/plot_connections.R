@@ -115,7 +115,7 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, ma
     geom_point(aes(to_pos, level, color=edge_id), data=plotdata$states %>% filter(!(to %in% from)), shape=15) +
     theme_clean()
 
-  if (!is.null(cell_positions)) {
+  if (!is.null(cell_progressions)) {
     requireNamespace("ggrepel")
     plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
     min_limit <- -1
