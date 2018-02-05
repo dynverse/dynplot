@@ -17,6 +17,8 @@ plot_connections(milestone_network, orientation = 1, plotdata = NULL,
 \item{margin}{The margin to add}
 
 \item{cell_progressions}{Progressions for adding individual cells}
+
+\item{cell_colors}{Named list to fill the cell labels}
 }
 \description{
 Plot connections

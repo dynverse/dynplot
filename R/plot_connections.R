@@ -85,6 +85,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @param plotdata ?? TODO: Zouter/wouters
 #' @param margin The margin to add
 #' @param cell_progressions Progressions for adding individual cells
+#' @param cell_colors Named list to fill the cell labels
 #'
 #' @export
 plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, margin=0.05, cell_progressions=NULL, cell_colors = NULL) {
