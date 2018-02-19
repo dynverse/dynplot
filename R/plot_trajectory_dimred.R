@@ -27,7 +27,7 @@ check_or_perform_dimred <- function(object, insert_phantom_edges) {
 #'
 #' @export
 dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
-  testthat::expect_true(dynutils::is_data_wrapper(object))
+  testthat::expect_true(dynutils::is_data_wrapper(traj_object))
 
   name <- traj_object$id
 
