@@ -1,6 +1,6 @@
-#' @importFrom dynutils is_ti_data_wrapper
+#' @importFrom dynutils is_data_wrapper
 check_or_perform_dimred <- function(object, insert_phantom_edges) {
-  if (dynutils::is_ti_data_wrapper(object)) {
+  if (dynutils::is_data_wrapper(object)) {
     dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges)
   } else if (is_ti_dimred_wrapper(object)) {
     dimred_object <- object
@@ -23,9 +23,12 @@ check_or_perform_dimred <- function(object, insert_phantom_edges) {
 #' @importFrom grDevices col2rgb rainbow rgb
 #' @importFrom dynutils scale_minmax scale_uniform
 #' @importFrom stats setNames
+#' @importFrom testthat expect_true
 #'
 #' @export
 dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
+  testthat::expect_true(dynutils::is_data_wrapper(object))
+
   name <- traj_object$id
 
   # retrieve some objects to work with
@@ -117,12 +120,12 @@ dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
     space_lines = space_lines,
     space_samples = space_samples
   )
-  class(l) <- c("dyneval::ti_dimred_wrapper", "list")
+  class(l) <- c("dynplot::ti_dimred_wrapper", "list")
   l
 }
 
 is_ti_dimred_wrapper <- function(object) {
-  "dyneval::ti_dimred_wrapper" %in% class(object)
+  "dynplot::ti_dimred_wrapper" %in% class(object)
 }
 
 # this is solely used to create spacing between nodes in dimred_trajectory, but
