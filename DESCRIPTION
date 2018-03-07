@@ -14,6 +14,7 @@ Imports:
   cowplot,
   dplyr,
   dynutils,
+  dynwrap,
   GA,
   ggplot2,
   igraph,
@@ -33,4 +34,5 @@ Suggests:
 Remotes:
   rcannood/dynmethods,
   rcannood/dynutils,
+  rcannood/dynwrap,
   Zouter/dyntoy

@@ -1,6 +1,7 @@
 library(testthat)
 library(dynplot)
 library(dynutils)
+library(dynwrap)
 library(dplyr)
 library(ggplot2)
 library(purrr)
