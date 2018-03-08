@@ -32,7 +32,7 @@ Suggests:
   dynmethods,
   ggrepel
 Remotes:
-  rcannood/dynmethods,
-  rcannood/dynutils,
-  rcannood/dynwrap,
-  Zouter/dyntoy
+  dynverse/dynmethods,
+  dynverse/dynutils,
+  dynverse/dynwrap,
+  dynverse/dyntoy
