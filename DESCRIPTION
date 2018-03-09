@@ -17,6 +17,7 @@ Imports:
   dynwrap,
   GA,
   ggplot2,
+  ggrepel,
   igraph,
   magrittr,
   methods,
@@ -28,11 +29,8 @@ Imports:
   tibble,
   tidyr
 Suggests:
-  dyntoy,
-  dynmethods,
-  ggrepel
+  dyntoy
 Remotes:
-  dynverse/dynmethods,
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy
