@@ -49,6 +49,8 @@ dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
   # determine colour for sample by mixing milestone colours
   mix_colours <- function(milid, milpct) {
     colour_rgb <- apply(col_milest_rgb[milid,,drop=FALSE], 2, function(x) sum(x * milpct))
+    colour_rgb[colour_rgb < 0] <- 0
+    colour_rgb[colour_rgb > 256] <- 256
     do.call(rgb, as.list(c(colour_rgb, maxColorValue = 256)))
   }
   colours_samples <-
