@@ -33,4 +33,4 @@ Suggests:
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
-  dynverse/dyntoy
+  Zouter/dyntoy
