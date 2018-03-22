@@ -52,10 +52,10 @@ plot_default <- function(object, insert_phantom_edges = TRUE) {
   g <- with(dimred_object, {
     segment_aes <- aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2)
     ggplot() +
-      geom_segment(segment_aes, size = 10, colour = "#444444",
+      geom_segment(segment_aes, size = 8, colour = "#444444",
                    space_lines %>% filter(directed),
-                   arrow = arrow(length = unit(.5, "cm"), type="closed")) +
-      geom_segment(segment_aes, size = 10, colour = "#444444", space_lines %>% filter(!directed)) +
+                   arrow = arrow(length = unit(1, "cm")), linejoin = "mitre", lineend = "butt") +
+      geom_segment(segment_aes, size = 8, colour = "#444444", space_lines %>% filter(!directed)) +
       geom_point(aes(Comp1, Comp2, colour = colour), space_samples, size = 3) +
       geom_point(aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones, size = 5, shape = 4, stroke = 2) +
       geom_text(aes(Comp1, Comp2, label = milestone_id), space_milestones, nudge_y = .05) +

@@ -1,6 +1,7 @@
 check_or_perform_dimred <- function(object, insert_phantom_edges) {
-  if (is_data_wrapper(object)) {
-    dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges)
+  if (is_data_wrapper(object) && is_wrapper_with_trajectory(object)) {
+    is_directed <- any(object$milestone_network$directed)
+    dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges && is_directed)
   } else if (is_ti_dimred_wrapper(object)) {
     dimred_object <- object
   } else {
@@ -130,55 +131,87 @@ is_ti_dimred_wrapper <- function(object) {
 # this is solely used to create spacing between nodes in dimred_trajectory, but
 # should be fixed to work well with undirected graphs
 #' @importFrom reshape2 melt
+#' @importFrom igraph graph_from_data_frame neighbors
 add_phantom_edges <- function(milestone_ids, milestone_network) {
   is_directed <- any(milestone_network$directed)
 
-  phantom_links1 <- bind_rows(lapply(milestone_ids, function(x) {
-    strx <- milestone_network %>%
-      filter(from == x)
+  if (is_directed) {
+    phantom_links1 <- bind_rows(lapply(milestone_ids, function(x) {
+      strx <- milestone_network %>%
+        filter(from == x)
 
-    if (nrow(strx) > 1) {
-      strx <- strx %>%
-        mutate(
-          angle = seq(0, 120/360*pi*2, length.out = n()),
-          x = length * cos(angle),
-          y = length * sin(angle)
-        )
-      poss <- strx %>% select(x, y) %>% as.matrix
-      rownames(poss) <- strx$to
-      poss %>%
-        dist %>%
-        as.matrix %>%
-        reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
-        mutate(from = as.character(from), to = as.character(to), directed = is_directed) %>%
-        filter(from != to)
-    } else {
-      NULL
-    }
-  }))
-  phantom_links2 <- bind_rows(lapply(milestone_ids, function(x) {
-    strx <- milestone_network %>%
-      filter(to == x)
+      if (nrow(strx) > 1) {
+        strx <- strx %>%
+          mutate(
+            angle = seq(0, 120/360*pi*2, length.out = n()),
+            x = length * cos(angle),
+            y = length * sin(angle)
+          )
+        poss <- strx %>% select(x, y) %>% as.matrix
+        rownames(poss) <- strx$to
+        poss %>%
+          dist %>%
+          as.matrix %>%
+          reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
+          mutate(from = as.character(from), to = as.character(to), directed = is_directed) %>%
+          filter(from != to)
+      } else {
+        NULL
+      }
+    }))
+    phantom_links2 <- bind_rows(lapply(milestone_ids, function(x) {
+      strx <- milestone_network %>%
+        filter(to == x)
 
-    if (nrow(strx) > 1) {
-      strx <- strx %>%
-        mutate(
-          angle = seq(0, 120/360*pi*2, length.out = n()),
-          x = length * cos(angle),
-          y = length * sin(angle)
-        )
-      poss <- strx %>% select(x, y) %>% as.matrix
-      rownames(poss) <- strx$from
-      poss %>%
-        dist %>%
-        as.matrix %>%
-        reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
-        mutate(from = as.character(from), to = as.character(to), directed = is_directed) %>%
-        filter(from != to)
-    } else {
-      NULL
-    }
-  }))
+      if (nrow(strx) > 1) {
+        strx <- strx %>%
+          mutate(
+            angle = seq(0, 120/360*pi*2, length.out = n()),
+            x = length * cos(angle),
+            y = length * sin(angle)
+          )
+        poss <- strx %>% select(x, y) %>% as.matrix
+        rownames(poss) <- strx$from
+        poss %>%
+          dist %>%
+          as.matrix %>%
+          reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
+          mutate(from = as.character(from), to = as.character(to), directed = is_directed) %>%
+          filter(from != to)
+      } else {
+        NULL
+      }
+    }))
 
-  bind_rows(milestone_network, phantom_links1, phantom_links2)
+    bind_rows(milestone_network, phantom_links1, phantom_links2)
+  } else {
+    gr <- igraph::graph_from_data_frame(milestone_network, directed = is_directed, vertices = milestone_ids)
+
+    phantom_links <- bind_rows(lapply(milestone_ids, function(x) {
+      neighs <- igraph::neighbors(gr, x) %>% names()
+      strx <- milestone_network %>%
+        filter((to == x & from %in% neighs) | (from == x & to %in% neighs))
+
+      if (nrow(strx) > 1) {
+        strx <- strx %>%
+          mutate(
+            angle = seq(0, 120/360*pi*2, length.out = n()),
+            x = length * cos(angle),
+            y = length * sin(angle)
+          )
+        poss <- strx %>% select(x, y) %>% as.matrix
+        rownames(poss) <- neighs
+        poss %>%
+          dist %>%
+          as.matrix %>%
+          reshape2::melt(varnames = c("from", "to"), value.name = "length") %>%
+          mutate(from = as.character(from), to = as.character(to), directed = is_directed) %>%
+          filter(from != to)
+      } else {
+        NULL
+      }
+    }))
+
+    bind_rows(milestone_network, phantom_links)
+  }
 }
