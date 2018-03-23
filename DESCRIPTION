@@ -33,5 +33,4 @@ Suggests:
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
-  dynverse/dyntoy,
-  tidyverse/ggplot2
+  dynverse/dyntoy

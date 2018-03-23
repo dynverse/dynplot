@@ -6,7 +6,7 @@
 #'
 #' @export
 process_dynplot <- function(g, id, expand = TRUE) {
-  ranges <- ggplot_build(g)$layout$panel_params[[1]]
+  ranges <- ggplot_build(g)$layout$panel_ranges[[1]]
   yrange <- ranges$y.range
   xrange <- ranges$x.range
 
@@ -54,7 +54,7 @@ plot_default <- function(object, insert_phantom_edges = TRUE) {
     ggplot() +
       geom_segment(segment_aes, size = 8, colour = "#444444",
                    space_lines %>% filter(directed),
-                   arrow = arrow(length = unit(1, "cm")), linejoin = "mitre", lineend = "butt") +
+                   arrow = arrow(length = unit(1, "cm"))) +
       geom_segment(segment_aes, size = 8, colour = "#444444", space_lines %>% filter(!directed)) +
       geom_point(aes(Comp1, Comp2, colour = colour), space_samples, size = 3) +
       geom_point(aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones, size = 5, shape = 4, stroke = 2) +
@@ -83,12 +83,12 @@ plot_combined <- function(original_object, new_object, insert_phantom_edges = TR
   combined_dimred <- new_dimred
   combined_dimred$space_samples$colour <- original_dimred$space_samples$colour
 
-  g <- with(dimred_object, {
+  g <- with(combined_dimred, {
     segment_aes <- aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2)
     ggplot() +
       geom_segment(segment_aes, size = 8, colour = "#444444",
                    space_lines %>% filter(directed),
-                   arrow = arrow(length = unit(1, "cm")), linejoin = "mitre", lineend = "butt") +
+                   arrow = arrow(length = unit(1, "cm"))) +
       geom_segment(segment_aes, size = 8, colour = "#444444", space_lines %>% filter(!directed)) +
       geom_point(aes(Comp1, Comp2, colour = colour), space_samples, size = 3) +
       scale_colour_identity() +
