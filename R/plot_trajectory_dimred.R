@@ -1,7 +1,7 @@
-check_or_perform_dimred <- function(object, insert_phantom_edges) {
+check_or_perform_dimred <- function(object, insert_phantom_edges, color_by=c("Set3", "rainbow")) {
   if (is_data_wrapper(object) && is_wrapper_with_trajectory(object)) {
     is_directed <- any(object$milestone_network$directed)
-    dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges && is_directed)
+    dimred_object <- dimred_trajectory(object, insert_phantom_edges = insert_phantom_edges && is_directed, color_by=color_by)
   } else if (is_ti_dimred_wrapper(object)) {
     dimred_object <- object
   } else {
@@ -22,10 +22,13 @@ check_or_perform_dimred <- function(object, insert_phantom_edges) {
 #' @importFrom grDevices col2rgb rainbow rgb
 #' @importFrom stats setNames
 #' @importFrom testthat expect_true
+#' @importFrom shades hue
 #'
 #' @export
-dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
+dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE, color_by=c("Set3", "rainbow")) {
   testthat::expect_true(is_data_wrapper(traj_object))
+
+  color_by <- match.arg(color_by)
 
   name <- traj_object$id
 
@@ -39,11 +42,12 @@ dimred_trajectory <- function(traj_object, insert_phantom_edges = TRUE) {
 
   # determine colours associated with each milestone
   col_milest_hex <-
-    if (length(milestone_ids) <= 12) {
-      RColorBrewer::brewer.pal(max(3, num_milestones), "Set3")[seq_len(num_milestones)]
+    if (color_by == "rainbow" || length(milestone_ids) > 12) {
+      rainbow(num_milestones)
     } else {
-      sample(rainbow(num_milestones))
-    }
+      RColorBrewer::brewer.pal(max(3, num_milestones), "Set3")[seq_len(num_milestones)]
+    } %>% {.[order(shades::hue(.))]}
+
   col_milest_rgb <- t(col2rgb(col_milest_hex))
   rownames(col_milest_rgb) <- names(col_milest_hex) <- milestone_ids
 
