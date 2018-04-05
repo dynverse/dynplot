@@ -23,6 +23,7 @@ Imports:
   methods,
   pheatmap,
   purrr,
+  shades,
   RColorBrewer,
   reshape2,
   testthat,
