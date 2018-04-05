@@ -64,13 +64,13 @@ plot_default <- function(object, insert_phantom_edges = TRUE, line_size = 8, arr
     ggplot() +
       geom_segment(segment_mid_aes, size = line_size, colour = "#444444",
                    space_lines %>% filter(directed),
-                   arrow = arrow(length = arrow_length, type = "closed")) +
+                   arrow = arrow(length = arrow_length, type = "open")) +
       geom_segment(segment_aes, size = line_size, colour = "#444444",
                    space_lines %>% filter(directed)) +
       geom_segment(segment_aes, size = line_size, colour = "#444444", space_lines %>% filter(!directed)) +
       geom_point(aes(Comp1, Comp2, colour = colour), space_samples, size = 3) +
       geom_point(aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones, size = 5, shape = 4, stroke = 2, alpha=as.numeric(plot_milestones)) +
-      ggrepel::geom_label_repel(aes(Comp1, Comp2, label = milestone_id, fill=colour), space_milestones %>% filter(milestone_id %in% nodes_to_label)) +
+      ggrepel::geom_label_repel(aes(Comp1, Comp2, label = milestone_id, fill=colour), space_milestones %>% filter(milestone_id %in% nodes_to_label), force=0) +
       scale_colour_identity() +
       scale_fill_identity()
   })
