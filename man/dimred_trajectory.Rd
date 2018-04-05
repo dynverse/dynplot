@@ -12,6 +12,8 @@ dimred_trajectory(traj_object, insert_phantom_edges = TRUE,
 \code{\link[dynwrap]{wrap_data}}}
 
 \item{insert_phantom_edges}{attempt to plot bifurcating edges correctly automatically}
+
+\item{color_by}{How to color the edges, either using Set3 or using rainbow}
 }
 \description{
 Perform dimensionality reduction on a trajectory and the respective samples in order to plot it
