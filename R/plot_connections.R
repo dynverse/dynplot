@@ -110,12 +110,13 @@ plot_connections <- function(milestone_network, orientation=1, plotdata=NULL, ma
   max_limit <- if(nrow(plotdata$connections)) {max(plotdata$connections$level)} else {0}
 
   plot <- ggplot() +
-    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$connections, linetype="longdash") +
-    geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$connections, linetype="longdash", arrow=arrow(length=unit(0.30,"cm"), ends="last", type = "closed")) +
-    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, arrow=arrow(length=unit(0.30,"cm"), ends="last", type = "closed")) +
-    geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$connections, linetype="longdash") +
-    geom_point(aes(from_pos, level, color=edge_id), data=plotdata$states %>% filter(from == first(from))) +
-    geom_point(aes(to_pos, level, color=edge_id), data=plotdata$states %>% filter(!(to %in% from)), shape=15) +
+    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$connections, linetype="dotted", color="#444444") +
+    geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$connections, linetype="dotted", color="#444444") +
+    # geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, arrow=arrow(length=unit(0.30,"cm"), ends="last", type = "closed"), color="black") +
+    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, color="black") +
+    geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$connections, linetype="dotted", color="#444444") +
+    geom_point(aes(from_pos, level), data=plotdata$states %>% filter(from == first(from)), color="black") +
+    geom_point(aes(to_pos, level), data=plotdata$states %>% filter(!(to %in% from)), shape=15, color="black") +
     theme_clean()
 
   if (!is.null(cell_progressions)) {
