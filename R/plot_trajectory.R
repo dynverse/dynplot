@@ -48,9 +48,17 @@ process_dynplot <- function(g, id, expand = TRUE) {
 #'
 #' @importFrom grid arrow
 #' @importFrom cowplot theme_cowplot
+#' @importFrom ggrepel geom_label_repel
 #'
 #' @export
-plot_default <- function(object, insert_phantom_edges = TRUE, line_size = 8, arrow_length = unit(1, "cm"), label=c("leaves", "all", "none"), plot_milestones = TRUE) {
+plot_default <- function(
+  object,
+  insert_phantom_edges = TRUE,
+  line_size = 8,
+  arrow_length = unit(1, "cm"),
+  label = c("leaves", "all", "none"),
+  plot_milestones = TRUE
+) {
   dimred_object <- check_or_perform_dimred(object, insert_phantom_edges)
 
   label <- match.arg(label)
@@ -64,18 +72,31 @@ plot_default <- function(object, insert_phantom_edges = TRUE, line_size = 8, arr
   }
 
   g <- with(dimred_object, {
-    segment_aes <- aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2)
-    segment_mid_aes <- aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1)/2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2)/2)
     ggplot() +
-      geom_segment(segment_mid_aes, size = line_size, colour = "#444444",
-                   space_lines %>% filter(directed),
-                   arrow = arrow(length = arrow_length, type = "open")) +
-      geom_segment(segment_aes, size = line_size, colour = "#444444",
-                   space_lines %>% filter(directed)) +
-      geom_segment(segment_aes, size = line_size, colour = "#444444", space_lines %>% filter(!directed)) +
-      geom_point(aes(Comp1, Comp2, colour = colour), space_samples, size = 3) +
-      geom_point(aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones, size = 5, shape = 4, stroke = 2, alpha=as.numeric(plot_milestones)) +
-      ggrepel::geom_label_repel(aes(Comp1, Comp2, label = milestone_id, fill=colour), space_milestones %>% filter(milestone_id %in% nodes_to_label), force=0) +
+      theme(legend.position = "none") +
+      geom_segment(
+        aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
+        space_lines %>% filter(directed),
+        size = line_size, colour = "#444444",
+        arrow = arrow(length = arrow_length, type = "open")
+      ) +
+      geom_segment(
+        aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+        space_lines,
+        size = line_size, colour = "#444444"
+      ) +
+      geom_point(
+        aes(Comp1, Comp2, colour = colour),
+        space_samples,
+        size = 3
+      ) +
+      geom_point(
+        aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones,
+        size = 5, shape = 4, stroke = 2, alpha = as.numeric(plot_milestones)
+      ) +
+      ggrepel::geom_label_repel(
+        aes(Comp1, Comp2, label = milestone_id, fill = colour),
+        space_milestones %>% filter(milestone_id %in% nodes_to_label)) +
       scale_colour_identity() +
       scale_fill_identity()
   })
