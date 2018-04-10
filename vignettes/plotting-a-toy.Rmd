@@ -11,10 +11,11 @@ fig_height: 10
 ---
 
 ```{r setup, include = FALSE}
-library(tidyverse)
+library(dplyr)
 library(dyntoy)
 library(dynplot)
 library(dynutils)
+library(dynwrap)
 ```
 
 Load in a toy dataset
