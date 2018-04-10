@@ -63,43 +63,51 @@ plot_default <- function(
 
   label <- match.arg(label)
 
-  if (label == "leaves") {
-    nodes_to_label <- dimred_object$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
-  } else if (label == "all") {
-    nodes_to_label <- dimred_object$space_milestones$milestone_id
-  } else if (label == "none"){
-    nodes_to_label <- c()
-  }
+  nodes_to_label <-
+    if (label == "leaves") {
+      dimred_object$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
+    } else if (label == "all") {
+      dimred_object$space_milestones$milestone_id
+    } else if (label == "none"){
+      c()
+    } else {
+      stop(sQuote("label"), " should be one of: \"leaves\", \"all\", or \"none\"")
+    }
 
-  g <- with(dimred_object, {
+  g <-
     ggplot() +
-      theme(legend.position = "none") +
-      geom_segment(
-        aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
-        space_lines %>% filter(directed),
-        size = line_size, colour = "#444444",
-        arrow = arrow(length = arrow_length, type = "open")
-      ) +
-      geom_segment(
-        aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
-        space_lines,
-        size = line_size, colour = "#444444"
-      ) +
+    theme(legend.position = "none") +
+    geom_segment(
+      aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
+      dimred_object$space_lines %>% filter(directed),
+      size = line_size, colour = "#444444",
+      arrow = arrow(length = arrow_length, type = "open")
+    ) +
+    geom_segment(
+      aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+      dimred_object$space_lines,
+      size = line_size, colour = "#444444"
+    ) +
+    geom_point(
+      aes(Comp1, Comp2, colour = colour),
+      dimred_object$space_samples,
+      size = 3
+    ) +
+    ggrepel::geom_label_repel(
+      aes(Comp1, Comp2, label = milestone_id, fill = colour),
+      dimred_object$space_milestones %>% filter(milestone_id %in% nodes_to_label)
+    ) +
+    scale_colour_identity() +
+    scale_fill_identity()
+
+  if (plot_milestones) {
+    g <- g +
       geom_point(
-        aes(Comp1, Comp2, colour = colour),
-        space_samples,
-        size = 3
-      ) +
-      geom_point(
-        aes(Comp1, Comp2, colour = colour, fill = colour), space_milestones,
-        size = 5, shape = 4, stroke = 2, alpha = as.numeric(plot_milestones)
-      ) +
-      ggrepel::geom_label_repel(
-        aes(Comp1, Comp2, label = milestone_id, fill = colour),
-        space_milestones %>% filter(milestone_id %in% nodes_to_label)) +
-      scale_colour_identity() +
-      scale_fill_identity()
-  })
+        aes(Comp1, Comp2, colour = colour, fill = colour),
+        dimred_object$space_milestones,
+        size = 5, shape = 4, stroke = 2
+      )
+  }
 
   process_dynplot(g, object$id)
 }
