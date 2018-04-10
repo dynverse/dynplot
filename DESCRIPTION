@@ -31,12 +31,14 @@ Imports:
   tibble,
   tidyr
 Suggests:
-  dyntoy
+  dyntoy,
+    knitr,
+    rmarkdown
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy
-Collate: 
+Collate:
     'is_colour_vector.R'
     'linearize_cells.R'
     'milestone_palette.R'
@@ -52,3 +54,4 @@ Collate:
     'plot_trajectory_dimred.R'
     'process_dynplot.R'
     'theme_clean.R'
+VignetteBuilder: knitr
