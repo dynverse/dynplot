@@ -36,3 +36,19 @@ Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy
+Collate: 
+    'is_colour_vector.R'
+    'linearize_cells.R'
+    'milestone_palette.R'
+    'optimize_order.R'
+    'package.R'
+    'plot_default.R'
+    'plot_combined.R'
+    'plot_connections.R'
+    'plot_genes.R'
+    'plot_heatmap.R'
+    'plot_strip.R'
+    'plot_strip_connections.R'
+    'plot_trajectory_dimred.R'
+    'process_dynplot.R'
+    'theme_clean.R'
