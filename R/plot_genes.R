@@ -5,7 +5,7 @@
 #' @param margin The margin to add
 #'
 #' @export
-plot_genes <- function(task, genes=colnames(task$counts), margin=0.05) {
+plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(20, ncol(task$counts)))), margin=0.05) {
   counts <- task$counts %>% as.data.frame() %>%
     select(one_of(genes)) %>%
     tibble::rownames_to_column("cell_id") %>%
@@ -16,9 +16,10 @@ plot_genes <- function(task, genes=colnames(task$counts), margin=0.05) {
   prog <- linearized$progressions
   milestone_network <- linearized$milestone_network
 
-  plotdata <- counts %>% left_join(task$cell_grouping, by="cell_id") %>% left_join(prog, by="cell_id")
+  plotdata <- counts %>%
+    left_join(task$prior_information$grouping_assignment, by="cell_id") %>%
+    left_join(prog, by="cell_id")
 
-  print(counts)
   expression_plot <- ggplot(plotdata, aes(cumpercentage, expression, color=edge_id)) +
     geom_point() +
     geom_smooth() +
