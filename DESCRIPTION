@@ -32,8 +32,8 @@ Imports:
   tidyr
 Suggests:
   dyntoy,
-    knitr,
-    rmarkdown
+  knitr,
+  rmarkdown
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
