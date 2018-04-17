@@ -1,0 +1,13 @@
+---
+title: dynplot
+output: md_document
+---
+
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, error=FALSE, echo = TRUE)
+```
+
+Common functionality for plotting trajectories.
+
+```{r child = 'vignettes/plotting-a-toy.Rmd'}
+```
