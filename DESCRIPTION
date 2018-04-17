@@ -3,7 +3,7 @@ Type: Package
 Title: Plotting functions for the dynverse
 Version: 0.1.0
 Authors@R: c(
-  person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut")),
+  person("Robrecht", "Cannoodt", email = "rcannood@gmail.com", role = c("aut")),
   person("Wouter", "Saelens", email = "wouter.saelens@ugent.be", role = c("aut", "cre")))
 Description: Plot ALL the trajectories!
 License: GPL-3
