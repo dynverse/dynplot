@@ -25,7 +25,8 @@ plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(5, ncol(t
     geom_smooth() +
     facet_grid(gene_id~.) +
     geom_vline(aes(xintercept=cumstart), data=milestone_network, alpha=0.2) +
-    geom_vline(aes(xintercept=cumend), data=milestone_network, alpha=0.2)
+    geom_vline(aes(xintercept=cumend), data=milestone_network, alpha=0.2) +
+    cowplot::theme_cowplot()
 
   connections_plot <- plot_connections(milestone_network, orientation = -1, margin=margin)
 
