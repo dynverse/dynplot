@@ -1,5 +1,9 @@
 Common functionality for plotting trajectories.
 
+[![Build
+Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
+[![codecov](https://img.shields.io/codecov/c/github/dynverse/dynplot.svg)](https://codecov.io/gh/dynverse/dynplot)
+
 Load in a toy dataset
 
     task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_to_list(1)

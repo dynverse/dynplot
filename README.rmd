@@ -9,5 +9,7 @@ knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, e
 
 Common functionality for plotting trajectories.
 
+[![Build Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot) [![codecov](https://img.shields.io/codecov/c/github/dynverse/dynplot.svg)](https://codecov.io/gh/dynverse/dynplot)
+
 ```{r child = 'vignettes/plotting-a-toy.Rmd'}
 ```
