@@ -5,7 +5,7 @@
 #' @param margin The margin to add
 #'
 #' @export
-plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(20, ncol(task$counts)))), margin=0.05) {
+plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(5, ncol(task$counts)))), margin=0.05) {
   counts <- task$counts %>% as.data.frame() %>%
     select(one_of(genes)) %>%
     tibble::rownames_to_column("cell_id") %>%

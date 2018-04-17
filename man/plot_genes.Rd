@@ -4,7 +4,7 @@
 \alias{plot_genes}
 \title{Plotting the genes}
 \usage{
-plot_genes(task, genes = sample(colnames(task$counts), min(c(20,
+plot_genes(task, genes = sample(colnames(task$counts), min(c(5,
   ncol(task$counts)))), margin = 0.05)
 }
 \arguments{
