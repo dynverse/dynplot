@@ -33,7 +33,7 @@ plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$
   cell_order <- order_cells(milestone_network, task$progressions)
   gene_order <- colnames(task$counts)[clust$order]
 
-  molten <- counts %>%
+  molten <- task$counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate(gene_id = factor(gene_id, gene_order))
 
