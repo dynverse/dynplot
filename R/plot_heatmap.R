@@ -28,12 +28,16 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @importFrom pheatmap pheatmap
 #' @export
-plot_heatmap <- function(task, clust=clust=hclust(as.dist(correlation_distance(task$counts)))) {
+plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$counts))))) {
   milestone_network <- optimize_order(task$milestone_network)
   cell_order <- order_cells(milestone_network, task$progressions)
+  gene_order <- colnames(task$counts)[clust$order]
 
-  molten <- counts %>% reshape2::melt(varnames=c("gene_id", "cell_id"), value.name="expression")
+  molten <- counts %>%
+    reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
+    mutate(gene_id = factor(gene_id, gene_order))
 
   ggplot(molten) +
-    geom_raster(aes(gene_id, cell_id, fill=expression))
+    geom_raster(aes(cell_id, gene_id, fill=expression)) +
+    scale_fill_distiller(palette = "RdBu")
 }
