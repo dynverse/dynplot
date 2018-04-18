@@ -1,8 +1,6 @@
 context("Test plot_default")
 
-data("toy_tasks", package="dyntoy")
-
-toy_tasks <- toy_tasks %>% sample_n(10)
+toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup()
 
 test_ggplot <- function(g) {
   expect_is(g, "ggplot")

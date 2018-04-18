@@ -40,7 +40,7 @@ Remotes:
   dynverse/dyntoy
 Collate: 
     'is_colour_vector.R'
-    'linearize_cells.R'
+    'linearise_cells.R'
     'milestone_palette.R'
     'optimize_order.R'
     'package.R'

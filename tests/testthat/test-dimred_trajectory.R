@@ -1,8 +1,6 @@
 context("Testing dimred_trajectory")
 
-data("toy_tasks", package="dyntoy")
-
-toy_tasks <- toy_tasks %>% sample_n(10)
+toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup()
 
 for (taski in seq_len(nrow(toy_tasks))) {
   task <- extract_row_to_list(toy_tasks, taski)
