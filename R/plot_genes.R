@@ -12,9 +12,9 @@ plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(5, ncol(t
     gather("gene_id", "expression", -cell_id)
 
   milestone_network <- optimize_order(task$milestone_network)
-  linearized <- linearize_cells(milestone_network, task$progressions, one_edge = TRUE, margin=margin)
-  prog <- linearized$progressions
-  milestone_network <- linearized$milestone_network
+  linearised <- linearise_cells(milestone_network, task$progressions, one_edge = TRUE, margin=margin)
+  prog <- linearised$progressions
+  milestone_network <- linearised$milestone_network
 
   plotdata <- counts %>%
     left_join(task$prior_information$grouping_assignment, by="cell_id") %>%

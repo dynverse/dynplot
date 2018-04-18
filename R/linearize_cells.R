@@ -1,10 +1,10 @@
-#' Linearize a trajectory
+#' Linearise a trajectory
 #'
 #' @param milestone_network The milestone network
 #' @param progressions The progressions
 #' @param margin The margin to add
 #' @param one_edge If TRUE, assigns each cell to one edge only
-linearize_cells <- function(milestone_network, progressions, margin=0.05, one_edge=FALSE) {
+linearise_cells <- function(milestone_network, progressions, margin=0.05, one_edge=FALSE) {
   margin <- sum(milestone_network$length) * margin
 
   milestone_network <- milestone_network %>%

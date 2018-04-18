@@ -38,7 +38,7 @@ Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy
-Collate:
+Collate: 
     'is_colour_vector.R'
     'linearize_cells.R'
     'milestone_palette.R'
