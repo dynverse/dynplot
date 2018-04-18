@@ -51,7 +51,7 @@ plot_genes(task)
 
 ## Comparing trajectories
 ```{r}
-pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]
+pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
 prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
 
