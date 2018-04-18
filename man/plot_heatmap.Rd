@@ -9,6 +9,8 @@ plot_heatmap(task,
 }
 \arguments{
 \item{task}{The task}
+
+\item{clust}{The clustering of the genes as a `clust` object}
 }
 \description{
 Plot the task as a heatmap

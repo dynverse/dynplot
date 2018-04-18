@@ -25,6 +25,7 @@ order_cells <- function(milestone_network, progressions) {
 #' Plot the task as a heatmap
 #'
 #' @param task The task
+#' @param clust The clustering of the genes as a `clust` object
 #'
 #' @importFrom pheatmap pheatmap
 #' @export
