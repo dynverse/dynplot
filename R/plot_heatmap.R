@@ -52,6 +52,7 @@ plot_heatmap <- function(
     left_join(linearised$progressions, "cell_id")
 
   x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
+  y_limits <- c(0.5, length(gene_order) + 0.5)
 
   heatmap <- ggplot(molten) +
     # geom_point(aes(cumpercentage, gene_id, color=expression)) +
@@ -59,7 +60,7 @@ plot_heatmap <- function(
     scale_fill_distiller(palette = "RdBu") +
     scale_color_distiller(palette = "RdBu") +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left") +
+    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left", limits=y_limits) +
     cowplot::theme_cowplot() +
     theme(legend.position="none")
 
@@ -68,7 +69,7 @@ plot_heatmap <- function(
   dendrogram <- ggraph::ggraph(as.dendrogram(clust)) +
     ggraph::geom_node_point() +
     ggraph::geom_edge_elbow() +
-    scale_x_continuous(expand=c(0, 0)) +
+    scale_x_continuous(limits=c(-0.5, length(gene_order)-0.5), expand=c(0, 0)) +
     scale_y_reverse() +
     coord_flip() +
     ggraph::theme_graph() +
