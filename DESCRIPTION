@@ -16,6 +16,7 @@ Imports:
   dynutils,
   dynwrap,
   GA,
+  ggraph,
   ggplot2,
   ggrepel,
   igraph,
@@ -31,7 +32,6 @@ Imports:
   tibble,
   tidyr
 Suggests:
-  ggraph,
   dyntoy,
   knitr,
   rmarkdown

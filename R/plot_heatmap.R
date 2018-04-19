@@ -60,7 +60,7 @@ plot_heatmap <- function(
 
   connections <- plot_connections(linearised$milestone_network, orientation = -1, margin=margin) + scale_x_continuous(expand=c(0, 0), limits=x_limits)
 
-  dendrogram <- ggraph(as.dendrogram(clust)) +
+  dendrogram <- ggraph::ggraph(as.dendrogram(clust)) +
     geom_node_point() +
     geom_edge_elbow() +
     scale_x_continuous(expand=c(0, 0)) +

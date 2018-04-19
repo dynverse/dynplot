@@ -2,6 +2,7 @@
 #'
 #' @import dplyr
 #' @import tidyr
+#' @importFrom stats as.dist hclust
 #' @import methods
 #' @import tibble
 #' @import ggplot2
