@@ -14,6 +14,15 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, one_ed
       ungroup()
   }
 
+  margin <- sum(milestone_network$length) * margin
+
+  milestone_network <- milestone_network %>%
+    mutate(
+      cumstart = c(0, cumsum(length)[-n()]) + margin * (seq_len(n())-1),
+      cumend = c(cumsum(length)) + margin * (seq_len(n())-1),
+      edge_id = factor(seq_len(n()))
+    )
+
   if (equal_cell_width) {
     progressions <- progressions %>%
       group_by(from, to) %>%
@@ -25,22 +34,17 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, one_ed
       summarise(length=max(position)) %>%
       left_join(milestone_network %>% select(-length), c("from", "to")) %>%
       ungroup()
+
+    progressions <- progressions %>%
+      left_join(milestone_network, by=c("from", "to")) %>%
+      mutate(cumpercentage = cumstart + position * length)
   } else {
     progressions$position <- progressions$percentage
+
+    progressions <- progressions %>%
+      left_join(milestone_network, by=c("from", "to")) %>%
+      mutate(cumpercentage = cumstart + position * length)
   }
-
-  margin <- sum(milestone_network$length) * margin
-
-  milestone_network <- milestone_network %>%
-    mutate(
-      cumstart = c(0, cumsum(length)[-n()]) + margin * (seq_len(n())-1),
-      cumend = c(cumsum(length)) + margin * (seq_len(n())-1),
-      edge_id = factor(seq_len(n()))
-    )
-
-  progressions <- progressions %>%
-    left_join(milestone_network, by=c("from", "to")) %>%
-    mutate(cumpercentage = cumstart + position)
 
   lst(milestone_network, progressions)
 }
