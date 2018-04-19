@@ -59,8 +59,9 @@ plot_heatmap <- function(
     scale_fill_distiller(palette = "RdBu") +
     scale_color_distiller(palette = "RdBu") +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="right") +
-    cowplot::theme_cowplot()
+    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left") +
+    cowplot::theme_cowplot() +
+    theme(legend.position="none")
 
   connections <- plot_connections(linearised$milestone_network, orientation = -1, margin=margin) + scale_x_continuous(expand=c(0, 0), limits=x_limits)
 
@@ -72,6 +73,7 @@ plot_heatmap <- function(
     coord_flip() +
     ggraph::theme_graph() +
     theme(plot.margin=margin())
+
 
   cowplot::plot_grid(
     dendrogram,

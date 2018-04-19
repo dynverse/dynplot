@@ -1,13 +1,14 @@
 ---
 title: "Plotting a toy datasets using dynplot"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    fig_width: 10
+    fig_height: 5 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-fig_width: 10
-fig_height: 10 
 ---
 
 ```{r setup, include = FALSE}
