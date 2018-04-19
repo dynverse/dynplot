@@ -29,16 +29,51 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @importFrom pheatmap pheatmap
 #' @export
-plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$counts))))) {
-  milestone_network <- optimize_order(task$milestone_network)
-  cell_order <- order_cells(milestone_network, task$progressions)
+plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$counts))), method = "ward.D2"), margin=0.02) {
+  linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
+
+  # get gene order
   gene_order <- colnames(task$counts)[clust$order]
 
-  molten <- task$counts %>%
+  # process counts
+  counts <- dynutils::scale_quantile(task$counts)
+  molten <- counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
-    mutate(gene_id = factor(gene_id, gene_order))
+    mutate_if(is.factor, as.character) %>%
+    mutate(gene_id = as.numeric(factor(gene_id, gene_order))) %>%
+    left_join(linearised$progressions, "cell_id")
 
-  ggplot(molten) +
-    geom_raster(aes(cell_id, gene_id, fill=expression)) +
-    scale_fill_distiller(palette = "RdBu")
+  x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
+
+  heatmap <- ggplot(molten) +
+    # geom_point(aes(cumpercentage, gene_id, color=expression)) +
+    geom_tile(aes(cumpercentage, gene_id, fill=expression)) +
+    scale_fill_distiller(palette = "RdBu") +
+    scale_color_distiller(palette = "RdBu") +
+    scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
+    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="right") +
+    cowplot::theme_cowplot()
+
+  connections <- plot_connections(linearised$milestone_network, orientation = -1, margin=margin) + scale_x_continuous(expand=c(0, 0), limits=x_limits)
+
+  dendrogram <- ggraph(as.dendrogram(clust)) +
+    geom_node_point() +
+    geom_edge_elbow() +
+    scale_x_continuous(expand=c(0, 0)) +
+    scale_y_reverse() +
+    coord_flip() +
+    ggraph::theme_graph() +
+    theme(plot.margin=margin())
+
+  cowplot::plot_grid(
+    dendrogram,
+    heatmap,
+    ggplot() + theme_void(),
+    connections,
+    ncol=2,
+    align="hv",
+    axis="lrtb",
+    rel_heights = c(0.8, 0.2),
+    rel_widths = c(0.2, 0.8)
+  )
 }
