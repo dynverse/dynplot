@@ -28,8 +28,8 @@ order_cells <- function(milestone_network, progressions) {
 #' @param clust The clustering of the genes as a `clust` object
 #' @param margin The margin to add
 #'
-#' @importFrom pheatmap pheatmap
-#' @importFrom ggraph ggraph geom_node_point geom_edge_elbow theme_graph
+#' @import tidygraph
+#' @import ggraph
 #' @export
 plot_heatmap <- function(
   task,
@@ -39,10 +39,10 @@ plot_heatmap <- function(
   linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
 
   # get gene order
-  gene_order <- colnames(task$counts)[clust$order]
+  gene_order <- colnames(task$counts[, genes_oi])[clust$order]
 
   # process counts
-  counts <- dynutils::scale_quantile(task$counts)
+  counts <- dynutils::scale_quantile(task$counts[, genes_oi])
   molten <- counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%

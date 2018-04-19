@@ -19,10 +19,10 @@ Imports:
   ggraph,
   ggplot2,
   ggrepel,
+  ggraph,
   igraph,
   magrittr,
   methods,
-  pheatmap,
   purrr,
   rje,
   shades,
@@ -30,7 +30,8 @@ Imports:
   reshape2,
   testthat,
   tibble,
-  tidyr
+  tidyr,
+  tidygraph
 Suggests:
   dyntoy,
   knitr,
