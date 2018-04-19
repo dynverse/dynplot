@@ -4,12 +4,14 @@
 \alias{plot_heatmap}
 \title{Plot the task as a heatmap}
 \usage{
-plot_heatmap(task,
-  clust = hclust(as.dist(correlation_distance(t(task$counts))), method =
-  "ward.D2"), margin = 0.02)
+plot_heatmap(task, genes_oi = colnames(task$counts)[1:20],
+  clust = hclust(as.dist(correlation_distance(t(task$counts[, genes_oi]))),
+  method = "ward.D2"), margin = 0.02)
 }
 \arguments{
 \item{task}{The task}
+
+\item{genes_oi}{Genes to plot}
 
 \item{clust}{The clustering of the genes as a `clust` object}
 
