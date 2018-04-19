@@ -15,6 +15,8 @@ linearise_cells(milestone_network, progressions, margin = 0.05,
 \item{margin}{The margin to add}
 
 \item{one_edge}{If TRUE, assigns each cell to one edge only}
+
+\item{equal_cell_width}{if TRUE, will give each cell equal width}
 }
 \description{
 Linearise a trajectory
