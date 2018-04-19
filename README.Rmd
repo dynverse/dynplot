@@ -1,13 +1,16 @@
 ---
-title: dynplot
 output: md_document
 ---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup1, include=FALSE}
 knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, error=FALSE, echo = TRUE)
 ```
 
-Common functionality for plotting trajectories.
+# dynplot
+
+**dynplot** provides common functionality for plotting trajectories.
 
 [![Build Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
 [![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)
