@@ -12,6 +12,8 @@ plot_heatmap(task,
 \item{task}{The task}
 
 \item{clust}{The clustering of the genes as a `clust` object}
+
+\item{margin}{The margin to add}
 }
 \description{
 Plot the task as a heatmap

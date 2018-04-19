@@ -26,8 +26,10 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @param task The task
 #' @param clust The clustering of the genes as a `clust` object
+#' @param margin The margin to add
 #'
 #' @importFrom pheatmap pheatmap
+#' @importFrom ggraph ggraph geom_node_point geom_edge_elbow theme_graph
 #' @export
 plot_heatmap <- function(
   task,
@@ -61,8 +63,8 @@ plot_heatmap <- function(
   connections <- plot_connections(linearised$milestone_network, orientation = -1, margin=margin) + scale_x_continuous(expand=c(0, 0), limits=x_limits)
 
   dendrogram <- ggraph::ggraph(as.dendrogram(clust)) +
-    geom_node_point() +
-    geom_edge_elbow() +
+    ggraph::geom_node_point() +
+    ggraph::geom_edge_elbow() +
     scale_x_continuous(expand=c(0, 0)) +
     scale_y_reverse() +
     coord_flip() +

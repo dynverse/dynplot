@@ -2,7 +2,7 @@
 #'
 #' @import dplyr
 #' @import tidyr
-#' @importFrom stats as.dist hclust
+#' @importFrom stats as.dist hclust as.dendrogram dist runif
 #' @import methods
 #' @import tibble
 #' @import ggplot2

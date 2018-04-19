@@ -3,7 +3,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^scripts$
-^\.travis\.yml$
+^\.travis
 ^net\.rds$
 ^\.git$
 ^\.readme_files
+^README
