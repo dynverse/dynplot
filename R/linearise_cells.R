@@ -26,7 +26,7 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, one_ed
   milestone_network <- progressions %>%
     group_by(from, to) %>%
     summarise(length=n()) %>%
-    left_join(milestone_network %>% select(-length), c("from", "to")) %>%
+    right_join(milestone_network %>% select(-length), c("from", "to")) %>%
     ungroup()
 
   margin <- sum(milestone_network$length) * margin
