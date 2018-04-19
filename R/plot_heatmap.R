@@ -19,7 +19,7 @@ order_cells <- function(milestone_network, progressions) {
     mutate(cumpercentage=percentage*length + cumstart) %>%
     arrange(cumpercentage)
 
-  ordered_progression %>% select(cell_id, edge_id) %>% ungroup() %>%  mutate(position=seq_len(n()), edge_id=factor(edge_id))
+  ordered_progression %>% select(cell_id, edge_id) %>% ungroup() %>% mutate(position=seq_len(n()), edge_id=factor(edge_id))
 }
 
 #' Plot the task as a heatmap
@@ -29,7 +29,11 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @importFrom pheatmap pheatmap
 #' @export
-plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$counts))), method = "ward.D2"), margin=0.02) {
+plot_heatmap <- function(
+  task,
+  clust = hclust(as.dist(correlation_distance(t(task$counts))), method = "ward.D2"),
+  margin = 0.02
+) {
   linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
 
   # get gene order
