@@ -5,7 +5,7 @@
 \title{Linearise a trajectory}
 \usage{
 linearise_cells(milestone_network, progressions, margin = 0.05,
-  one_edge = FALSE)
+  one_edge = FALSE, equal_cell_width = FALSE)
 }
 \arguments{
 \item{milestone_network}{The milestone network}

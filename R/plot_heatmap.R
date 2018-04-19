@@ -27,16 +27,18 @@ order_cells <- function(milestone_network, progressions) {
 #' @param task The task
 #' @param clust The clustering of the genes as a `clust` object
 #'
-#' @importFrom pheatmap pheatmap
+#' @import tidygraph
+#' @import ggraph
+#'
 #' @export
-plot_heatmap <- function(task, clust=hclust(as.dist(correlation_distance(t(task$counts))), method = "ward.D2"), margin=0.02) {
+plot_heatmap <- function(task, genes_oi = rownames(task$counts), clust=hclust(as.dist(correlation_distance(t(task$counts[, genes_oi]))), method = "ward.D2"), margin=0.02) {
   linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
 
   # get gene order
-  gene_order <- colnames(task$counts)[clust$order]
+  gene_order <- colnames(task$counts[, genes_oi])[clust$order]
 
   # process counts
-  counts <- dynutils::scale_quantile(task$counts)
+  counts <- dynutils::scale_quantile(task$counts[, genes_oi])
   molten <- counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%

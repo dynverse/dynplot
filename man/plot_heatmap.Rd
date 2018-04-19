@@ -5,7 +5,8 @@
 \title{Plot the task as a heatmap}
 \usage{
 plot_heatmap(task,
-  clust = hclust(as.dist(correlation_distance(t(task$counts)))))
+  clust = hclust(as.dist(correlation_distance(t(task$counts))), method =
+  "ward.D2"), margin = 0.02)
 }
 \arguments{
 \item{task}{The task}
