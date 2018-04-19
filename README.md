@@ -1,6 +1,11 @@
-Common functionality for plotting trajectories.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+dynplot
+=======
 
-[![Build Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
+**dynplot** provides common functionality for plotting trajectories.
+
+[![Build
+Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
 [![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)
 
 Load in a toy dataset

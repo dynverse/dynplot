@@ -6,3 +6,4 @@
 ^\.travis\.yml$
 ^net\.rds$
 ^\.git$
+^\.readme_files
