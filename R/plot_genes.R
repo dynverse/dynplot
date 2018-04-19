@@ -1,13 +1,13 @@
 #' Plotting the genes
 #'
 #' @param task The task
-#' @param genes The genes
+#' @param genes_oi The genes of interest
 #' @param margin The margin to add
 #'
 #' @export
-plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(5, ncol(task$counts)))), margin=0.05) {
+plot_genes <- function(task, genes_oi=sample(colnames(task$counts), min(c(5, ncol(task$counts)))), margin=0.05) {
   counts <- task$counts %>% as.data.frame() %>%
-    select(one_of(genes)) %>%
+    select(one_of(genes_oi)) %>%
     tibble::rownames_to_column("cell_id") %>%
     gather("gene_id", "expression", -cell_id)
 
@@ -30,6 +30,6 @@ plot_genes <- function(task, genes=sample(colnames(task$counts), min(c(5, ncol(t
 
   connections_plot <- plot_connections(milestone_network, orientation = -1, margin=margin)
 
-  cowplot::plot_grid(plotlist=list(expression_plot, connections_plot), ncol=1, align = "v", axis="lr", rel_heights = c(length(genes), 1))
+  cowplot::plot_grid(plotlist=list(expression_plot, connections_plot), ncol=1, align = "v", axis="lr", rel_heights = c(length(genes_oi), 1))
 
 }

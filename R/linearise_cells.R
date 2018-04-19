@@ -4,7 +4,31 @@
 #' @param progressions The progressions
 #' @param margin The margin to add
 #' @param one_edge If TRUE, assigns each cell to one edge only
-linearise_cells <- function(milestone_network, progressions, margin=0.05, one_edge=FALSE) {
+#' @param equal_cell_width if TRUE, will give each cell equal width
+linearise_cells <- function(milestone_network, progressions, margin=0.05, one_edge=FALSE, equal_cell_width=FALSE) {
+  if(one_edge | equal_cell_width) {
+    progressions <- progressions %>%
+      group_by(cell_id) %>%
+      arrange(-percentage) %>%
+      filter(row_number() == 1) %>%
+      ungroup()
+  }
+
+  if (equal_cell_width) {
+    progressions <- progressions %>%
+      group_by(from, to) %>%
+      mutate(percentage2 = percentage + runif(n(), 0, 1e-6)) %>%
+      mutate(percentage2 = (rank(percentage2)-1)/n())
+  } else {
+    progressions$percentage2 <- progressions$percentage
+  }
+
+  milestone_network <- progressions %>%
+    group_by(from, to) %>%
+    summarise(length=n()) %>%
+    left_join(milestone_network %>% select(-length), c("from", "to")) %>%
+    ungroup()
+
   margin <- sum(milestone_network$length) * margin
 
   milestone_network <- milestone_network %>%
@@ -14,17 +38,9 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, one_ed
       edge_id = factor(seq_len(n()))
     )
 
-  if(one_edge) {
-    progressions <- progressions %>%
-      group_by(cell_id) %>%
-      arrange(-percentage) %>%
-      filter(row_number() == 1) %>%
-      ungroup()
-  }
-
   progressions <- progressions %>%
     left_join(milestone_network, by=c("from", "to")) %>%
-    mutate(cumpercentage = cumstart + percentage * (cumend-cumstart))
+    mutate(cumpercentage = cumstart + percentage2 * length)
 
   lst(milestone_network, progressions)
 }

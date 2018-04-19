@@ -4,13 +4,13 @@
 \alias{plot_genes}
 \title{Plotting the genes}
 \usage{
-plot_genes(task, genes = sample(colnames(task$counts), min(c(5,
+plot_genes(task, genes_oi = sample(colnames(task$counts), min(c(5,
   ncol(task$counts)))), margin = 0.05)
 }
 \arguments{
 \item{task}{The task}
 
-\item{genes}{The genes}
+\item{genes_oi}{The genes of interest}
 
 \item{margin}{The margin to add}
 }
