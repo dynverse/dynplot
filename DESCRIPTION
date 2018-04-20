@@ -41,6 +41,7 @@ Remotes:
   dynverse/dynwrap,
   dynverse/dyntoy
 Collate: 
+    'dimensionality_reduction.R'
     'is_colour_vector.R'
     'linearise_cells.R'
     'milestone_palette.R'
