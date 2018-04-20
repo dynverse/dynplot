@@ -31,7 +31,8 @@ Imports:
   testthat,
   tibble,
   tidyr,
-  tidygraph
+  tidygraph,
+  vipor
 Suggests:
   dyntoy,
   knitr,

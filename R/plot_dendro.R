@@ -1,16 +1,33 @@
 #' Plot a tree trajectory as a dendrogram
 #'
 #' @param task The trajectory
+#' @param color_cells How to color the cells, one of auto, none, grouping
+#' @param grouping_assigment Tibble containing the assignment of cells to groups of cells
+#' @param groups Tibble containing information of the cell groups
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
-#' @import igraph tidygraph ggraph
 #' @export
-plot_dendro <- function(task, grouping=NULL, groups=NULL) {
+plot_dendro <- function(task, color_cells = c("auto", "none", "grouping"), grouping_assigment=NULL, groups=NULL, diag_offset = 0.05) {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
     root <- task$root_milestone_id
   } else {
     task <- dynwrap::root_trajectory(task, start_milestone_id = task$milestone_ids[[1]])
     root <- task$root_milestone_id
+  }
+
+  # make sure every cell is on only one edge
+  task$progressions <- progressions_one_edge(task$progressions)
+
+  color_cells <- match.arg(color_cells)
+  if(color_cells == "auto") {
+    if(!is.null(grouping_assigment)) {
+      message("Coloring by grouping")
+      color_cells <- "grouping"
+    }
+  } else {
+    if(color_cells == "grouping") {
+      if(is.null(grouping_assigment)) {stop("Provide grouping_assignment")}
+    }
   }
 
   # TODO: stop if not tree
@@ -115,24 +132,39 @@ plot_dendro <- function(task, grouping=NULL, groups=NULL) {
     ) %>%
     mutate(y = y + vipor::offsetX(x, edge_id, method="quasirandom", width=0.2))
 
+  if (color_cells == "grouping") {
+    if (is.null(groups) | !("color" %in% names(groups))) {
+      groups <- tibble(group_id = unique(grouping_assigment$group_id)) %>% mutate(color = milestone_palette_list$auto(n()))
+    }
+    cell_positions$color <- grouping_assigment$group_id[match(cell_positions$cell_id, grouping_assigment$cell_id)]
+
+    color_scale <- scale_color_manual(color_cells, values=set_names(groups$color, groups$group_id))
+  } else {
+    cell_positions$color <- "1"
+    color_scale <- scale_color_manual(color_cells, values=c("1"="black"))
+  }
+
   # generate layout
   layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)
 
   # start plotting!
-  ggplot(layout) +
+  dendro <- ggplot(layout) +
     # the main edges
-    ggraph::geom_edge_link(aes(linetype = node1.node_type, edge_width = node1.node_type), colour="grey") +
+    ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour="grey") +
     # the arrows
     ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha=ifelse(node1.node_type == "milestone", 0, 1)), arrow=arrow(type="closed"), colour="grey") +
     # the node labels
     # ggraph::geom_node_label(aes(label=node_id)) +
     # the cells
-    geom_point(aes(x, y), data=cell_positions) +
+    geom_point(aes(x, y, color=color), data=cell_positions) +
+    color_scale +
 
     ggraph::theme_graph() +
     ggraph::scale_edge_alpha_identity() +
-    ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="solid"), guide="none") +
-    ggraph::scale_edge_width_manual(values=c("milestone"=1, "fake_milestone"=3), guide="none")
+    ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="dotted"), guide="none") +
+    ggraph::scale_edge_width_manual(values=c("milestone"=3, "fake_milestone"=1), guide="none")
+
+  dendro
 }
 
 

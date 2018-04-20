@@ -4,10 +4,17 @@
 \alias{plot_dendro}
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
-plot_dendro(task, grouping = NULL, groups = NULL)
+plot_dendro(task, color_cells = c("auto", "none", "grouping"),
+  grouping_assigment = NULL, groups = NULL, diag_offset = 0.05)
 }
 \arguments{
 \item{task}{The trajectory}
+
+\item{color_cells}{How to color the cells, one of auto, none, grouping}
+
+\item{grouping_assigment}{Tibble containing the assignment of cells to groups of cells}
+
+\item{groups}{Tibble containing information of the cell groups}
 
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
 }
