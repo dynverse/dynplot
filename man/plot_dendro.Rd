@@ -4,8 +4,9 @@
 \alias{plot_dendro}
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
-plot_dendro(task, color_cells = c("auto", "none", "grouping"),
-  grouping_assigment = NULL, groups = NULL, diag_offset = 0.05)
+plot_dendro(task, color_cells = c("auto", "none", "grouping", "gene"),
+  grouping_assigment = NULL, groups = NULL, diag_offset = 0.05,
+  gene_oi = NULL, expression_source = "expression")
 }
 \arguments{
 \item{task}{The trajectory}

@@ -46,6 +46,14 @@ In line plots
 
 ![](.readme_files/unnamed-chunk-6-1.png)
 
+In a dendrogram
+
+    plot_dendro(task, gene_oi = colnames(task$expression)[[10]])
+
+    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
+
+![](.readme_files/unnamed-chunk-7-1.png)
+
 Comparing trajectories
 ----------------------
 
@@ -55,4 +63,4 @@ Comparing trajectories
 
     plot_strip_connections(task, prediction)
 
-![](.readme_files/unnamed-chunk-7-1.png)
+![](.readme_files/unnamed-chunk-8-1.png)

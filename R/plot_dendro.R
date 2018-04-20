@@ -6,7 +6,7 @@
 #' @param groups Tibble containing information of the cell groups
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @export
-plot_dendro <- function(task, color_cells = c("auto", "none", "grouping"), grouping_assigment=NULL, groups=NULL, diag_offset = 0.05) {
+plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"), grouping_assigment=NULL, groups=NULL, diag_offset = 0.05, gene_oi = NULL, expression_source = "expression") {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
     root <- task$root_milestone_id
@@ -18,16 +18,22 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping"), group
   # make sure every cell is on only one edge
   task$progressions <- progressions_one_edge(task$progressions)
 
+  # check cell coloration
   color_cells <- match.arg(color_cells)
   if(color_cells == "auto") {
     if(!is.null(grouping_assigment)) {
       message("Coloring by grouping")
       color_cells <- "grouping"
+    } else if (!is.null(gene_oi)) {
+      message("Coloring by expression")
+      color_cells <- "gene"
     }
-  } else {
-    if(color_cells == "grouping") {
-      if(is.null(grouping_assigment)) {stop("Provide grouping_assignment")}
-    }
+  } else if(color_cells == "grouping") {
+    if(is.null(grouping_assigment)) {stop("Provide grouping_assignment")}
+  } else if (color_cells == "gene") {
+    if(is.null(gene_oi)) {stop("Provide gene_oi")}
+    if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
+    if(!gene_oi %in% colnames(task[[expression_source]])) {stop("Gene not found in expression_source")}
   }
 
   # TODO: stop if not tree
@@ -138,10 +144,14 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping"), group
     }
     cell_positions$color <- grouping_assigment$group_id[match(cell_positions$cell_id, grouping_assigment$cell_id)]
 
-    color_scale <- scale_color_manual(color_cells, values=set_names(groups$color, groups$group_id))
+    fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id))
+
+  } else if (color_cells == "gene") {
+    cell_positions$color <- task[[expression_source]][cell_positions$cell_id, gene_oi]
+    fill_scale <- scale_fill_distiller(palette = "RdYlBu")
   } else {
     cell_positions$color <- "1"
-    color_scale <- scale_color_manual(color_cells, values=c("1"="black"))
+    fill_scale <- scale_fill_manual(color_cells, values=c("1"="black"))
   }
 
   # generate layout
@@ -156,8 +166,8 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping"), group
     # the node labels
     # ggraph::geom_node_label(aes(label=node_id)) +
     # the cells
-    geom_point(aes(x, y, color=color), data=cell_positions) +
-    color_scale +
+    geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="black") +
+    fill_scale +
 
     ggraph::theme_graph() +
     ggraph::scale_edge_alpha_identity() +

@@ -3,7 +3,7 @@ title: "Plotting a toy datasets using dynplot"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
-    fig_width: 10
+    fig_width: 7
     fig_height: 5 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -49,6 +49,13 @@ In line plots
 ```{r}
 plot_genes(task)
 ```
+
+In a dendrogram
+```{r, fig.width=5, fig.height=5}
+plot_dendro(task, gene_oi = colnames(task$expression)[[10]])
+```
+
+
 
 ## Comparing trajectories
 ```{r}
