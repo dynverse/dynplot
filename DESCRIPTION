@@ -35,7 +35,15 @@ Imports:
 Suggests:
   dyntoy,
   knitr,
-  rmarkdown
+  rmarkdown,
+  fastICA,
+  lle,
+  MASS,
+  Rtsne,
+  SCORPIUS,
+  SIMLR,
+  smacof,
+  tsne
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
