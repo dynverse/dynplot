@@ -1,25 +1,10 @@
-library(dynutils)
-library(tidyverse)
-library(dynwrap)
-
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup()
-
-task <- extract_row_to_list(toy_tasks, 1)
-
-task <- root_trajectory(task, start_milestone_id = "M5")
-
-library(ggraph)
-library(tidygraph)
-
-milestone_network <- task$milestone_network %>% mutate(edge_id = seq_len(n()))
-
-milestone_graph <- milestone_network %>% as_tbl_graph()
-igraph::layout_as_tree(milestone_graph) %>% plot()
-
+#' Plot a tree trajectory as a dendrogram
+#'
 #' @param task The trajectory
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
+#' @import igraph tidygraph ggraph
 #' @export
-generate_dendro_data <- function(task, diag_offset = 0.1) {
+plot_dendro <- function(task, grouping=NULL, groups=NULL) {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
     root <- task$root_milestone_id
@@ -28,15 +13,19 @@ generate_dendro_data <- function(task, diag_offset = 0.1) {
     root <- task$root_milestone_id
   }
 
+  # TODO: stop if not tree
+
+  # convert to graph
   milestone_network <- task$milestone_network %>% mutate(edge_id = seq_len(n()))
   milestone_graph <- milestone_network %>% tidygraph::as_tbl_graph()
 
-  # leaf positions
+  # determine leaves & position the leaves evenly
   leaves <- setdiff(milestone_network$to, milestone_network$from)
   node_order <- milestone_graph %>% igraph::dfs(root) %>% .$order %>% names # use dfs to find order of final nodes
   leaves <- leaves[order(match(leaves, node_order))]
   leaves_y <- set_names(seq_along(leaves), leaves)
 
+  # get leaves under each node (to get y positions later)
   descendants <- map(task$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode="out", unreachable = F)$order))}) %>% set_names(task$milestone_ids)
 
   # calculate diag offset based on largest distances between root and leaf
@@ -66,6 +55,8 @@ generate_dendro_data <- function(task, diag_offset = 0.1) {
   }
 
   milestone_positions_to <- search(root)
+
+  # extract positions of fake milestones
   milestone_positions_from <- milestone_positions_to %>%
     filter(!is.na(parent_node_id)) %>%
     mutate(
@@ -74,11 +65,13 @@ generate_dendro_data <- function(task, diag_offset = 0.1) {
       node_id = paste0(parent_node_id, "-", node_id),
     )
 
+  # combine positions
   milestone_positions <- bind_rows(
     milestone_positions_to %>% mutate(node_type = "milestone"),
     milestone_positions_from %>% mutate(node_type = "fake_milestone")
   )
 
+  # now generate network between milestones
   milestone_tree_branches <- tibble(
     node_id_from = milestone_positions_from$node_id,
     node_id_to = milestone_positions_from$child_node_id,
@@ -103,8 +96,8 @@ generate_dendro_data <- function(task, diag_offset = 0.1) {
       "node_id_to"
     )
 
+  # create milestone tree graph
   milestone_tree <- tidygraph::tbl_graph(milestone_positions, milestone_tree_edges %>% mutate(from = match(node_id_from, milestone_positions$node_id), to = match(node_id_to, milestone_positions$node_id)))
-
 
   # put cells on tree
   progressions <- task$progressions %>%
@@ -122,23 +115,20 @@ generate_dendro_data <- function(task, diag_offset = 0.1) {
     ) %>%
     mutate(y = y + vipor::offsetX(x, edge_id, method="quasirandom", width=0.2))
 
-  lst(milestone_tree, milestone_positions, cell_positions)
-}
+  # generate layout
+  layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)
 
-plot_dendro <- function(task, grouping=NULL, groups=NULL) {
-  dendro_data <- generate_dendro_data(task)
-
-  filter_edges <- function(q = quo(is.na(x$edge_id))) {
-    function(x) {x <- get_edges()(x); x[!!q, ]}
-  }
-
-  layout <- ggraph::create_layout(dendro_data$milestone_tree, "manual", node.position = dendro_data$milestone_positions)
-
+  # start plotting!
   ggplot(layout) +
+    # the main edges
     ggraph::geom_edge_link(aes(linetype = node1.node_type, edge_width = node1.node_type), colour="grey") +
-    ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha=ifelse(node1.node_type == "milestone", 0, 1)), arrow=arrow(type="closed"), colour="grey") + # arrow
+    # the arrows
+    ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha=ifelse(node1.node_type == "milestone", 0, 1)), arrow=arrow(type="closed"), colour="grey") +
+    # the node labels
     # ggraph::geom_node_label(aes(label=node_id)) +
-    geom_point(aes(x, y), data=dendro_data$cell_positions) +
+    # the cells
+    geom_point(aes(x, y), data=cell_positions) +
+
     ggraph::theme_graph() +
     ggraph::scale_edge_alpha_identity() +
     ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="solid"), guide="none") +

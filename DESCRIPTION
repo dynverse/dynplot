@@ -59,6 +59,7 @@ Collate:
     'plot_default.R'
     'plot_combined.R'
     'plot_connections.R'
+    'plot_dendro.R'
     'plot_genes.R'
     'plot_heatmap.R'
     'plot_strip.R'
