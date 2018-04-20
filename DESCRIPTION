@@ -36,6 +36,7 @@ Suggests:
   dyntoy,
   knitr,
   rmarkdown,
+  diffusionMap,
   fastICA,
   lle,
   MASS,
