@@ -38,6 +38,9 @@ plot_connections(task$milestone_network)
 plot_connections(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
 ```
 
+## Plotting a grouping
+
+
 ## Plotting expression
 
 In a heatmap

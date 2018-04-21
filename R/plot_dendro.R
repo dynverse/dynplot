@@ -2,11 +2,11 @@
 #'
 #' @param task The trajectory
 #' @param color_cells How to color the cells, one of auto, none, grouping
-#' @param grouping_assigment Tibble containing the assignment of cells to groups of cells
+#' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @export
-plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"), grouping_assigment=NULL, groups=NULL, diag_offset = 0.05, gene_oi = NULL, expression_source = "expression") {
+plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"), grouping_assignment=NULL, groups=NULL, diag_offset = 0.05, gene_oi = NULL, expression_source = "expression") {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
     root <- task$root_milestone_id
@@ -21,7 +21,7 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
   # check cell coloration
   color_cells <- match.arg(color_cells)
   if(color_cells == "auto") {
-    if(!is.null(grouping_assigment)) {
+    if(!is.null(grouping_assignment)) {
       message("Coloring by grouping")
       color_cells <- "grouping"
     } else if (!is.null(gene_oi)) {
@@ -29,7 +29,7 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
       color_cells <- "gene"
     }
   } else if(color_cells == "grouping") {
-    if(is.null(grouping_assigment)) {stop("Provide grouping_assignment")}
+    if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
   } else if (color_cells == "gene") {
     if(is.null(gene_oi)) {stop("Provide gene_oi")}
     if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
@@ -140,9 +140,9 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
 
   if (color_cells == "grouping") {
     if (is.null(groups) | !("color" %in% names(groups))) {
-      groups <- tibble(group_id = unique(grouping_assigment$group_id)) %>% mutate(color = milestone_palette_list$auto(n()))
+      groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette_list$auto(n()))
     }
-    cell_positions$color <- grouping_assigment$group_id[match(cell_positions$cell_id, grouping_assigment$cell_id)]
+    cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
 
     fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id))
 
