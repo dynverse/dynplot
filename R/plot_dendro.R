@@ -151,7 +151,7 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
     fill_scale <- scale_fill_distiller(paste0(gene_oi, " ", expression_source), palette = "RdYlBu")
   } else {
     cell_positions$color <- "1"
-    fill_scale <- scale_fill_manual(color_cells, values=c("1"="black"))
+    fill_scale <- scale_fill_manual(color_cells, values=c("1"="black"), guide="none")
   }
 
   # generate layout
@@ -172,7 +172,9 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
     ggraph::theme_graph() +
     ggraph::scale_edge_alpha_identity() +
     ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="dotted"), guide="none") +
-    ggraph::scale_edge_width_manual(values=c("milestone"=3, "fake_milestone"=1), guide="none")
+    ggraph::scale_edge_width_manual(values=c("milestone"=3, "fake_milestone"=1), guide="none") +
+
+    theme(legend.position="bottom")
 
   dendro
 }
