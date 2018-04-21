@@ -148,7 +148,7 @@ plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"
 
   } else if (color_cells == "gene") {
     cell_positions$color <- task[[expression_source]][cell_positions$cell_id, gene_oi]
-    fill_scale <- scale_fill_distiller(palette = "RdYlBu")
+    fill_scale <- scale_fill_distiller(paste0(gene_oi, " ", expression_source), palette = "RdYlBu")
   } else {
     cell_positions$color <- "1"
     fill_scale <- scale_fill_manual(color_cells, values=c("1"="black"))
