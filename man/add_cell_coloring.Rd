@@ -5,8 +5,10 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
-  "positions", "grouping", "gene"), task, grouping_assignment = NULL,
-  groups = NULL, gene_oi = NULL, expression_source = "expression")
+  "positions", "grouping", "gene", "milestone"), task,
+  grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
+  expression_source = "expression", color_milestones = c("auto", "given"),
+  milestones = NULL)
 }
 \arguments{
 \item{color_cells}{How to color the cells}
@@ -18,6 +20,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 \item{gene_oi}{Gene to plot expression}
 
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
+
+\item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 }
 \description{
 Add coloring

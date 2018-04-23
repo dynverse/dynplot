@@ -4,19 +4,21 @@
 \alias{plot_onedim}
 \title{Plot onedim}
 \usage{
-plot_onedim(task, milestone_network = task$milestone_network,
-  color_cells = c("auto", "invisible", "positions", "grouping", "gene"),
-  grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
-  expression_source = "expression", orientation = 1, margin = 0.05,
+plot_onedim(task, color_cells = c("auto", "invisible", "positions",
+  "grouping", "gene", "milestone"),
+  milestone_network = task$milestone_network, grouping_assignment = NULL,
+  groups = NULL, gene_oi = NULL, expression_source = "expression",
+  color_milestones = c("auto", "given"), milestones = NULL,
+  orientation = 1, margin = 0.05,
   plotdata = make_connection_plotdata(milestone_network, orientation =
   orientation, margin = margin))
 }
 \arguments{
 \item{task}{A trajectory or milestone_network}
 
-\item{milestone_network}{Optional, the milestone network}
-
 \item{color_cells}{How to color the cells}
+
+\item{milestone_network}{Optional, the milestone network}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 
@@ -25,6 +27,8 @@ plot_onedim(task, milestone_network = task$milestone_network,
 \item{gene_oi}{Gene to plot expression}
 
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
+
+\item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
 \item{orientation}{The orientation of the onedim between milestones}
 

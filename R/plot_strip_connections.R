@@ -26,8 +26,8 @@ plot_strip_onedim <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_s
   onedim_plotdata1 <- make_connection_plotdata(task1$milestone_network, margin=margin)
   onedim_plotdata2 <- make_connection_plotdata(task2$milestone_network, margin=margin)
 
-  onedim_plot1 <- plot_onedim(task1$milestone_network, orientation = -1, plotdata=onedim_plotdata1)
-  onedim_plot2 <- plot_onedim(task2$milestone_network, orientation = -1, plotdata=onedim_plotdata2) + coord_flip()
+  onedim_plot1 <- plot_onedim(task1, orientation = -1, plotdata=onedim_plotdata1)
+  onedim_plot2 <- plot_onedim(task2, orientation = -1, plotdata=onedim_plotdata2) + coord_flip()
 
   size1 <- empty_max(onedim_plotdata1$onedim$level) + 1
   size2 <- empty_max(onedim_plotdata2$onedim$level) + 1
