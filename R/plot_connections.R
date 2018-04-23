@@ -90,7 +90,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #'
 #' @importFrom ggrepel geom_label_repel
 plot_onedim <- function(
-  task=NULL,
+  task = NULL,
   color_cells,
   milestone_network = task$milestone_network,
   grouping_assignment,
@@ -100,9 +100,9 @@ plot_onedim <- function(
   expression_source,
   color_milestones,
   milestones,
-  orientation=1,
-  margin=0.05,
-  plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)
+  orientation = 1,
+  margin = 0.05,
+  plotdata = make_connection_plotdata(milestone_network, orientation = orientation, margin = margin)
 ) {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
