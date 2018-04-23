@@ -23,11 +23,11 @@ In 2D
 
 In 1D
 
-    plot_onedim(task$milestone_network)
+    plot_onedim(task)
 
 ![](.readme_files/unnamed-chunk-4-1.png)
 
-    plot_onedim(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
+    plot_onedim(task, cell_progressions = task$progressions %>% sample_n(10))
 
 ![](.readme_files/unnamed-chunk-4-2.png)
 
