@@ -28,14 +28,12 @@ task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_t
 
 In 2D
 ```{r}
-plot_default(task)
+# plot_default(task)
 ```
 
 In 1D
 ```{r}
-plot_connections(task$milestone_network)
-
-plot_connections(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
+plot_onedim(task)
 ```
 
 ## Plotting a grouping
@@ -66,6 +64,6 @@ pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
 prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
 
-plot_strip_connections(task, prediction)
+plot_strip_onedim(task, prediction)
 ```
 
