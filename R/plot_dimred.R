@@ -90,6 +90,7 @@ plot_dimred <- function(
   plot <- ggplot(cell_positions, aes(Comp1, Comp2)) +
     geom_point(aes(fill=color), shape=21, color="#33333388") +
     theme_graph() +
+    theme(legend.position="bottom") +
     fill_scale
 
   if (plot_milestone_network) {

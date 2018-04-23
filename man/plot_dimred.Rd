@@ -10,7 +10,8 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   milestones = NULL, pseudotime = NULL, expression_source = "expression",
   cell_positions,
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
-  dimred_method = dimred_pca)
+  plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)
+  > 500, dimred_pca, dimred_mds))
 }
 \arguments{
 \item{color_cells}{How to color the cells}
