@@ -14,6 +14,8 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   > 500, dimred_pca, dimred_mds))
 }
 \arguments{
+\item{task}{The task}
+
 \item{color_cells}{How to color the cells}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
@@ -29,6 +31,12 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 \item{pseudotime}{The pseudotime}
 
 \item{expression_source}{Source of the expression}
+
+\item{plot_milestone_network}{Whether to plot the milestone network}
+
+\item{plot_milestone_labels}{Whether to overlay the milestone labels over the network}
+
+\item{dimred_method}{The dimred method}
 }
 \description{
 Plot trajectory on dimensionality reduction

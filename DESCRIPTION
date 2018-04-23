@@ -16,6 +16,7 @@ Imports:
   dynutils,
   dynwrap,
   GA,
+  ggbeeswarm,
   ggraph,
   ggplot2,
   ggrepel,
@@ -33,7 +34,8 @@ Imports:
   tibble,
   tidyr,
   tidygraph,
-  vipor
+  vipor,
+  viridis
 Suggests:
   dyntoy,
   knitr,

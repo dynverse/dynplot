@@ -1,5 +1,7 @@
 #' Add coloring
+#' @param cell_position The positions of the cells
 #' @param color_cells How to color the cells
+#' @param task The task
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
 #' @param gene_oi Gene to plot expression
