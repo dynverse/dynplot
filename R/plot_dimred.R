@@ -3,6 +3,9 @@
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @param expression_source Source of the expression
+#' @param plot_milestone_network Whether to plot the milestone network
+#' @param plot_milestone_labels Whether to overlay the milestone labels over the network
+#' @param dimred_method The dimred method
 #'
 #' @export
 plot_dimred <- function(

@@ -106,3 +106,6 @@ plot_graph <- function(
 
   # process_dynplot(g, object$id)
 }
+
+#' @export
+plot_default <- plot_graph

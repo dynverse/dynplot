@@ -14,6 +14,8 @@ plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
   "none"), plot_milestones = FALSE)
 }
 \arguments{
+\item{task}{The task}
+
 \item{color_cells}{How to color the cells}
 
 \item{color_milestones}{How to color the cells}

@@ -13,6 +13,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 \arguments{
 \item{color_cells}{How to color the cells}
 
+\item{task}{The task}
+
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 
 \item{groups}{Tibble containing information of the cell groups}
@@ -26,6 +28,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{cell_position}{The positions of the cells}
 }
 \description{
 Add coloring
