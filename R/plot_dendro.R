@@ -4,9 +4,11 @@
 #' @param color_cells How to color the cells, one of auto, none, grouping
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
+#' @param gene_oi Gene to plot expression
+#' @param expression_source Source of the gene expression, defaults to `expression`
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @export
-plot_dendro <- function(task, color_cells = c("auto", "none", "grouping", "gene"), grouping_assignment=NULL, groups=NULL, diag_offset = 0.05, gene_oi = NULL, expression_source = "expression") {
+plot_dendro <- function(task, color_cells = c("auto", "invisible", "black", "positions", "grouping", "gene"), grouping_assignment=NULL, groups=NULL, gene_oi = NULL, expression_source = "expression", diag_offset = 0.05) {
   # root if necessary
   if ("root_milestone_id" %in% names(task)) {
     root <- task$root_milestone_id
