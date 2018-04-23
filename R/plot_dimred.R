@@ -89,13 +89,13 @@ plot_dimred <- function(
 
   plot <- ggplot(cell_positions, aes(Comp1, Comp2)) +
     geom_point(aes(fill=color), shape=21, color="#33333388") +
-    theme_graph()
+    theme_graph() +
+    fill_scale
 
   if (plot_milestone_network) {
     plot <- plot +
     ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_to, yend=Comp2_to), data=milestone_network) +
-      ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_mid, yend=Comp2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm"))) +
-      fill_scale
+      ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_mid, yend=Comp2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
 
     if (plot_milestone_labels) {
       if(color_cells == "milestone") {
