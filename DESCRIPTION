@@ -23,6 +23,7 @@ Imports:
   igraph,
   magrittr,
   methods,
+  patchwork,
   purrr,
   rje,
   shades,
@@ -49,8 +50,10 @@ Suggests:
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
-  dynverse/dyntoy
+  dynverse/dyntoy,
+  thomasp85/patchwork
 Collate: 
+    'add_cell_coloring.R'
     'dimensionality_reduction.R'
     'is_colour_vector.R'
     'linearise_cells.R'
@@ -68,4 +71,5 @@ Collate:
     'plot_trajectory_dimred.R'
     'process_dynplot.R'
     'theme_clean.R'
+    'zzz.R'
 VignetteBuilder: knitr
