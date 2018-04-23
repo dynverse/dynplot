@@ -17,8 +17,10 @@ plot_dimred <- function(
   expression_source = "expression",
   cell_positions=NULL,
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
-  dimred_method = dimred_pca
+  dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)
 ) {
+  color_cells <- match.arg(color_cells)
+
   cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>%
     as_tibble() %>%
     mutate(cell_id = rownames(task[[expression_source]]))
