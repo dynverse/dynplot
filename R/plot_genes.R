@@ -30,7 +30,7 @@ plot_genes <- function(task, genes_oi=sample(colnames(task$counts), min(c(5, nco
     scale_x_continuous(NULL, breaks=NULL) +
     theme(legend.position="none", panel.border = element_rect(color = "black", size=0.5, linetype="solid"), panel.background = element_blank())
 
-  onedim_plot <- plot_onedim(milestone_network, orientation = -1, margin=margin)
+  onedim_plot <- plot_onedim(task, orientation = -1, margin=margin)
 
   cowplot::plot_grid(plotlist=list(expression_plot, onedim_plot), ncol=1, align = "v", axis="lr", rel_heights = c(length(genes_oi), 1))
 

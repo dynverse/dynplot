@@ -91,12 +91,14 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @importFrom ggrepel geom_label_repel
 plot_onedim <- function(
   task=NULL,
-  milestone_network = task$milestone_network,
   color_cells,
+  milestone_network = task$milestone_network,
   grouping_assignment,
   groups,
   gene_oi,
   expression_source,
+  color_milestones,
+  milestones,
   orientation=1,
   margin=0.05,
   plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)

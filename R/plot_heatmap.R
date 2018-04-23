@@ -40,6 +40,7 @@ plot_heatmap <- function(
   clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][, genes_oi]))), method = "ward.D2"),
   margin = 0.02,
   color_cells = NULL,
+  milestones = tibble(milestone_id = task$milestone_ids),
   grouping_assignment = NULL,
   groups = NULL
 ) {
