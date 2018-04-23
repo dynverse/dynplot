@@ -17,6 +17,7 @@ plot_dimred <- function(
   expression_source = "expression",
   cell_positions=NULL,
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
+  plot_milestone_labels = TRUE,
   dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)
 ) {
   color_cells <- match.arg(color_cells)
@@ -88,7 +89,7 @@ plot_dimred <- function(
 
   plot <- ggplot(cell_positions, aes(Comp1, Comp2)) +
     geom_point(aes(fill=color), shape=21, color="#33333388") +
-    theme_clean()
+    theme_graph()
 
   if (plot_milestone_network) {
     plot <- plot +
@@ -96,11 +97,20 @@ plot_dimred <- function(
       ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_mid, yend=Comp2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm"))) +
       fill_scale
 
-    if(color_cells == "milestone") {
-      plot <- plot + geom_label(aes(label=milestone_id, fill=color), data=milestone_positions)
+    if (plot_milestone_labels) {
+      if(color_cells == "milestone") {
+        plot <- plot + geom_label(aes(label=milestone_id, fill=color), data=milestone_positions)
+      } else {
+        plot <- plot + geom_label(aes(label=milestone_id), data=milestone_positions)
+      }
     } else {
-      plot <- plot + geom_label(aes(label=milestone_id), data=milestone_positions)
+      if(color_cells == "milestone") {
+        plot <- plot +
+          geom_point(color="black", data=milestone_positions, size=6) +
+          geom_point(aes(fill=color), data=milestone_positions, size=4, shape=21, color="#00000000")
+      }
     }
+
   }
 
   plot

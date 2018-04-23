@@ -139,7 +139,7 @@ plot_onedim <- function(
     # the cells
     geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
     fill_scale +
-    theme_clean() +
+    theme_graph() +
     theme(legend.position="bottom")
 
   # if (!is.null(cell_progressions)) {

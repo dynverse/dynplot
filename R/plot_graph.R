@@ -85,7 +85,7 @@ plot_graph <- function(
       shape=21
     ) +
     fill_scale +
-    theme_clean() +
+    theme_graph() +
     theme(legend.position="bottom")
     # ggrepel::geom_label_repel(
     #   aes(Comp1, Comp2, label = milestone_id),

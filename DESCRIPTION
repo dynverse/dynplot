@@ -69,8 +69,10 @@ Collate:
     'plot_strip.R'
     'plot_strip_connections.R'
     'plot_trajectory_dimred.R'
+    'plot_dimred.R'
+    'plot_grouped.R'
+    'dummy_proofing.R'
     'process_dynplot.R'
     'theme_clean.R'
-    'plot_dimred.R'
     'zzz.R'
 VignetteBuilder: knitr

@@ -85,7 +85,7 @@ plot_heatmap <- function(
     scale_x_continuous(limits=c(-0.5, length(gene_order)-0.5), expand=c(0, 0)) +
     scale_y_reverse() +
     coord_flip() +
-    theme_clean() +
+    theme_graph() +
     theme(plot.margin=margin())
 
   patchwork::wrap_plots(

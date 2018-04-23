@@ -39,9 +39,7 @@ add_cell_coloring <- function(
   } else if(color_cells == "grouping") {
     if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
   } else if (color_cells == "gene") {
-    if(is.null(gene_oi)) {stop("Provide gene_oi")}
-    if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
-    if(!gene_oi %in% colnames(task[[expression_source]])) {stop("Gene not found in expression_source")}
+    check_gene(task, gene_oi, expression_source)
   } else if (color_cells == "milestone") {
     if(is.null(milestones) | !"color" %in% names(milestones)) {
       milestones <- tibble(milestone_id = task$milestone_ids) %>%
@@ -49,15 +47,8 @@ add_cell_coloring <- function(
     }
     # TODO more checks
   } else if (color_cells == "pseudotime") {
-    if(is.null(pseudotime)) {
-      if("pseudotime" %in% names(task)) {
-        cell_positions$pseudotime <- task$pseudotime[cell_positions$cell_id]
-      } else {
-        message("Pseudotime not provided, will calculate pseudotime from root milestone")
-        cell_positions$pseudotime <- dynwrap:::calculate_pseudotime(task)[cell_positions$cell_id]
-      }
-
-    }
+    task <- check_pseudotime(task, pseudotime)
+    cell_positions$pseudotime <- task$pseudotime[cell_positions$cell_id]
   }
 
   # now create the actual coloring
