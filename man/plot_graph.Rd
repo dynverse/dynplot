@@ -6,11 +6,11 @@
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
 plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
-  "gene", "milestone"), color_milestones = c("auto", "given"),
+  "gene", "milestone", "pseudotime"), color_milestones = c("auto", "given"),
   grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
-  expression_source = "expression", milestones = NULL,
+  pseudotime = NULL, expression_source = "expression", milestones = NULL,
   transition_size = 3, cell_size = 2, milestone_size = 5,
-  arrow_length = grid::unit(1, "cm"), plot_label = c("leaves", "all",
+  arrow_length = grid::unit(0.6, "cm"), plot_label = c("leaves", "all",
   "none"), plot_milestones = FALSE)
 }
 \arguments{
@@ -23,6 +23,8 @@ plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
 \item{groups}{Tibble containing information of the cell groups}
 
 \item{gene_oi}{Gene to plot expression}
+
+\item{pseudotime}{The pseudotime}
 
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
 

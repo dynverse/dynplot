@@ -5,10 +5,10 @@
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
 plot_dendro(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "gene", "milestone"), grouping_assignment = NULL,
+  "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, expression_source = "expression",
-  color_milestones = c("auto", "given"), milestones = NULL,
-  diag_offset = 0.05)
+  pseudotime = NULL, color_milestones = c("auto", "given"),
+  milestones = NULL, diag_offset = 0.05)
 }
 \arguments{
 \item{task}{The trajectory}
@@ -22,6 +22,10 @@ plot_dendro(task, color_cells = c("auto", "invisible", "positions",
 \item{gene_oi}{Gene to plot expression}
 
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
+
+\item{pseudotime}{The pseudotime}
+
+\item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 

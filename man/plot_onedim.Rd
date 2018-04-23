@@ -5,11 +5,11 @@
 \title{Plot onedim}
 \usage{
 plot_onedim(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "gene", "milestone"),
+  "grouping", "gene", "milestone", "pseudotime"),
   milestone_network = task$milestone_network, grouping_assignment = NULL,
-  groups = NULL, gene_oi = NULL, expression_source = "expression",
-  color_milestones = c("auto", "given"), milestones = NULL,
-  orientation = 1, margin = 0.05,
+  groups = NULL, gene_oi = NULL, pseudotime = NULL,
+  expression_source = "expression", color_milestones = c("auto", "given"),
+  milestones = NULL, orientation = 1, margin = 0.05,
   plotdata = make_connection_plotdata(milestone_network, orientation =
   orientation, margin = margin))
 }
@@ -26,7 +26,11 @@ plot_onedim(task, color_cells = c("auto", "invisible", "positions",
 
 \item{gene_oi}{Gene to plot expression}
 
+\item{pseudotime}{The pseudotime}
+
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
+
+\item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
