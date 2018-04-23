@@ -24,12 +24,13 @@ plot_graph <- function(
   grouping_assignment,
   groups,
   gene_oi,
+  pseudotime,
   expression_source,
   milestones,
   transition_size = 3,
   cell_size = 2,
   milestone_size = 5,
-  arrow_length = grid::unit(1, "cm"),
+  arrow_length = grid::unit(0.6, "cm"),
   plot_label = c("leaves", "all", "none"),
   plot_milestones = FALSE
 ) {
@@ -69,13 +70,13 @@ plot_graph <- function(
     geom_segment(
       aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
       dimred_task$space_lines %>% filter(directed),
-      size = transition_size, colour = "#444444",
+      size = transition_size, colour = "grey",
       arrow = arrow(length = arrow_length, type = "open")
     ) +
     geom_segment(
       aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
       dimred_task$space_lines,
-      size = transition_size, colour = "#444444"
+      size = transition_size, colour = "grey"
     ) +
     geom_point(
       aes(Comp1, Comp2, fill = color),

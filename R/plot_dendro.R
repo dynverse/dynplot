@@ -11,6 +11,7 @@ plot_dendro <- function(
   groups,
   gene_oi,
   expression_source,
+  pseudotime,
   color_milestones,
   milestones,
   diag_offset = 0.05

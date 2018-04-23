@@ -96,6 +96,7 @@ plot_onedim <- function(
   grouping_assignment,
   groups,
   gene_oi,
+  pseudotime,
   expression_source,
   color_milestones,
   milestones,
