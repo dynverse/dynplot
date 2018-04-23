@@ -32,6 +32,8 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 
 \item{expression_source}{Source of the expression}
 
+\item{cell_positions}{The positions of the cells}
+
 \item{plot_milestone_network}{Whether to plot the milestone network}
 
 \item{plot_milestone_labels}{Whether to overlay the milestone labels over the network}

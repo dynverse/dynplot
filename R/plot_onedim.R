@@ -89,74 +89,77 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @inheritParams add_cell_coloring
 #'
 #' @importFrom ggrepel geom_label_repel
-plot_onedim <- function(
-  task=NULL,
-  color_cells,
-  milestone_network = task$milestone_network,
-  grouping_assignment,
-  groups,
-  gene_oi,
-  pseudotime,
-  expression_source,
-  color_milestones,
-  milestones,
-  orientation=1,
-  margin=0.05,
-  plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)
-) {
-  # root if necessary
-  if ("root_milestone_id" %in% names(task)) {
-    root <- task$root_milestone_id
-  } else {
-    task <- dynwrap::root_trajectory(task, start_milestone_id = task$milestone_ids[[1]])
-    root <- task$root_milestone_id
-  }
+plot_onedim <- dynutils::inherit_default_params(
+  add_cell_coloring
+  , function(
+    task=NULL,
+    color_cells,
+    milestone_network = task$milestone_network,
+    grouping_assignment,
+    groups,
+    gene_oi,
+    pseudotime,
+    expression_source,
+    color_milestones,
+    milestones,
+    orientation=1,
+    margin=0.05,
+    plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)
+  ) {
+    # root if necessary
+    if ("root_milestone_id" %in% names(task)) {
+      root <- task$root_milestone_id
+    } else {
+      task <- dynwrap::root_trajectory(task, start_milestone_id = task$milestone_ids[[1]])
+      root <- task$root_milestone_id
+    }
 
-  # make sure every cell is on only one edge
-  task$progressions <- progressions_one_edge(task$progressions)
+    # make sure every cell is on only one edge
+    task$progressions <- progressions_one_edge(task$progressions)
 
-  # cell positions
-  cell_positions <- task$progressions %>%
-    left_join(plotdata$states, by=c("from", "to")) %>%
-    mutate(x = from_pos + (to_pos - from_pos) * percentage, y=0) %>%
-    mutate(y = y + vipor::offsetX(x, edge_id, method="quasirandom", width=0.2))
+    # cell positions
+    cell_positions <- task$progressions %>%
+      left_join(plotdata$states, by=c("from", "to")) %>%
+      mutate(x = from_pos + (to_pos - from_pos) * percentage, y=0) %>%
+      mutate(y = y + vipor::offsetX(x, edge_id, method="quasirandom", width=0.2))
 
-  # add cell coloring
-  cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
-  cell_positions <- cell_coloring_output$cell_positions
-  fill_scale <- cell_coloring_output$fill_scale
+    # add cell coloring
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+    cell_positions <- cell_coloring_output$cell_positions
+    fill_scale <- cell_coloring_output$fill_scale
 
-  # get x limit
-  max_limit <- if(nrow(plotdata$onedim)) {max(plotdata$onedim$level)} else {0}
+    # get x limit
+    max_limit <- if(nrow(plotdata$onedim)) {max(plotdata$onedim$level)} else {0}
 
-  plot <- ggplot() +
-    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
-    geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$onedim, linetype="dotted", color="#444444") +
-    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, color="black") +
-    geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
-    geom_point(aes(from_pos, level), data=plotdata$states %>% filter(from == first(from)), color="black") +
-    geom_point(aes(to_pos, level), data=plotdata$states %>% filter(!(to %in% from)), shape=15, color="black") +
-    # the cells
-    geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
-    fill_scale +
-    theme_graph() +
-    theme(legend.position="bottom")
+    plot <- ggplot() +
+      geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
+      geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$onedim, linetype="dotted", color="#444444") +
+      geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, color="black") +
+      geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
+      geom_point(aes(from_pos, level), data=plotdata$states %>% filter(from == first(from)), color="black") +
+      geom_point(aes(to_pos, level), data=plotdata$states %>% filter(!(to %in% from)), shape=15, color="black") +
+      # the cells
+      geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
+      fill_scale +
+      theme_graph() +
+      theme(legend.position="bottom")
 
-  # if (!is.null(cell_progressions)) {
-  #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
-  #   min_limit <- -1
-  # } else {
+    # if (!is.null(cell_progressions)) {
+    #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
+    #   min_limit <- -1
+    # } else {
     min_limit <- -0.2
-  # }
+    # }
 
-  if(orientation == -1) {
-    plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, min_limit))
-  } else {
-    plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(min_limit, max_limit+0.5))
+    if(orientation == -1) {
+      plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, min_limit))
+    } else {
+      plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(min_limit, max_limit+0.5))
+    }
+
+    plot
   }
-
-  plot
-}
+)
 
 add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, onedim, edge_id, margin) {
   max_bound <- max(connection_from_pos, connection_to_pos)
