@@ -27,16 +27,21 @@ order_cells <- function(milestone_network, progressions) {
 #' @param task The task
 #' @param genes_oi Genes to plot
 #' @param clust The clustering of the genes as a `clust` object
-#' @param margin The margin to add
+#'
+#' @inheritParams plot_onedim
 #'
 #' @import tidygraph
 #' @import ggraph
 #' @export
 plot_heatmap <- function(
   task,
-  genes_oi = colnames(task$counts)[1:20],
-  clust = hclust(as.dist(correlation_distance(t(task$counts[, genes_oi]))), method = "ward.D2"),
-  margin = 0.02
+  expression_source = "expression",
+  genes_oi = apply(task[[expression_source]], 2, sd) %>% sort() %>% names() %>% tail(20),
+  clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][, genes_oi]))), method = "ward.D2"),
+  margin = 0.02,
+  color_cells = NULL,
+  grouping_assignment = NULL,
+  groups = NULL
 ) {
   linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
 
@@ -44,7 +49,7 @@ plot_heatmap <- function(
   gene_order <- colnames(task$counts[, genes_oi])[clust$order]
 
   # process counts
-  counts <- dynutils::scale_quantile(task$counts[, genes_oi])
+  counts <- dynutils::scale_quantile(task[[expression_source]][, genes_oi])
   molten <- counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%
@@ -61,13 +66,20 @@ plot_heatmap <- function(
     scale_color_distiller(palette = "RdBu") +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
     scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left", limits=y_limits) +
-    cowplot::theme_cowplot() +
-    theme(legend.position="none")
+    theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
 
-  connections <- plot_connections(linearised$milestone_network, orientation = -1, margin=margin) + scale_x_continuous(expand=c(0, 0), limits=x_limits)
+  onedim <- plot_onedim(
+    task,
+    milestone_network=linearised$milestone_network,
+    orientation = -1,
+    margin=margin,
+    color_cells=color_cells,
+    grouping_assignment=grouping_assignment,
+    groups=groups
+  ) + scale_x_continuous(expand=c(0, 0), limits=x_limits) +
+  theme(plot.margin=margin())
 
-  dendrogram <- ggraph::ggraph(as.dendrogram(clust)) +
-    ggraph::geom_node_point() +
+  dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
     scale_x_continuous(limits=c(-0.5, length(gene_order)-0.5), expand=c(0, 0)) +
     scale_y_reverse() +
@@ -75,16 +87,15 @@ plot_heatmap <- function(
     ggraph::theme_graph() +
     theme(plot.margin=margin())
 
-
-  cowplot::plot_grid(
+  patchwork::wrap_plots(
     dendrogram,
     heatmap,
-    ggplot() + theme_void(),
-    connections,
-    ncol=2,
-    align="hv",
-    axis="lrtb",
-    rel_heights = c(0.8, 0.2),
-    rel_widths = c(0.2, 0.8)
+    patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    onedim,
+    ncol = 2,
+    widths = c(2, 10),
+    heights=c(10, 2)
   )
 }
+
+

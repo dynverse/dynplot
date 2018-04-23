@@ -1,7 +1,7 @@
 #' Make connection plotdata
 #'
 #' @param milestone_network The milestone network
-#' @param orientation The orientation of the connections between milestones
+#' @param orientation The orientation of the onedim between milestones
 #' @param margin Relative distance between milestones
 #'
 #' @importFrom dynutils extract_row_to_list
@@ -12,7 +12,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
   margin <- sum(milestone_network$length) * margin
 
-  # these four objects will remember the from and to positions and levels for every milestone, to be used for connections
+  # these four objects will remember the from and to positions and levels for every milestone, to be used for onedim
   milestone_from_poss <- map(allmilestones, ~list()) %>% set_names(allmilestones)
   milestone_to_poss <- map(allmilestones, ~list()) %>% set_names(allmilestones)
 
@@ -20,7 +20,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
   milestone_to_levels <- map(allmilestones, ~list()) %>% set_names(allmilestones)
 
   states <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from=character(), to=character())
-  connections <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from_level=integer(), to_level=integer())
+  onedim <- tibble(from_pos=numeric(), to_pos=numeric(),  level=integer(), edge_id=integer(), from_level=integer(), to_level=integer())
 
   last_edge_to_pos <- 0
 
@@ -36,7 +36,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
     states <- states %>% add_row(from_pos=edge_from_pos, to_pos=edge_to_pos, level=0, edge_id=edge_id, from=edge$from, to=edge$to)
 
-    ## CONNECTIONS EDGE(S) -----------------------
+    ## onedim EDGE(S) -----------------------
     # add positions of these milestones
     milestone_from_poss[[edge$from]] <- c(milestone_from_poss[[edge$from]], edge_from_pos)
     milestone_from_levels[[edge$from]] <- c(milestone_from_levels[[edge$from]], level)
@@ -46,12 +46,12 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
     ## CONNECTION FROM FROM
     for (i in seq_along(milestone_to_poss[[edge$from]])) {
-      connections <- add_connection(
+      onedim <- add_connection(
         connection_from_pos = milestone_to_poss[[edge$from]][[i]],
         connection_to_pos = edge_from_pos,
         connection_from_level = milestone_to_levels[[edge$from]][[i]],
         connection_to_level = level,
-        connections = connections,
+        onedim = onedim,
         edge_id = edge_id,
         margin = margin
       )
@@ -59,12 +59,12 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
     ## CONNECTION FROM TO
     for (i in seq_along(milestone_from_poss[[edge$to]])) {
-      connections <- add_connection(
+      onedim <- add_connection(
         connection_from_pos = edge_to_pos,
         connection_to_pos = milestone_from_poss[[edge$to]][[i]],
         connection_from_level = level,
         connection_to_level = milestone_from_levels[[edge$to]][[i]],
-        connections = connections,
+        onedim = onedim,
         edge_id = edge_id,
         margin = margin
       )
@@ -73,12 +73,12 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 
   all_edge_ids <- states$edge_id
   states$edge_id <- factor(states$edge_id, levels=all_edge_ids)
-  connections$edge_id <- factor(connections$edge_id, levels=all_edge_ids)
+  onedim$edge_id <- factor(onedim$edge_id, levels=all_edge_ids)
 
-  tibble::lst(states, connections)
+  tibble::lst(states, onedim)
 }
 
-#' Plot connections
+#' Plot onedim
 #'
 #' @param task A trajectory or milestone_network
 #' @param milestone_network Optional, the milestone network
@@ -89,7 +89,7 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #' @inheritParams add_cell_coloring
 #'
 #' @importFrom ggrepel geom_label_repel
-plot_connections <- function(
+plot_onedim <- function(
   task=NULL,
   milestone_network = task$milestone_network,
   color_cells,
@@ -124,13 +124,13 @@ plot_connections <- function(
   fill_scale <- cell_coloring_output$fill_scale
 
   # get x limit
-  max_limit <- if(nrow(plotdata$connections)) {max(plotdata$connections$level)} else {0}
+  max_limit <- if(nrow(plotdata$onedim)) {max(plotdata$onedim$level)} else {0}
 
   plot <- ggplot() +
-    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$connections, linetype="dotted", color="#444444") +
-    geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$connections, linetype="dotted", color="#444444") +
+    geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
+    geom_segment(aes(to_pos, level, xend=to_pos+0.0001, yend=to_level), data=plotdata$onedim, linetype="dotted", color="#444444") +
     geom_segment(aes(from_pos, level, xend=to_pos, yend=level), data=plotdata$states, color="black") +
-    geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$connections, linetype="dotted", color="#444444") +
+    geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
     geom_point(aes(from_pos, level), data=plotdata$states %>% filter(from == first(from)), color="black") +
     geom_point(aes(to_pos, level), data=plotdata$states %>% filter(!(to %in% from)), shape=15, color="black") +
     # the cells
@@ -155,12 +155,12 @@ plot_connections <- function(
   plot
 }
 
-add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, connections, edge_id, margin) {
+add_connection <- function(connection_from_pos, connection_to_pos, connection_from_level, connection_to_level, onedim, edge_id, margin) {
   max_bound <- max(connection_from_pos, connection_to_pos)
   min_bound <- min(connection_from_pos, connection_to_pos)
 
-  if (nrow(connections) > 0) {
-    available_levels <- connections %>%
+  if (nrow(onedim) > 0) {
+    available_levels <- onedim %>%
       group_by(level) %>%
       summarise(
         available = all((pmax(from_pos, to_pos) < min_bound) | (pmin(from_pos, to_pos) > max_bound))
@@ -173,8 +173,8 @@ add_connection <- function(connection_from_pos, connection_to_pos, connection_fr
 
   available_levels <- c(0, available_levels)
 
-  # avoid that connections can go through states
-  # check whether the distance is equal to the margin ==> direct level-0 connections are allowed
+  # avoid that onedim can go through states
+  # check whether the distance is equal to the margin ==> direct level-0 onedim are allowed
   if (abs(abs(connection_from_pos - connection_to_pos) - margin) > 0.0001) {
     available_levels <- available_levels[available_levels != connection_from_level]
   }
@@ -182,10 +182,10 @@ add_connection <- function(connection_from_pos, connection_to_pos, connection_fr
   if(length(available_levels) > 0) {
     level <- min(available_levels)
   } else {
-    level <- max(connections$level) + 1
+    level <- max(onedim$level) + 1
   }
 
-  connections <- connections %>% add_row(
+  onedim <- onedim %>% add_row(
     from_pos = connection_from_pos,
     to_pos = connection_to_pos,
     from_level = connection_from_level,
@@ -194,5 +194,5 @@ add_connection <- function(connection_from_pos, connection_to_pos, connection_fr
     edge_id = edge_id
   )
 
-  connections
+  onedim
 }

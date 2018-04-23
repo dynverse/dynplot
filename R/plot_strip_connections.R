@@ -1,4 +1,4 @@
-#' Plot strip connections
+#' Plot strip onedim
 #'
 #' @param task1 The first task
 #' @param task2 The second task
@@ -9,7 +9,7 @@
 #' @export
 #' @importFrom cowplot plot_grid
 #' @export
-plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
+plot_strip_onedim <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
     task1$milestone_network <- optimize_order(task1$milestone_network)
@@ -23,14 +23,14 @@ plot_strip_connections <- function(task1, task2, reorder=TRUE, margin=0.05, reor
   empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
 
   strip_plot <- plot_strip(task1, task2, reorder = FALSE, margin=margin)
-  connections_plotdata1 <- make_connection_plotdata(task1$milestone_network, margin=margin)
-  connections_plotdata2 <- make_connection_plotdata(task2$milestone_network, margin=margin)
+  onedim_plotdata1 <- make_connection_plotdata(task1$milestone_network, margin=margin)
+  onedim_plotdata2 <- make_connection_plotdata(task2$milestone_network, margin=margin)
 
-  connections_plot1 <- plot_connections(task1$milestone_network, orientation = -1, plotdata=connections_plotdata1)
-  connections_plot2 <- plot_connections(task2$milestone_network, orientation = -1, plotdata=connections_plotdata2) + coord_flip()
+  onedim_plot1 <- plot_onedim(task1$milestone_network, orientation = -1, plotdata=onedim_plotdata1)
+  onedim_plot2 <- plot_onedim(task2$milestone_network, orientation = -1, plotdata=onedim_plotdata2) + coord_flip()
 
-  size1 <- empty_max(connections_plotdata1$connections$level) + 1
-  size2 <- empty_max(connections_plotdata2$connections$level) + 1
+  size1 <- empty_max(onedim_plotdata1$onedim$level) + 1
+  size2 <- empty_max(onedim_plotdata2$onedim$level) + 1
 
-  cowplot::plot_grid(connections_plot2, strip_plot, ggplot() + theme_clean(), connections_plot1, align="hv", axis="tblr", rel_widths=c(size2, 10), rel_heights=c(10, size1))
+  cowplot::plot_grid(onedim_plot2, strip_plot, ggplot() + theme_clean(), onedim_plot1, align="hv", axis="tblr", rel_widths=c(size2, 10), rel_heights=c(10, size1))
 }

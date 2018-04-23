@@ -9,9 +9,9 @@ make_connection_plotdata(milestone_network, orientation = 1, margin = 0.05)
 \arguments{
 \item{milestone_network}{The milestone network}
 
-\item{orientation}{?? TODO: Zouter/wouters}
+\item{orientation}{The orientation of the onedim between milestones}
 
-\item{margin}{?? TODO: Zouter/wouters}
+\item{margin}{Relative distance between milestones}
 }
 \description{
 Make connection plotdata

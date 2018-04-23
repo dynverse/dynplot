@@ -4,18 +4,29 @@
 \alias{plot_heatmap}
 \title{Plot the task as a heatmap}
 \usage{
-plot_heatmap(task, genes_oi = colnames(task$counts)[1:20],
-  clust = hclust(as.dist(correlation_distance(t(task$counts[, genes_oi]))),
-  method = "ward.D2"), margin = 0.02)
+plot_heatmap(task, expression_source = "expression",
+  genes_oi = apply(task[[expression_source]], 2, sd) \%>\% sort() \%>\%
+  names() \%>\% tail(20),
+  clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][,
+  genes_oi]))), method = "ward.D2"), margin = 0.02, color_cells = NULL,
+  grouping_assignment = NULL, groups = NULL)
 }
 \arguments{
 \item{task}{The task}
+
+\item{expression_source}{Source of the gene expression, defaults to `expression`}
 
 \item{genes_oi}{Genes to plot}
 
 \item{clust}{The clustering of the genes as a `clust` object}
 
-\item{margin}{The margin to add}
+\item{margin}{Relative distance between milestones}
+
+\item{color_cells}{How to color the cells}
+
+\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+
+\item{groups}{Tibble containing information of the cell groups}
 }
 \description{
 Plot the task as a heatmap

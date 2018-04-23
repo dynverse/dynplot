@@ -4,14 +4,14 @@
 \alias{plot_dendro}
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
-plot_dendro(task, color_cells = c("auto", "invisible", "black", "positions",
+plot_dendro(task, color_cells = c("auto", "invisible", "positions",
   "grouping", "gene"), grouping_assignment = NULL, groups = NULL,
   gene_oi = NULL, expression_source = "expression", diag_offset = 0.05)
 }
 \arguments{
 \item{task}{The trajectory}
 
-\item{color_cells}{How to color the cells, one of auto, none, grouping}
+\item{color_cells}{How to color the cells}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 

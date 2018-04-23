@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @include plot_default.R
-plot_combined <- inherit_default_params(
+plot_combined <- dynutils::inherit_default_params(
   list(plot_default),
   function(
     original_object,

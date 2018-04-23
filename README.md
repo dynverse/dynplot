@@ -23,11 +23,11 @@ In 2D
 
 In 1D
 
-    plot_connections(task$milestone_network)
+    plot_onedim(task$milestone_network)
 
 ![](.readme_files/unnamed-chunk-4-1.png)
 
-    plot_connections(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
+    plot_onedim(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
 
 ![](.readme_files/unnamed-chunk-4-2.png)
 
@@ -61,6 +61,6 @@ Comparing trajectories
     prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
       dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
 
-    plot_strip_connections(task, prediction)
+    plot_strip_onedim(task, prediction)
 
 ![](.readme_files/unnamed-chunk-8-1.png)
