@@ -1,6 +1,6 @@
 context("Test plot_graph")
 
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup()
+toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
 
 test_ggplot <- function(g) {
   expect_is(g, "ggplot")
