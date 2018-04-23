@@ -26,34 +26,51 @@ task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_t
 
 ## Plotting the topology and cellular positions
 
-In 2D
-```{r}
-# plot_default(task)
-```
-
-In 1D
+If the topology is very simple (or should be represented in one dimension)
 ```{r}
 plot_onedim(task)
 ```
 
+If the topology is a tree
+```{r}
+plot_dendro(task)
+```
+
+If the topology is more complex
+```{r}
+plot_graph(task)
+
+```
+
 ## Plotting a grouping
+```{r}
+grouping_assignment <- task$prior_information$grouping_assignment
+```
 
+```{r}
+plot_onedim(task, grouping_assignment=grouping_assignment)
+plot_dendro(task, grouping_assignment=grouping_assignment)
+plot_graph(task, grouping_assignment=grouping_assignment)
+```
 
-## Plotting expression
+## Plotting expression of one gene
+```{r}
+gene_oi <- first(colnames(task$counts))
+```
 
-In a heatmap
+```{r}
+plot_onedim(task, gene_oi = gene_oi)
+plot_dendro(task, gene_oi = gene_oi)
+plot_graph(task, gene_oi = gene_oi)
+```
+
+## Plotting expression of a lot of genes
+
 ```{r}
 plot_heatmap(task)
 ```
-
-In line plots
 ```{r}
 plot_genes(task)
-```
-
-In a dendrogram
-```{r, fig.width=5, fig.height=5}
-plot_dendro(task, gene_oi = colnames(task$expression)[[10]])
 ```
 
 
