@@ -76,7 +76,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
         milestone_percentages <- task$milestone_percentages
       }
       if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = unique(milestone_percentages)) %>%
+        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
           add_milestone_coloring(color_milestones)
       }
       # TODO more checks
