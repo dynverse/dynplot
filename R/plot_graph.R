@@ -31,6 +31,7 @@ plot_graph <- dynutils::inherit_default_params(
     pseudotime,
     expression_source,
     milestones,
+    milestone_percentages,
     transition_size = 3,
     cell_size = 2,
     milestone_size = 5,

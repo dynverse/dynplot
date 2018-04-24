@@ -11,6 +11,8 @@ check_pseudotime <- function(task, pseudotime) {
       message("Pseudotime not provided, will calculate pseudotime from root milestone")
       task$pseudotime <- dynwrap:::calculate_pseudotime(task)
     }
+    task$pseudotime
+  } else {
+    pseudotime
   }
-  task
 }

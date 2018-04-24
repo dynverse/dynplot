@@ -18,6 +18,7 @@ plot_dimred <- dynutils::inherit_default_params(
     gene_oi,
     color_milestones,
     milestones,
+    milestone_percentages,
     pseudotime,
     expression_source = "expression",
     cell_positions=NULL,

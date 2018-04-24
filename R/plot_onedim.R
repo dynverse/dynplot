@@ -102,6 +102,7 @@ plot_onedim <- dynutils::inherit_default_params(
     expression_source,
     color_milestones,
     milestones,
+    milestone_percentages,
     orientation=1,
     margin=0.05,
     plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)

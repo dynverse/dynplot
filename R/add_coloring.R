@@ -31,6 +31,7 @@ add_milestone_coloring <- function(
 #' @param gene_oi Gene to plot expression
 #' @param expression_source Source of the gene expression, defaults to `expression`
 #' @param pseudotime The pseudotime
+#' @param milestone_percentages The milestone percentages
 #' @inheritParams add_milestone_coloring
 add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
@@ -44,7 +45,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
     expression_source="expression",
     pseudotime=NULL,
     color_milestones=NULL,
-    milestones=NULL
+    milestones=NULL,
+    milestone_percentages=NULL
   ) {
     # check cell coloration
     color_cells <- match.arg(color_cells)
@@ -55,7 +57,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       } else if (!is.null(gene_oi)) {
         message("Coloring by expression")
         color_cells <- "gene"
-      } else if (!is.null(milestones)) {
+      } else if (!is.null(milestones) | !is.null(milestone_percentages)) {
         message("Coloring by milestone")
         color_cells <- "milestone"
       } else if (!is.null(pseudotime)) {
@@ -69,14 +71,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
     } else if (color_cells == "gene") {
       check_gene(task, gene_oi, expression_source)
     } else if (color_cells == "milestone") {
+      if(is.null(milestone_percentages)) {
+        message("Using milestone_percentages from task")
+        milestone_percentages <- task$milestone_percentages
+      }
       if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = task$milestone_ids) %>%
+        milestones <- tibble(milestone_id = unique(milestone_percentages)) %>%
           add_milestone_coloring(color_milestones)
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
-      task <- check_pseudotime(task, pseudotime)
-      cell_positions$pseudotime <- task$pseudotime[cell_positions$cell_id]
+      pseudotime <- check_pseudotime(task, pseudotime)
+      cell_positions$pseudotime <- pseudotime[cell_positions$cell_id]
     }
 
     # now create the actual coloring
@@ -107,7 +113,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
         do.call(rgb, as.list(c(color_rgb, maxColorValue = 256)))
       }
 
-      cell_colors <- task$milestone_percentages %>%
+      cell_colors <- milestone_percentages %>%
         group_by(cell_id) %>%
         summarise(color = mix_colors(milestone_id, percentage))
 

@@ -16,6 +16,7 @@ plot_dendro <-dynutils::inherit_default_params(
     pseudotime,
     color_milestones,
     milestones,
+    milestone_percentages,
     diag_offset = 0.05
   ) {
     # root if necessary
