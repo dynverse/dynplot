@@ -64,7 +64,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
         message("Coloring by pseudotime")
         color_cells <- "pseudotime"
       } else {
-        color_cells <- "black"
+        color_cells <- "grey"
       }
     } else if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
@@ -74,10 +74,6 @@ add_cell_coloring <- dynutils::inherit_default_params(
       if(is.null(milestone_percentages)) {
         message("Using milestone_percentages from task")
         milestone_percentages <- task$milestone_percentages
-      }
-      if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
-          add_milestone_coloring(color_milestones)
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
@@ -104,6 +100,11 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions$color <- "trajectories_are_awesome"
       fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"="#00000000"), guide="none")
     } else if (color_cells == "milestone") {
+      if(is.null(milestones) | !"color" %in% names(milestones)) {
+        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
+          add_milestone_coloring(color_milestones)
+      }
+
       milestone_colors <- set_names(milestones$color, milestones$milestone_id) %>% col2rgb %>% t
 
       mix_colors <- function(milid, milpct) {

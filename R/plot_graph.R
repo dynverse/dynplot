@@ -41,14 +41,17 @@ plot_graph <- dynutils::inherit_default_params(
   ) {
     # check whether object has already been graph-dimredded
     dimred_task <- check_or_perform_dimred(task)
-    if (!is.null(milestones)) {
-      milestones <- left_join(dimred_task$space_milestones, milestones, "milestone_id")
-    } else {
-      milestones <- dimred_task$space_milestones
-    }
 
-    # color milestones & cells
-    milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
+    if(plot_milestones) {
+      if (!is.null(milestones)) {
+        milestones <- left_join(dimred_task$space_milestones, milestones, "milestone_id")
+      } else {
+        milestones <- dimred_task$space_milestones
+      }
+
+      # color milestones & cells
+      milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
+    }
 
     cell_positions <- dimred_task$space_samples
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))

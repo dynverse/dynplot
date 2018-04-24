@@ -77,7 +77,9 @@ plot_heatmap <- function(
     margin=margin,
     color_cells=color_cells,
     grouping_assignment=grouping_assignment,
-    groups=groups
+    groups=groups,
+    milestone_percentages = milestone_percentages,
+    milestones=milestones,
   ) + scale_x_continuous(expand=c(0, 0), limits=x_limits) +
   theme(plot.margin=margin())
 
