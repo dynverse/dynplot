@@ -66,7 +66,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
       } else {
         color_cells <- "grey"
       }
-    } else if(color_cells == "grouping") {
+    }
+    if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
     } else if (color_cells == "gene") {
       check_gene(task, gene_oi, expression_source)

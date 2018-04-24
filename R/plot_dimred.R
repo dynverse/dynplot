@@ -28,14 +28,10 @@ plot_dimred <- dynutils::inherit_default_params(
   ) {
     color_cells <- match.arg(color_cells)
 
+    # get cell positions
     cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>%
       as_tibble() %>%
       mutate(cell_id = rownames(task[[expression_source]]))
-
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
-
-    cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
 
     # assign cells to closest milestone
     cell_positions <- left_join(
@@ -44,6 +40,7 @@ plot_dimred <- dynutils::inherit_default_params(
       "cell_id"
     )
 
+    # first do milestone coloring, so that these colors can be reused by the cells if necessary
     if (plot_milestone_network) {
       # calculate position of milestones
       milestone_positions <- cell_positions %>%
@@ -91,7 +88,15 @@ plot_dimred <- dynutils::inherit_default_params(
           Comp1_mid = Comp1_from + (Comp1_to - Comp1_from) /2,
           Comp2_mid = Comp2_from + (Comp2_to - Comp2_from) /2
         )
+
+      milestones <- milestone_positions
     }
+
+    # add cell coloring
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+
+    cell_positions <- cell_coloring_output$cell_positions
+    fill_scale <- cell_coloring_output$fill_scale
 
     plot <- ggplot(cell_positions, aes(Comp1, Comp2)) +
       geom_point(aes(fill=color), shape=21, color="#33333388") +
