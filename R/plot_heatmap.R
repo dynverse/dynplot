@@ -87,18 +87,19 @@ plot_heatmap <- function(
 
   onedim <- plot_onedim(
     task,
-    milestone_network=linearised$milestone_network,
-    progressions=linearised$progressions %>% mutate(percentage = percentage2) %>% select(from, to, cell_id, percentage),
+    milestone_network = linearised$milestone_network,
+    progressions = linearised$progressions %>% mutate(percentage = percentage2) %>% select(from, to, cell_id, percentage),
     orientation = -1,
     quasirandom_width = 0,
-    margin=margin,
-    color_cells=color_cells,
-    grouping_assignment=grouping_assignment,
-    groups=groups,
+    margin = margin,
+    color_cells = color_cells,
+    grouping_assignment = grouping_assignment,
+    groups = groups,
     milestone_percentages = milestone_percentages,
-    milestones=milestones,
-  ) + scale_x_continuous(expand=c(0, 0), limits=x_limits) +
-  theme(plot.margin=margin())
+    milestones = milestones
+  ) +
+    scale_x_continuous(expand=c(0, 0), limits=x_limits) +
+    theme(plot.margin=margin())
 
   dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
