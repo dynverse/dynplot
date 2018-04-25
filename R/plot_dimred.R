@@ -56,10 +56,10 @@ plot_dimred <- dynutils::inherit_default_params(
           function(milestone_id) {
             close_milestone_ids <-
               c(
-                milestone_network %>%
+                task$milestone_network %>%
                   filter(from == milestone_id) %>%
                   pull(to),
-                milestone_network %>%
+                task$milestone_network %>%
                   filter(to == milestone_id) %>%
                   pull(from) %>%
                   rep(3)
