@@ -3,15 +3,17 @@
 #' @param milestones Tibble containing the `milestone_id` and a `color` for each milestone
 add_milestone_coloring <- function(
   milestones=NULL,
-  color_milestones=c("auto", "given")
+  color_milestones=c("auto", "given", names(milestone_palette_list))
 ) {
   color_milestones <- match.arg(color_milestones)
 
   if(color_milestones == "given") {
     if(!"color" %in% names(milestones)) {stop("Milestone colors need to be given")}
   } else if (color_milestones == "auto") {
-    milestones <- milestones %>%
-      mutate(color = milestone_palette("Set3", n = n()))
+    if(!"color" %in% names(milestones)) {
+      milestones <- milestones %>%
+        mutate(color = milestone_palette("Set3", n = n()))
+    }
   } else if (color_milestones %in% names(milestone_palette_list)) {
     milestones <- milestones %>%
       mutate(color = milestone_palette(color_milestones, n = n()))

@@ -4,11 +4,8 @@
 \alias{plot_heatmap}
 \title{Plot the task as a heatmap}
 \usage{
-plot_heatmap(task, expression_source = "expression",
-  genes_oi = apply(task[[expression_source]], 2, sd) \%>\% sort() \%>\%
-  names() \%>\% tail(20),
-  clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][,
-  genes_oi]))), method = "ward.D2"), margin = 0.02, color_cells = NULL,
+plot_heatmap(task, expression_source = "expression", genes_oi = 20,
+  clust = "ward.D2", margin = 0.02, color_cells = NULL,
   milestones = NULL, milestone_percentages = task$milestone_percentages,
   grouping_assignment = NULL, groups = NULL)
 }
@@ -17,9 +14,9 @@ plot_heatmap(task, expression_source = "expression",
 
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
 
-\item{genes_oi}{Genes to plot}
+\item{genes_oi}{Genes to plot, or the top number of genes to select}
 
-\item{clust}{The clustering of the genes as a `clust` object}
+\item{clust}{The method to cluster the genes, or a hclust object}
 
 \item{margin}{Relative distance between milestones}
 

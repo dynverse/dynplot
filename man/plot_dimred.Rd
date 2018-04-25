@@ -6,8 +6,9 @@
 \usage{
 plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
-  groups = NULL, gene_oi = NULL, color_milestones = c("auto", "given"),
-  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
+  groups = NULL, gene_oi = NULL, color_milestones = c("auto", "given",
+  names(milestone_palette_list)), milestones = NULL,
+  milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression", cell_positions,
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
   plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)

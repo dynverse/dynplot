@@ -9,10 +9,11 @@ plot_onedim(task, color_cells = c("auto", "invisible", "positions",
   milestone_network = task$milestone_network,
   progressions = task$progressions, grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, pseudotime = NULL,
-  expression_source = "expression", color_milestones = c("auto", "given"),
-  milestones = NULL, milestone_percentages = NULL, orientation = 1,
-  margin = 0.05, plotdata = make_connection_plotdata(milestone_network,
-  orientation = orientation, margin = margin), quasirandom_width = 0.2)
+  expression_source = "expression", color_milestones = c("auto", "given",
+  names(milestone_palette_list)), milestones = NULL,
+  milestone_percentages = NULL, orientation = 1, margin = 0.05,
+  plotdata = make_connection_plotdata(milestone_network, orientation =
+  orientation, margin = margin), quasirandom_width = 0.2)
 }
 \arguments{
 \item{task}{A trajectory or milestone_network}

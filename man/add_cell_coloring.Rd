@@ -8,8 +8,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
   "positions", "grouping", "gene", "milestone", "pseudotime"), task,
   grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given"), milestones = NULL,
-  milestone_percentages = NULL)
+  color_milestones = c("auto", "given", names(milestone_palette_list)),
+  milestones = NULL, milestone_percentages = NULL)
 }
 \arguments{
 \item{cell_positions}{The positions of the cells}
