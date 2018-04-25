@@ -25,8 +25,8 @@ order_cells <- function(milestone_network, progressions) {
 #' Plot the task as a heatmap
 #'
 #' @param task The task
-#' @param genes_oi Genes to plot
-#' @param clust The clustering of the genes as a `clust` object
+#' @param genes_oi Genes to plot, or the top number of genes to select
+#' @param clust The method to cluster the genes, or a hclust object
 #'
 #' @inheritParams plot_onedim
 #'
@@ -36,8 +36,8 @@ order_cells <- function(milestone_network, progressions) {
 plot_heatmap <- function(
   task,
   expression_source = "expression",
-  genes_oi = apply(task[[expression_source]], 2, sd) %>% sort() %>% names() %>% tail(20),
-  clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][, genes_oi]))), method = "ward.D2"),
+  genes_oi = 20,
+  clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
@@ -45,15 +45,29 @@ plot_heatmap <- function(
   grouping_assignment = NULL,
   groups = NULL
 ) {
+  # process expression
+  expression <- check_expression_source(task, expression_source)
+  expression <- dynutils::scale_quantile(expression)
+
+  # get genes oi
+  if (length(genes_oi) == 1 & is.numeric(genes_oi)) {
+    message("No genes of interest provided, selecting the top ", genes_oi, " genes automatically")
+    genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+  }
+
+  expression <- expression[, genes_oi]
+
+  # cluster genes
+  if(is.character(clust)) {
+    clust <- hclust(as.dist(correlation_distance(t(expression))), method = clust)
+  }
+  gene_order <- colnames(expression)[clust$order]
+
+  # put cells on one edge
   linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
 
-  # get gene order
-  gene_order <- colnames(task$counts[, genes_oi])[clust$order]
-
-  # process counts
-  expression <- check_expression_source(task, expression_source)
-  expression <- dynutils::scale_quantile(expression[, genes_oi])
-  molten <- counts %>%
+  # melt expression
+  molten <- expression %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%
     mutate(gene_id = as.numeric(factor(gene_id, gene_order))) %>%
