@@ -30,6 +30,8 @@ plot_dimred <- dynutils::inherit_default_params(
 
     dimred_method <- check_dimred_method(dimred_method)
 
+    expression <- check_expression_source(task, expression_source)
+
     # get cell positions
     cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>% check_dimred()
 
