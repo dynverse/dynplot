@@ -4,7 +4,8 @@
 \alias{plot_topology}
 \title{Plotting the topology of a trajectory}
 \usage{
-plot_topology(task, color_milestones, milestones)
+plot_topology(task, color_milestones = c("auto", "given",
+  names(milestone_palette_list)), milestones = NULL)
 }
 \arguments{
 \item{task}{The task}
