@@ -18,7 +18,7 @@ install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
  - R -e 'devtools::install_cran("covr")'
- - R -e 'setRepositories(ind = 1:2)'
- - R -e 'devtools::install(dependencies = T, upgrade = T)'
+ - R -e 'devtools::install_github("tidyverse/ggplot2")'
+ - R -e 'setRepositories(ind = 1:2); devtools::install(dependencies = T, upgrade = T)'
 after_success:
  - R -e 'covr::codecov()'

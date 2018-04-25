@@ -11,13 +11,12 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports:
-  aaaimportthisfirst,
   dplyr,
   dynutils,
   dynwrap,
   GA,
   ggbeeswarm,
-  ggplot2,
+  ggplot2 (>= 2.2.1.9000),
   ggraph,
   ggrepel,
   igraph,
@@ -49,7 +48,6 @@ Suggests:
   smacof,
   tsne
 Remotes:
-  dynverse/aaaimportthisfirst,
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy,
