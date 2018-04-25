@@ -32,6 +32,8 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @import tidygraph
 #' @import ggraph
+#' @importFrom patchwork wrap_plots plot_spacer
+#'
 #' @export
 plot_heatmap <- function(
   task,

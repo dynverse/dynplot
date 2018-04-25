@@ -4,6 +4,7 @@
 #' @param genes_oi The genes of interest
 #' @param margin The margin to add
 #'
+#' @importFrom patchwork wrap_plots
 #' @export
 plot_genes <- function(
   task,
@@ -30,17 +31,17 @@ plot_genes <- function(
     facet_grid(gene_id~.) +
     geom_vline(aes(xintercept=cumstart), data=milestone_network, alpha=0.2) +
     geom_vline(aes(xintercept=cumend), data=milestone_network, alpha=0.2) +
-    cowplot::theme_cowplot() +
+    # cowplot::theme_cowplot() +
+    theme_clean() +
     scale_x_continuous(NULL, breaks = NULL) +
     theme(legend.position="none", panel.border = element_rect(color = "black", size=0.5, linetype="solid"), panel.background = element_blank())
 
   onedim_plot <- plot_onedim(task, orientation = -1, margin = margin)
 
-  cowplot::plot_grid(
-    plotlist = list(expression_plot, onedim_plot),
+  patchwork::wrap_plots(
+    oexpression_plot,
+    onedim_plot,
     ncol = 1,
-    align = "v",
-    axis = "lr",
-    rel_heights = c(length(genes_oi), 1)
+    heights = c(length(genes_oi), 1)
   )
 }

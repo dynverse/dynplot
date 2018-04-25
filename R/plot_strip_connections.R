@@ -7,7 +7,7 @@
 #' @param reorder_second_by ?? TODO: Zouter/wouters
 #'
 #' @export
-#' @importFrom cowplot plot_grid
+#' @importFrom patchwork wrap_plots
 #' @export
 plot_strip_onedim <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
   if (reorder) {
@@ -32,5 +32,13 @@ plot_strip_onedim <- function(task1, task2, reorder=TRUE, margin=0.05, reorder_s
   size1 <- empty_max(onedim_plotdata1$onedim$level) + 1
   size2 <- empty_max(onedim_plotdata2$onedim$level) + 1
 
-  cowplot::plot_grid(onedim_plot2, strip_plot, ggplot() + theme_clean(), onedim_plot1, align="hv", axis="tblr", rel_widths=c(size2, 10), rel_heights=c(10, size1))
+  patchwork::wrap_plots(
+    onedim_plot2,
+    strip_plot,
+    ggplot() + theme_clean(),
+    onedim_plot1,
+    ncol = 2,
+    widths = c(size2, 10),
+    heights = c(10, size1)
+  )
 }
