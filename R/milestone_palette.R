@@ -2,6 +2,7 @@
 #' @importFrom grDevices rainbow
 #' @importFrom shades hue
 #' @importFrom rje cubeHelix
+#' @export
 milestone_palette_list <- list(
   cubeHelix = function(n) rje::cubeHelix(n = n),
   Set3 = function(n) {
