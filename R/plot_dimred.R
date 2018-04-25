@@ -31,9 +31,7 @@ plot_dimred <- dynutils::inherit_default_params(
     dimred_method <- check_dimred_method(dimred_method)
 
     # get cell positions
-    cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>%
-      as_tibble() %>%
-      mutate(cell_id = rownames(task[[expression_source]]))
+    cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>% check_dimred()
 
     # assign cells to closest milestone
     cell_positions <- left_join(

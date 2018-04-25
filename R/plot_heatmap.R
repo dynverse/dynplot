@@ -73,7 +73,9 @@ plot_heatmap <- function(
   onedim <- plot_onedim(
     task,
     milestone_network=linearised$milestone_network,
+    progressions=linearised$progressions %>% mutate(percentage = percentage2) %>% select(from, to, cell_id, percentage),
     orientation = -1,
+    quasirandom_width = 0,
     margin=margin,
     color_cells=color_cells,
     grouping_assignment=grouping_assignment,
