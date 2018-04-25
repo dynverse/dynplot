@@ -9,7 +9,7 @@ plot_heatmap(task, expression_source = "expression",
   names() \%>\% tail(20),
   clust = hclust(as.dist(correlation_distance(t(task[[expression_source]][,
   genes_oi]))), method = "ward.D2"), margin = 0.02, color_cells = NULL,
-  milestones = tibble(milestone_id = task$milestone_ids),
+  milestones = NULL, milestone_percentages = task$milestone_percentages,
   grouping_assignment = NULL, groups = NULL)
 }
 \arguments{
@@ -26,6 +26,8 @@ plot_heatmap(task, expression_source = "expression",
 \item{color_cells}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{milestone_percentages}{The milestone percentages}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 

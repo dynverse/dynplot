@@ -8,7 +8,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
   "positions", "grouping", "gene", "milestone", "pseudotime"), task,
   grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given"), milestones = NULL)
+  color_milestones = c("auto", "given"), milestones = NULL,
+  milestone_percentages = NULL)
 }
 \arguments{
 \item{cell_positions}{The positions of the cells}
@@ -30,6 +31,8 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{milestone_percentages}{The milestone percentages}
 }
 \description{
 Add coloring

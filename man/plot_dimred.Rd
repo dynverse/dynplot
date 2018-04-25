@@ -7,8 +7,8 @@
 plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, color_milestones = c("auto", "given"),
-  milestones = NULL, pseudotime = NULL, expression_source = "expression",
-  cell_positions,
+  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
+  expression_source = "expression", cell_positions,
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
   plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)
   > 500, dimred_pca, dimred_mds))
@@ -28,6 +28,8 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
+\item{milestone_percentages}{The milestone percentages}
+
 \item{pseudotime}{The pseudotime}
 
 \item{expression_source}{Source of the expression}
@@ -38,7 +40,7 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 
 \item{plot_milestone_labels}{Whether to overlay the milestone labels over the network}
 
-\item{dimred_method}{The dimred method}
+\item{dimred_method}{The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)}
 }
 \description{
 Plot trajectory on dimensionality reduction

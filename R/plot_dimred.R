@@ -5,7 +5,7 @@
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the milestone network
 #' @param plot_milestone_labels Whether to overlay the milestone labels over the network
-#' @param dimred_method The dimred method
+#' @param dimred_method The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)
 #'
 #' @export
 plot_dimred <- dynutils::inherit_default_params(
@@ -27,6 +27,8 @@ plot_dimred <- dynutils::inherit_default_params(
     dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)
   ) {
     color_cells <- match.arg(color_cells)
+
+    dimred_method <- check_dimred_method(dimred_method)
 
     # get cell positions
     cell_positions <- dimred_method(task[[expression_source]], ndim=2) %>%

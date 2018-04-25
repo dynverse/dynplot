@@ -105,15 +105,9 @@ plot_onedim <- dynutils::inherit_default_params(
     milestone_percentages,
     orientation=1,
     margin=0.05,
-    start_milestone_id=NULL,
     plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin)
   ) {
-    if(!is.null(start_milestone_id)) {
-      task <- dynwrap::root_trajectory(task, start_milestone_id = task$milestone_ids[[1]])
-      root <- task$root_milestone_id
-    } else {
-      root <- task$milestone_network$from[[1]]
-    }
+    root <- task$milestone_network$from[[1]]
 
     # make sure every cell is on only one edge
     task$progressions <- progressions_one_edge(task$progressions)

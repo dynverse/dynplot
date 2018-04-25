@@ -9,9 +9,9 @@ plot_onedim(task, color_cells = c("auto", "invisible", "positions",
   milestone_network = task$milestone_network, grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, pseudotime = NULL,
   expression_source = "expression", color_milestones = c("auto", "given"),
-  milestones = NULL, orientation = 1, margin = 0.05,
-  plotdata = make_connection_plotdata(milestone_network, orientation =
-  orientation, margin = margin))
+  milestones = NULL, milestone_percentages = NULL, orientation = 1,
+  margin = 0.05, plotdata = make_connection_plotdata(milestone_network,
+  orientation = orientation, margin = margin))
 }
 \arguments{
 \item{task}{A trajectory or milestone_network}
@@ -33,6 +33,8 @@ plot_onedim(task, color_cells = c("auto", "invisible", "positions",
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{milestone_percentages}{The milestone percentages}
 
 \item{orientation}{The orientation of the onedim between milestones}
 

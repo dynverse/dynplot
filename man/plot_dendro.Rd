@@ -8,7 +8,7 @@ plot_dendro(task, color_cells = c("auto", "invisible", "positions",
   "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, expression_source = "expression",
   pseudotime = NULL, color_milestones = c("auto", "given"),
-  milestones = NULL, diag_offset = 0.05)
+  milestones = NULL, milestone_percentages = NULL, diag_offset = 0.05)
 }
 \arguments{
 \item{task}{The trajectory}
@@ -28,6 +28,8 @@ plot_dendro(task, color_cells = c("auto", "invisible", "positions",
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{milestone_percentages}{The milestone percentages}
 
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
 }

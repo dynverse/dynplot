@@ -9,9 +9,9 @@ plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
   "gene", "milestone", "pseudotime"), color_milestones = c("auto", "given"),
   grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
   pseudotime = NULL, expression_source = "expression", milestones = NULL,
-  transition_size = 3, cell_size = 2, milestone_size = 5,
-  arrow_length = grid::unit(0.6, "cm"), plot_label = c("leaves", "all",
-  "none"), plot_milestones = FALSE)
+  milestone_percentages = NULL, transition_size = 3, cell_size = 2,
+  milestone_size = 5, arrow_length = grid::unit(0.6, "cm"),
+  plot_label = c("leaves", "all", "none"), plot_milestones = FALSE)
 }
 \arguments{
 \item{task}{The task}
@@ -31,6 +31,8 @@ plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
 \item{expression_source}{Source of the gene expression, defaults to `expression`}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{milestone_percentages}{The milestone percentages}
 
 \item{transition_size}{The size of the transition lines between milestones.}
 
