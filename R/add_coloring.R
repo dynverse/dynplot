@@ -70,7 +70,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
     if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
     } else if (color_cells == "gene") {
-      check_gene(task, gene_oi, expression_source)
+      expression <- check_expression_source(task, expression_source)
+      check_gene(expression, gene_oi)
     } else if (color_cells == "milestone") {
       if(is.null(milestone_percentages)) {
         message("Using milestone_percentages from task")
@@ -92,7 +93,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=10))
 
     } else if (color_cells == "gene") {
-      cell_positions$color <- task[[expression_source]][cell_positions$cell_id, gene_oi]
+      cell_positions$color <- expression[cell_positions$cell_id, gene_oi]
       fill_scale <- scale_fill_distiller(paste0(gene_oi, " ", expression_source), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"

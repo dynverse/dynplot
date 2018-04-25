@@ -51,7 +51,8 @@ plot_heatmap <- function(
   gene_order <- colnames(task$counts[, genes_oi])[clust$order]
 
   # process counts
-  counts <- dynutils::scale_quantile(task[[expression_source]][, genes_oi])
+  expression <- check_expression_source(task, expression_source)
+  expression <- dynutils::scale_quantile(expression[, genes_oi])
   molten <- counts %>%
     reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%

@@ -1,10 +1,3 @@
-check_gene <- function(task, gene_oi, expression_source) {
-  if(is.null(gene_oi)) {stop("Provide gene_oi")}
-  if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
-  if(!gene_oi %in% colnames(task[[expression_source]])) {stop("Gene not found in expression_source")}
-}
-
-
 check_pseudotime <- function(task, pseudotime) {
   if(is.null(pseudotime)) {
     if(!"pseudotime" %in% names(task)) {
@@ -33,4 +26,23 @@ check_dimred <- function(dimred) {
   if(any(!c("Comp1", "Comp2", "cell_id") %in% colnames(dimred))) {stop("The dimensionality reduction should at least contain Comp1, Comp2 and cell_id")}
 
   dimred
+}
+
+
+check_gene <- function(expression, gene_oi) {
+  if(is.null(gene_oi)) {stop("Provide gene_oi")}
+  if(!gene_oi %in% colnames(expression)) {stop("Gene not found in expression")}
+  gene_oi
+}
+
+check_expression_source <- function(task, expression_source) {
+  if (is.character(expression_source)) {
+    if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
+    expression <- task[[expression_source]]
+  } else if (is.matrix(expression_source)) {
+    expression <- expression_source
+  } else {
+    stop("Invalid expression_source")
+  }
+  expression
 }

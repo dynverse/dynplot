@@ -24,7 +24,8 @@ plot_grouped <- dynutils::inherit_default_params(
       cell_positions <- tibble(cell_id = names(task$pseudotime), y = task$pseudotime)
       y_scale <- scale_y_continuous("pseudotime")
     } else if (order_cells == "gene") {
-      check_gene(task, gene_oi, expression_source)
+      expression <- check_expression_source(task, expression_source)
+      check_gene(expression, gene_oi)
       cell_positions <- tibble(cell_id = rownames(task[[expression_source]]), y = task[[expression_source]][, gene_oi])
       y_scale <- scale_y_continuous(paste0(gene_oi, " ", expression_source))
     }
