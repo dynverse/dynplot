@@ -114,7 +114,10 @@ plot_dendro <-dynutils::inherit_default_params(
       )
 
     # create milestone tree graph
-    milestone_tree <- tidygraph::tbl_graph(milestone_positions, milestone_tree_edges %>% mutate(from = match(node_id_from, milestone_positions$node_id), to = match(node_id_to, milestone_positions$node_id)))
+    milestone_tree <- tidygraph::tbl_graph(
+      milestone_positions %>% select(-x, -y),
+      milestone_tree_edges %>% mutate(from = match(node_id_from, milestone_positions$node_id), to = match(node_id_to, milestone_positions$node_id))
+    )
 
     # put cells on tree
     progressions <- task$progressions %>%
