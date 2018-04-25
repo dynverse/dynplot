@@ -1,3 +1,4 @@
+#' @importFrom ggbeeswarm geom_quasirandom
 plot_grouped <- dynutils::inherit_default_params(
   list(add_milestone_coloring),
   function(
@@ -6,8 +7,8 @@ plot_grouped <- dynutils::inherit_default_params(
     grouping_assignment = task$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
     groups = tibble(group_id = task$milestone_ids),
     order_cells = c("auto", "pseudotime", "gene"),
-    pseudotime=NULL,
-    gene_oi=NULL,
+    pseudotime = NULL,
+    gene_oi = NULL,
     expression_source = "expression"
   ) {
     order_cells <- match.arg(order_cells)
