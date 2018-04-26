@@ -156,8 +156,8 @@ plot_heatmap <- function(
     theme(legend.position="top")
 
   patchwork::wrap_plots(
-    # patchwork::plot_spacer() + theme(panel.background = element_blank()),
-    # cell_annotation,
+    patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    cell_annotation,
     dendrogram,
     heatmap,
     patchwork::plot_spacer() + theme(panel.background = element_blank()),
