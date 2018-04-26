@@ -117,7 +117,8 @@ plot_heatmap <- function(
     grouping_assignment = grouping_assignment,
     groups = groups,
     milestone_percentages = milestone_percentages,
-    milestones = milestones
+    milestones = milestones,
+    plot_cells=FALSE
   ) +
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +
     theme(plot.margin=margin())
@@ -132,16 +133,39 @@ plot_heatmap <- function(
     theme(plot.margin=margin())
 
   # plot cell information
+  # TODO: Allow multiple cell info here, even "external" which does not fit into grouping_assignment,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
+  if (!is.null(grouping_assignment)) {
+    cell_annotation_positions <- linearised$progressions %>%
+      add_cell_coloring(
+        "grouping",
+        grouping_assignment=grouping_assignment
+      )
+  } else if (!is.null(milestone_percentages)) {
+    cell_annotation_positions <- linearised$progressions %>%
+      add_cell_coloring(
+        "milestone",
+        milestone_percentages=milestone_percentages
+      )
+  }
 
+  cell_annotation <- cell_annotation_positions$cell_positions %>%
+    ggplot() +
+    geom_tile(aes(cumpercentage, 1, fill=color)) +
+    cell_annotation_positions$fill_scale +
+    scale_x_continuous(expand=c(0, 0), limits=x_limits) +
+    theme_graph() +
+    theme(legend.position="top")
 
   patchwork::wrap_plots(
+    patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    cell_annotation,
     dendrogram,
     heatmap,
     patchwork::plot_spacer() + theme(panel.background = element_blank()),
     onedim,
     ncol = 2,
     widths = c(2, 10),
-    heights=c(10, 2)
+    heights=c(0.5, 10, 2)
   )
 }
 

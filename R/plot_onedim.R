@@ -108,7 +108,8 @@ plot_onedim <- dynutils::inherit_default_params(
     orientation=1,
     margin=0.05,
     plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin),
-    quasirandom_width = 0.2
+    quasirandom_width = 0.2,
+    plot_cells = TRUE
   ) {
     root <- task$milestone_network$from[[1]]
 
@@ -136,11 +137,15 @@ plot_onedim <- dynutils::inherit_default_params(
       geom_segment(aes(from_pos, from_level, xend=from_pos, yend=level), data=plotdata$onedim, linetype="dotted", color="#444444") +
       geom_point(aes(from_pos, level), data=plotdata$states %>% filter(from == first(from)), color="black") +
       geom_point(aes(to_pos, level), data=plotdata$states %>% filter(!(to %in% from)), shape=15, color="black") +
-      # the cells
-      geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
-      fill_scale +
       theme_graph() +
       theme(legend.position="bottom")
+
+    # add the cells
+    if (plot_cells) {
+      plot <- geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
+        fill_scale
+    }
+
 
     # if (!is.null(cell_progressions)) {
     #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
