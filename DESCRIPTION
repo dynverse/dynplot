@@ -11,18 +11,19 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports:
-  cowplot,
   dplyr,
   dynutils,
+  dynfeature,
   dynwrap,
   GA,
+  ggbeeswarm,
+  ggplot2 (>= 2.2.1.9000),
   ggraph,
-  ggplot2,
   ggrepel,
-  ggraph,
   igraph,
   magrittr,
   methods,
+  patchwork,
   purrr,
   rje,
   shades,
@@ -31,28 +32,49 @@ Imports:
   testthat,
   tibble,
   tidyr,
-  tidygraph
+  tidygraph,
+  vipor,
+  viridis
 Suggests:
   dyntoy,
   knitr,
-  rmarkdown
+  rmarkdown,
+  diffusionMap,
+  fastICA,
+  lle,
+  MASS,
+  Rtsne,
+  SCORPIUS,
+  SIMLR,
+  smacof,
+  tsne
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
-  dynverse/dyntoy
+  dynverse/dyntoy,
+  dynverse/dynfeature,
+  tidyverse/ggplot,
+  thomasp85/patchwork
 Collate: 
+    'add_coloring.R'
+    'dimensionality_reduction.R'
+    'dummy_proofing.R'
     'is_colour_vector.R'
     'linearise_cells.R'
     'milestone_palette.R'
     'optimize_order.R'
     'package.R'
-    'plot_default.R'
     'plot_combined.R'
-    'plot_connections.R'
+    'plot_dendro.R'
+    'plot_dimred.R'
     'plot_genes.R'
+    'plot_graph.R'
+    'plot_grouped.R'
     'plot_heatmap.R'
+    'plot_onedim.R'
     'plot_strip.R'
     'plot_strip_connections.R'
+    'plot_topology.R'
     'plot_trajectory_dimred.R'
     'process_dynplot.R'
     'theme_clean.R'

@@ -6,7 +6,12 @@
 #'
 #' @export
 process_dynplot <- function(g, id, expand = TRUE) {
-  ranges <- ggplot_build(g)$layout$panel_ranges[[1]]
+  gbl <- ggplot_build(g)$layout
+  if ("panel_params" %in% names(gbl)) {
+    ranges <- gbl$panel_params[[1]]
+  } else if ("panel_ranges" %in% names(gbl)) {
+    ranges <- gbl$panel_ranges[[1]]
+  }
   yrange <- ranges$y.range
   xrange <- ranges$x.range
 

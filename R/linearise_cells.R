@@ -7,11 +7,7 @@
 #' @param equal_cell_width if TRUE, will give each cell equal width
 linearise_cells <- function(milestone_network, progressions, margin=0.05, one_edge=FALSE, equal_cell_width=FALSE) {
   if(one_edge | equal_cell_width) {
-    progressions <- progressions %>%
-      group_by(cell_id) %>%
-      arrange(-percentage) %>%
-      filter(row_number() == 1) %>%
-      ungroup()
+    progressions <- progressions_one_edge(progressions)
   }
 
   if (equal_cell_width) {
@@ -43,4 +39,14 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, one_ed
     mutate(cumpercentage = cumstart + percentage2 * length)
 
   lst(milestone_network, progressions)
+}
+
+
+# Put every cell on only one edge
+progressions_one_edge <- function(progressions) {
+  progressions %>%
+    group_by(cell_id) %>%
+    arrange(-percentage) %>%
+    filter(row_number() == 1) %>%
+    ungroup()
 }

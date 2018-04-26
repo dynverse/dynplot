@@ -1,6 +1,6 @@
 context("Testing dimred_trajectory")
 
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup()
+toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
 
 for (taski in seq_len(nrow(toy_tasks))) {
   task <- extract_row_to_list(toy_tasks, taski)
@@ -13,7 +13,6 @@ for (taski in seq_len(nrow(toy_tasks))) {
     space_milestones <- dimred$space_milestones
     expect_equal( nrow(space_milestones), length(milestone_ids) )
     expect_equal( space_milestones$milestone_id, milestone_ids )
-    expect_true( all(c("milestone_id", "Comp1", "Comp2", "colour") %in% colnames(space_milestones)) )
     expect_true( all(is.finite(space_milestones$Comp1)) )
     expect_true( all(is.finite(space_milestones$Comp2)) )
 
@@ -35,20 +34,5 @@ for (taski in seq_len(nrow(toy_tasks))) {
     # try on an undirected network
     task$milestone_network$directed <- FALSE
     dimred2 <- dimred_trajectory(task)
-
-    # try with custom colourss
-    dimred3 <- dimred_trajectory(task, colour_cells = colnames(task$expression)[[1]])
-
-    dimred4 <- dimred_trajectory(task, colour_cells = task$expression[,1])
-
-    n_cells <- length(cell_ids)
-    col_cells <- set_names(ifelse(runif(n_cells) < .5, "#aaaaee", "blue"), cell_ids)
-    dimred5 <- dimred_trajectory(task, colour_cells = col_cells)
-
-    n_milestones <- length(milestone_ids)
-    col_mils <- set_names(ifelse(runif(n_milestones) < .5, "#aaaaee", "blue"), milestone_ids)
-    dimred6 <- dimred_trajectory(task, colour_cells = col_cells, colour_milestones = col_mils)
-
-    dimred7 <- dimred_trajectory(task, colour_milestones = col_mils)
   })
 }

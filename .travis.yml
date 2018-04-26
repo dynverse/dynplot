@@ -4,7 +4,8 @@ dist: trusty
 bioc_required: true
 cache: packages
 env:
-  - R_MAX_NUM_DLLS=250
+  global:
+    - R_MAX_NUM_DLLS=250
 addons:
   apt:
     packages:
@@ -15,9 +16,10 @@ addons:
       - libfftw3-dev
       - libudunits2-dev
 install:
+ - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
  - R -e 'devtools::install_cran("covr")'
- - R -e 'setRepositories(ind = 1:2)'
- - R -e 'devtools::install(dependencies = T, upgrade = T)'
+ - R -e 'devtools::install_github(c("r-lib/rlang", "tidyverse/ggplot2"))'
+ - R -e 'setRepositories(ind = 1:2); devtools::install(dependencies = T, upgrade = T)'
 after_success:
  - R -e 'covr::codecov()'

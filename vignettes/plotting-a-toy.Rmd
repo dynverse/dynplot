@@ -3,7 +3,7 @@ title: "Plotting a toy datasets using dynplot"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
-    fig_width: 10
+    fig_width: 7
     fig_height: 5 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -26,36 +26,61 @@ task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_t
 
 ## Plotting the topology and cellular positions
 
-In 2D
-```{r}
-plot_default(task)
+If the topology is very simple (or should be represented in one dimension)
+```{r onedim}
+plot_onedim(task)
 ```
 
-In 1D
-```{r}
-plot_connections(task$milestone_network)
-
-plot_connections(task$milestone_network, cell_progressions = task$progressions %>% sample_n(10))
+If the topology is a tree
+```{r dendro}
+plot_dendro(task)
 ```
 
-## Plotting expression
+If the topology is more complex
+```{r graph}
+plot_graph(task)
 
-In a heatmap
+```
+
+## Plotting a grouping
 ```{r}
+grouping_assignment <- task$prior_information$grouping_assignment
+```
+
+```{r grouping}
+plot_onedim(task, grouping_assignment=grouping_assignment)
+plot_dendro(task, grouping_assignment=grouping_assignment)
+plot_graph(task, grouping_assignment=grouping_assignment)
+```
+
+## Plotting expression of one gene
+```{r}
+gene_oi <- first(colnames(task$counts))
+```
+
+```{r expression}
+plot_onedim(task, gene_oi = gene_oi)
+plot_dendro(task, gene_oi = gene_oi)
+plot_graph(task, gene_oi = gene_oi)
+```
+
+## Plotting expression of a lot of genes
+
+```{r heatmap}
 plot_heatmap(task)
 ```
-
-In line plots
-```{r}
-plot_genes(task)
+```{r line}
+# plot_genes(task)
 ```
+
+
 
 ## Comparing trajectories
 ```{r}
-pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
-prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
-  dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
-
-plot_strip_connections(task, prediction)
+# pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
+# prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
+#   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
+# 
+# plot_strip_onedim(task, prediction)
 ```
 

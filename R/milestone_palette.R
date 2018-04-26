@@ -25,3 +25,9 @@ milestone_palette_list <- list(
 milestone_palette <- function(name, n) {
   milestone_palette_list[[name]](n)
 }
+
+#' Get the names of valid color palettes
+#' @export
+get_milestone_palette_names <- function() {
+  names(milestone_palette_list)
+}
