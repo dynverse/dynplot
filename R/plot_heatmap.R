@@ -148,8 +148,7 @@ plot_heatmap <- function(
       )
   }
 
-  cell_annotation <- cell_annotation_positions$cell_positions %>%
-    ggplot() +
+  cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
     geom_tile(aes(cumpercentage, 1, fill=color)) +
     cell_annotation_positions$fill_scale +
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +
@@ -157,8 +156,8 @@ plot_heatmap <- function(
     theme(legend.position="top")
 
   patchwork::wrap_plots(
-    patchwork::plot_spacer() + theme(panel.background = element_blank()),
-    cell_annotation,
+    # patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    # cell_annotation,
     dendrogram,
     heatmap,
     patchwork::plot_spacer() + theme(panel.background = element_blank()),
