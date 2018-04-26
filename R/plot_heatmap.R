@@ -63,7 +63,7 @@ plot_heatmap <- function(
       message("Using dynfeature for selecting the top ", genes_oi, " genes")
       requireNamespace("dynfeature")
 
-      genes_oi <- dynfeature::calculate_overall_feature_importance(task)$feature_id[1:genes_oi]
+      genes_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:genes_oi]
     } else {
       genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
     }
