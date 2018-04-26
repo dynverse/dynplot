@@ -8,7 +8,7 @@ plot_dendro(task, color_cells = c("auto", "invisible", "positions",
   "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
   groups = NULL, gene_oi = NULL, expression_source = "expression",
   pseudotime = NULL, color_milestones = c("auto", "given",
-  names(milestone_palette_list)), milestones = NULL,
+  get_milestone_palette_names()), milestones = NULL,
   milestone_percentages = NULL, diag_offset = 0.05)
 }
 \arguments{

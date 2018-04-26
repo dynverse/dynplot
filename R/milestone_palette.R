@@ -2,7 +2,6 @@
 #' @importFrom grDevices rainbow
 #' @importFrom shades hue
 #' @importFrom rje cubeHelix
-#' @export
 milestone_palette_list <- list(
   cubeHelix = function(n) rje::cubeHelix(n = n),
   Set3 = function(n) {
@@ -25,4 +24,10 @@ milestone_palette_list <- list(
 #' @param n The number of colours to be in the palette.
 milestone_palette <- function(name, n) {
   milestone_palette_list[[name]](n)
+}
+
+#' Get the names of valid color palettes
+#' @export
+get_milestone_palette_names <- function() {
+  names(milestone_palette_list)
 }

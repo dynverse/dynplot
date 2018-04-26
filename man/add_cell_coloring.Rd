@@ -8,7 +8,7 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
   "positions", "grouping", "gene", "milestone", "pseudotime"), task,
   grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given", names(milestone_palette_list)),
+  color_milestones = c("auto", "given", get_milestone_palette_names()),
   milestones = NULL, milestone_percentages = NULL)
 }
 \arguments{

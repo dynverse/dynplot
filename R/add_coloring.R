@@ -3,7 +3,7 @@
 #' @param milestones Tibble containing the `milestone_id` and a `color` for each milestone
 add_milestone_coloring <- function(
   milestones=NULL,
-  color_milestones=c("auto", "given", names(milestone_palette_list))
+  color_milestones=c("auto", "given", get_milestone_palette_names())
 ) {
   color_milestones <- match.arg(color_milestones)
 
@@ -14,7 +14,7 @@ add_milestone_coloring <- function(
       milestones <- milestones %>%
         mutate(color = milestone_palette("Set3", n = n()))
     }
-  } else if (color_milestones %in% names(milestone_palette_list)) {
+  } else if (color_milestones %in% get_milestone_palette_names()) {
     milestones <- milestones %>%
       mutate(color = milestone_palette(color_milestones, n = n()))
   }
@@ -88,7 +88,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
     # now create the actual coloring
     if (color_cells == "grouping") {
       if (is.null(groups) | !("color" %in% names(groups))) {
-        groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette_list$auto(n()))
+        groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette("auto", n()))
       }
       cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
 
