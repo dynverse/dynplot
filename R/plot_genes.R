@@ -39,7 +39,7 @@ plot_genes <- function(
   onedim_plot <- plot_onedim(task, orientation = -1, margin = margin)
 
   patchwork::wrap_plots(
-    oexpression_plot,
+    expression_plot,
     onedim_plot,
     ncol = 1,
     heights = c(length(genes_oi), 1)
