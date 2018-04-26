@@ -53,7 +53,7 @@ Remotes:
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  dthomasp85/patchwork,
+  thomasp85/patchwork,
   tidyverse/ggplot2
 Collate: 
     'add_coloring.R'
