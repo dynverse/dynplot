@@ -1,4 +1,4 @@
-context("Test plot_heatmap")
+context("Test plot_genes")
 
 toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
 
