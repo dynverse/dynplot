@@ -53,8 +53,8 @@ Remotes:
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  tidyverse/ggplot,
-  thomasp85/patchwork
+  tidyverse/patchwork,
+  tidyverse/ggplot
 Collate: 
     'add_coloring.R'
     'dimensionality_reduction.R'

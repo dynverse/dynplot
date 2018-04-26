@@ -19,7 +19,7 @@ plot_topology <- dynutils::inherit_default_params(
     }
     milestone_positions <- add_milestone_coloring(milestone_positions, color_milestones)
 
-    milestone_graph <- tbl_graph(milestone_positions, task$milestone_network)
+    milestone_graph <- tbl_graph(milestone_positions %>% select(-x, -y), task$milestone_network)
 
     ggraph(milestone_graph, "manual", node.positions=milestone_positions) +
       geom_edge_fan() +
