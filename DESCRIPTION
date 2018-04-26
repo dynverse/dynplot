@@ -13,6 +13,7 @@ RoxygenNote: 6.0.1
 Imports:
   dplyr,
   dynutils,
+  dynfeature,
   dynwrap,
   GA,
   ggbeeswarm,
@@ -36,7 +37,6 @@ Imports:
   viridis
 Suggests:
   dyntoy,
-  dynfeature,
   knitr,
   rmarkdown,
   diffusionMap,

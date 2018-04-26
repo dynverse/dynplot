@@ -67,7 +67,7 @@ plot_graph(task, gene_oi = gene_oi)
 ## Plotting expression of a lot of genes
 
 ```{r heatmap}
-plot_heatmap(task, genes_oi = colnames(task$counts)[1:20])
+plot_heatmap(task)
 ```
 ```{r line}
 # plot_genes(task)
