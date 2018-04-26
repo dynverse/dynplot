@@ -93,8 +93,8 @@ make_connection_plotdata <- function(milestone_network, orientation = 1, margin=
 #'
 #' @importFrom ggrepel geom_label_repel
 plot_onedim <- dynutils::inherit_default_params(
-  add_cell_coloring
-  , function(
+  add_cell_coloring,
+  function(
     task=NULL,
     color_cells,
     milestone_network = task$milestone_network,
@@ -107,8 +107,8 @@ plot_onedim <- dynutils::inherit_default_params(
     color_milestones,
     milestones,
     milestone_percentages,
-    orientation=1,
-    margin=0.05,
+    orientation = 1,
+    margin = 0.05,
     plotdata = make_connection_plotdata(milestone_network, orientation=orientation, margin=margin),
     quasirandom_width = 0.2,
     plot_cells = TRUE
