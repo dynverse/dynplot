@@ -53,8 +53,9 @@ Remotes:
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  thomasp85/patchwork,
+  dynverse/patchwork,
   tidyverse/ggplot2
+VignetteBuilder: knitr
 Collate: 
     'add_coloring.R'
     'dimensionality_reduction.R'
@@ -78,4 +79,3 @@ Collate:
     'plot_trajectory_dimred.R'
     'process_dynplot.R'
     'theme_clean.R'
-VignetteBuilder: knitr
