@@ -52,9 +52,22 @@ plot_heatmap <- function(
   expression <- dynutils::scale_quantile(expression)
 
   # get genes oi
-  if (length(genes_oi) == 1 & is.numeric(genes_oi)) {
+  if (length(genes_oi) == 1 & is.numeric(genes_oi) & genes_oi > 0) {
+    # make sure genes_oi is not larger than the number of genes
+    if(ncol(expression) < genes_oi) {genes_oi <- ncol(expression)}
+
     message("No genes of interest provided, selecting the top ", genes_oi, " genes automatically")
-    genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+
+    # choose dynfeature if it is installed, otherwise use more simplistic approach
+    if ("dynfeature" %in% rownames(installed.packages())) {
+      message("Using dynfeature for selecting the top ", genes_oi, " genes")
+      requireNamespace("dynfeature")
+
+      genes_oi <- dynfeature::calculate_overall_feature_importance(task)$feature_id[1:genes_oi]
+    } else {
+      genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+    }
+
   }
 
   expression <- expression[, genes_oi]

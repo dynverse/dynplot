@@ -154,7 +154,7 @@ plot_dendro <-dynutils::inherit_default_params(
       # the cells
       geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
       fill_scale +
-
+      # theme graph
       theme_graph() +
       ggraph::scale_edge_alpha_identity() +
       ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="dotted"), guide="none") +
