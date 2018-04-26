@@ -32,7 +32,7 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @import tidygraph
 #' @import ggraph
-#' @importFrom patchwork wrap_plots plot_spacer
+#' @importFrom patchwork wrap_plots
 #'
 #' @export
 plot_heatmap <- function(
@@ -156,11 +156,11 @@ plot_heatmap <- function(
     theme(legend.position="top")
 
   patchwork::wrap_plots(
-    patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    empty_plot(),
     cell_annotation,
     dendrogram,
     heatmap,
-    patchwork::plot_spacer() + theme(panel.background = element_blank()),
+    empty_plot(),
     onedim,
     ncol = 2,
     widths = c(2, 10),
