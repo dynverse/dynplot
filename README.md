@@ -20,23 +20,19 @@ dimension)
 
     plot_onedim(task)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-3-1.png)
+![](.readme_files/onedim-1.png)
 
 If the topology is a tree
 
     plot_dendro(task)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-4-1.png)
+![](.readme_files/dendro-1.png)
 
 If the topology is more complex
 
     plot_graph(task)
 
-![](.readme_files/unnamed-chunk-5-1.png)
+![](.readme_files/graph-1.png)
 
 Plotting a grouping
 -------------------
@@ -45,19 +41,15 @@ Plotting a grouping
 
     plot_onedim(task, grouping_assignment=grouping_assignment)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-7-1.png)
+![](.readme_files/grouping-1.png)
 
     plot_dendro(task, grouping_assignment=grouping_assignment)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-7-2.png)
+![](.readme_files/grouping-2.png)
 
     plot_graph(task, grouping_assignment=grouping_assignment)
 
-![](.readme_files/unnamed-chunk-7-3.png)
+![](.readme_files/grouping-3.png)
 
 Plotting expression of one gene
 -------------------------------
@@ -66,45 +58,30 @@ Plotting expression of one gene
 
     plot_onedim(task, gene_oi = gene_oi)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-9-1.png)
+![](.readme_files/expression-1.png)
 
     plot_dendro(task, gene_oi = gene_oi)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-9-2.png)
+![](.readme_files/expression-2.png)
 
     plot_graph(task, gene_oi = gene_oi)
 
-![](.readme_files/unnamed-chunk-9-3.png)
+![](.readme_files/expression-3.png)
 
 Plotting expression of a lot of genes
 -------------------------------------
 
     plot_heatmap(task)
 
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
+![](.readme_files/heatmap-1.png)
 
-![](.readme_files/unnamed-chunk-10-1.png)
-
-    plot_genes(task)
-
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-
-![](.readme_files/unnamed-chunk-11-1.png)
+    # plot_genes(task)
 
 Comparing trajectories
 ----------------------
 
-    pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
-    prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
-      dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
-
-    plot_strip_onedim(task, prediction)
-
-    ## [1] "M1" "M2" "M3" "M4" "M5" "M6"
-    ## [1] "milestone_start" "milestone_end"
-
-![](.readme_files/unnamed-chunk-12-1.png)
+    # pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
+    # prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
+    #   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
+    # 
+    # plot_strip_onedim(task, prediction)

@@ -36,6 +36,7 @@ Imports:
   viridis
 Suggests:
   dyntoy,
+  dynfeature,
   knitr,
   rmarkdown,
   diffusionMap,
@@ -51,6 +52,7 @@ Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy,
+  dynverse/dynfeature,
   tidyverse/ggplot2,
   thomasp85/patchwork
 Collate: 

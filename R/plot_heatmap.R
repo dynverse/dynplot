@@ -52,9 +52,21 @@ plot_heatmap <- function(
   expression <- dynutils::scale_quantile(expression)
 
   # get genes oi
-  if (length(genes_oi) == 1 & is.numeric(genes_oi)) {
+  if (length(genes_oi) == 1 & is.numeric(genes_oi) & genes_oi > 0) {
+    # make sure genes_oi is not larger than the number of genes
+    if(ncol(expression) < genes_oi) {genes_oi <- ncol(expression)}
+
     message("No genes of interest provided, selecting the top ", genes_oi, " genes automatically")
-    genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+
+    # choose dynfeature if it is installed, otherwise use more simplistic approach
+    if ("dynfeature" %in% rownames(installed.packages())) {
+      message("Using dynfeature for selecting the top ", genes_oi, " genes")
+      requireNamespace("dynfeature")
+
+      genes_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:genes_oi]
+    } else {
+      genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+    }
   }
 
   expression <- expression[, genes_oi]
@@ -65,8 +77,13 @@ plot_heatmap <- function(
   }
   gene_order <- colnames(expression)[clust$order]
 
-  # put cells on one edge
-  linearised <- linearise_cells(task$milestone_network, task$progressions, equal_cell_width = TRUE, margin=margin)
+  # put cells on one edge with equal width per cell
+  linearised <- linearise_cells(
+    task$milestone_network,
+    task$progressions,
+    equal_cell_width = TRUE,
+    margin=margin
+  )
 
   # melt expression
   molten <- expression %>%
@@ -75,6 +92,7 @@ plot_heatmap <- function(
     mutate(gene_id = as.numeric(factor(gene_id, gene_order))) %>%
     left_join(linearised$progressions, "cell_id")
 
+  # plot heatmap
   x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
   y_limits <- c(0.5, length(gene_order) + 0.5)
 
@@ -87,6 +105,7 @@ plot_heatmap <- function(
     scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left", limits=y_limits) +
     theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
 
+  # plot one dim
   onedim <- plot_onedim(
     task,
     milestone_network = linearised$milestone_network,
@@ -103,6 +122,7 @@ plot_heatmap <- function(
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +
     theme(plot.margin=margin())
 
+  # plot dendrogram
   dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
     scale_x_continuous(limits=c(-0.5, length(gene_order)-0.5), expand=c(0, 0)) +
@@ -110,6 +130,9 @@ plot_heatmap <- function(
     coord_flip() +
     theme_graph() +
     theme(plot.margin=margin())
+
+  # plot cell information
+
 
   patchwork::wrap_plots(
     dendrogram,
