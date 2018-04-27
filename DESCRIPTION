@@ -67,6 +67,7 @@ Collate:
     'plot_combined.R'
     'plot_dendro.R'
     'plot_dimred.R'
+    'plot_generic.R'
     'plot_genes.R'
     'plot_graph.R'
     'plot_grouped.R'

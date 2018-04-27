@@ -4,7 +4,7 @@
 \alias{process_dynplot}
 \title{Default theme for TI plots}
 \usage{
-process_dynplot(g, id, expand = TRUE)
+process_dynplot(g, id = NULL, expand = TRUE)
 }
 \arguments{
 \item{g}{A ggplot to modify}
