@@ -64,7 +64,7 @@ plot_graph <- dynutils::inherit_default_params(
       if (plot_label == "leaves") {
         dimred_task$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
       } else if (plot_label == "all") {
-        milestone_positions$milestone_id
+        milestones$milestone_id
       } else if (plot_label == "none"){
         c()
       } else {
