@@ -31,7 +31,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
 
 context("Test plot_dimred and dimensionality_reduction")
 
-task <- load_test_tasks("toy_tasks_connected") %>% extract_row_to_list(1)
+task <- load_test_tasks("toy_tasks_connected") %>% filter(trajectory_type == "directed_linear") %>% extract_row_to_list(1)
 map(get_dimreds(), function(dimred_name) {
   space <- get(dimred_name)(task$expression)
 
