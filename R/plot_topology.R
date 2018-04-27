@@ -13,14 +13,13 @@ plot_topology <- dynutils::inherit_default_params(
     milestone_graph <- as_tbl_graph(task$milestone_network)
     milestone_positions <- milestone_graph %>%
       create_layout("tree") %>%
-      mutate(milestone_id = name) %>%
-      slice(match(names(igraph::V(milestone_graph)), milestone_id))
+      mutate(milestone_id = name)
     if(!is.null(milestones)) {
       milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     }
     milestone_positions <- add_milestone_coloring(milestone_positions, color_milestones)
 
-    milestone_graph <- tbl_graph(milestone_positions %>% select(-x, -y), task$milestone_network)
+    milestone_graph <- igraph::graph_from_data_frame(task$milestone_network, vertices = milestone_positions %>% select(-x, -y)) %>% as_tbl_graph()
 
     ggraph(milestone_graph, "manual", node.positions=milestone_positions) +
       geom_edge_fan() +
