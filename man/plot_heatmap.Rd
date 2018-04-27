@@ -8,7 +8,7 @@ plot_heatmap(task, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
   milestones = NULL, milestone_percentages = task$milestone_percentages,
   grouping_assignment = NULL, groups = NULL,
-  cell_feature_importances = NULL)
+  cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"))
 }
 \arguments{
 \item{task}{The task}
@@ -30,6 +30,10 @@ plot_heatmap(task, expression_source = "expression", features_oi = 20,
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 
 \item{groups}{Tibble containing information of the cell groups}
+
+\item{cell_feature_importances}{The feature importances per cell}
+
+\item{heatmap_type}{The type of heatmap, either tiled or dotted}
 }
 \description{
 Plot the task as a heatmap

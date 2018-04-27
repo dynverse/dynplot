@@ -27,6 +27,8 @@ order_cells <- function(milestone_network, progressions) {
 #' @param task The task
 #' @param features_oi features to plot, or the top number of features to select
 #' @param clust The method to cluster the features, or a hclust object
+#' @param cell_feature_importances The feature importances per cell
+#' @param heatmap_type The type of heatmap, either tiled or dotted
 #'
 #' @inheritParams plot_onedim
 #'
@@ -46,8 +48,11 @@ plot_heatmap <- function(
   milestone_percentages = task$milestone_percentages,
   grouping_assignment = NULL,
   groups = NULL,
-  cell_feature_importances = NULL
+  cell_feature_importances = NULL,
+  heatmap_type = c("tiled", "dotted")
 ) {
+  heatmap_type <- match.arg(heatmap_type)
+
   # process expression
   expression <- check_expression_source(task, expression_source)
   expression <- dynutils::scale_quantile(expression)
@@ -90,7 +95,7 @@ plot_heatmap <- function(
   molten <- expression %>%
     reshape2::melt(varnames=c("cell_id", "feature_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%
-    mutate(feature_id = as.numeric(factor(feature_id, feature_order))) %>%
+    mutate(feature_position = as.numeric(factor(feature_id, feature_order))) %>%
     left_join(linearised$progressions, "cell_id")
 
   # check importances
@@ -106,20 +111,45 @@ plot_heatmap <- function(
   x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
   y_limits <- c(0.5, length(feature_order) + 0.5)
 
-  heatmap <- ggplot(molten) +
-    # geom_point(aes(cumpercentage, feature_id, color=expression)) +
-    geom_tile(aes(cumpercentage, feature_id, fill=expression)) +
-    scale_fill_distiller(palette = "RdBu") +
-    scale_color_distiller(palette = "RdBu") +
-    scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
-    theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
-
-  # plot feature importances
-  if (!is.null(cell_feature_importances)) {
-    heatmap <- heatmap +
-      geom_tile(aes(cumpercentage, feature_id, alpha=-sqrt(importance)), fill="black")
+  if (heatmap_type == "tiled") {
+    if (is.null(cell_feature_importances)) {
+      heatmap <- ggplot(molten) +
+        geom_tile(aes(cumpercentage, feature_position, fill=expression)) +
+        scale_fill_distiller(palette = "RdBu") +
+        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
+        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
+        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+    } else {
+      heatmap <- ggplot(molten) +
+        # geom_tile(aes(cumpercentage, feature_position, alpha=importance), fill="black") +
+        geom_rect(aes(xmin=cumpercentage-0.5, xmax=cumpercentage+0.5, ymin=feature_position+scale_minmax(importance)/10*5, ymax=feature_position-scale_minmax(importance)/10*5, fill=expression)) +
+        scale_fill_distiller(palette = "RdBu") +
+        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
+        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
+        scale_alpha_continuous(range=c(0, 1)) +
+        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+    }
+  } else if (heatmap_type == "dotted") {
+    if (is.null(cell_feature_importances)) {
+      heatmap <- ggplot(molten) +
+        geom_point(aes(cumpercentage, feature_position, color=expression, size=expression)) +
+        scale_color_distiller(palette = "RdBu") +
+        scale_size_continuous(range=c(0, 6)) +
+        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
+        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
+        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+    } else {
+      heatmap <- ggplot(molten) +
+        geom_point(aes(cumpercentage, feature_position, color=expression, size=importance**2)) +
+        scale_color_distiller(palette = "RdBu") +
+        scale_size_continuous(range=c(0, 6)) +
+        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
+        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
+        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+    }
   }
+
+
 
   # plot one dim
   onedim <- plot_onedim(
