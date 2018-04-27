@@ -38,8 +38,12 @@ If the topology is more complex
 
 ![](.readme_files/unnamed-chunk-3-1.png)
 
-Plotting a grouping
--------------------
+    plot_dimred(task)
+
+![](.readme_files/unnamed-chunk-4-1.png)
+
+Plotting a grouping or clustering
+---------------------------------
 
     grouping_assignment <- task$prior_information$grouping_assignment
 
@@ -54,6 +58,10 @@ Plotting a grouping
     plot_graph(task, grouping_assignment=grouping_assignment)
 
 ![](.readme_files/grouping-3.png)
+
+    plot_dimred(task, grouping_assignment=grouping_assignment)
+
+![](.readme_files/grouping-4.png)
 
 Plotting expression of one gene
 -------------------------------
@@ -71,6 +79,10 @@ Plotting expression of one gene
     plot_graph(task, gene_oi = gene_oi)
 
 ![](.readme_files/expression-3.png)
+
+    plot_dimred(task, gene_oi = gene_oi)
+
+![](.readme_files/expression-4.png)
 
 Plotting expression of a lot of genes
 -------------------------------------
@@ -90,4 +102,4 @@ Comparing trajectories
 
     plot_strip_onedim(task, prediction)
 
-![](.readme_files/unnamed-chunk-6-1.png)
+![](.readme_files/unnamed-chunk-7-1.png)

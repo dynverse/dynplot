@@ -3,8 +3,8 @@ title: "Plotting a toy datasets using dynplot"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
-    fig_width: 7
-    fig_height: 5 
+    fig_width: 5
+    fig_height: 4 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -46,8 +46,11 @@ plot_graph(task)
 plot_topology(task)
 ```
 
+```{r}
+plot_dimred(task)
+```
 
-## Plotting a grouping
+## Plotting a grouping or clustering
 ```{r}
 grouping_assignment <- task$prior_information$grouping_assignment
 ```
@@ -56,6 +59,7 @@ grouping_assignment <- task$prior_information$grouping_assignment
 plot_onedim(task, grouping_assignment=grouping_assignment)
 plot_dendro(task, grouping_assignment=grouping_assignment)
 plot_graph(task, grouping_assignment=grouping_assignment)
+plot_dimred(task, grouping_assignment=grouping_assignment)
 ```
 
 ## Plotting expression of one gene
@@ -67,6 +71,7 @@ gene_oi <- first(colnames(task$counts))
 plot_onedim(task, gene_oi = gene_oi)
 plot_dendro(task, gene_oi = gene_oi)
 plot_graph(task, gene_oi = gene_oi)
+plot_dimred(task, gene_oi = gene_oi)
 ```
 
 ## Plotting expression of a lot of genes
