@@ -21,7 +21,6 @@ plot_dimred <- dynutils::inherit_default_params(
     milestone_percentages,
     pseudotime,
     expression_source = "expression",
-    cell_positions=NULL,
     plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
     plot_milestone_labels = TRUE,
     dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)

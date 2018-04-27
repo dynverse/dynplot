@@ -1,16 +1,23 @@
 context("Test plot_dendro")
 
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% filter(trajectory_type %in% c("directed_linear", "bifurcation", "multifurcation", "rooted_tree", "rooted_binary_tree")) %>% ungroup()
-
-for (taski in seq_len(nrow(toy_tasks))) {
-  task <- extract_row_to_list(toy_tasks, taski)
-
-  test_that(paste0("Perform dimred on trajectory with task ", task$id), {
+test_tasks(load_test_tasks("toy_tasks_tree"), function(task) {
+  test_that(paste0("plot_dendro on ", task$id), {
     g <- plot_dendro(task)
-    expect_is(g, "ggplot")
-
-    pdf("/dev/null")
-    print(g)
-    dev.off()
+    expect_ggplot(g)
   })
-}
+
+  test_that(paste0("plot_dendro on ", task$id, " with pseudotime"), {
+    g <- plot_dendro(task, color_cells = "pseudotime")
+    expect_ggplot(g)
+  })
+
+  test_that(paste0("plot_dendro on ", task$id, " with grouping"), {
+    g <- plot_dendro(task, grouping_assignment = task$grouping_assignment)
+    expect_ggplot(g)
+  })
+
+  test_that(paste0("plot_dendro on ", task$id, " with milestone"), {
+    g <- plot_dendro(task, "milestone")
+    expect_ggplot(g)
+  })
+})

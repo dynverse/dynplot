@@ -1,9 +1,6 @@
 context("Test linearisation")
 
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
-
-for (taski in seq_len(nrow(toy_tasks))) {
-  task <- extract_row_to_list(toy_tasks, taski)
+test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
 
   test_that(paste0("Linearise cells of ", task$id, " works."), {
     linearisation <- linearise_cells(task$milestone_network, task$progressions)
@@ -16,4 +13,4 @@ for (taski in seq_len(nrow(toy_tasks))) {
     expect_true(all(task$cell_ids %in% linearisation$progressions$cell_id))
     expect_true(all(table(linearisation$progressions$cell_id) == 1))
   })
-}
+})
