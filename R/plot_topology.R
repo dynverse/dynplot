@@ -13,7 +13,8 @@ plot_topology <- dynutils::inherit_default_params(
     milestone_graph <- as_tbl_graph(task$milestone_network)
     milestone_positions <- milestone_graph %>%
       create_layout("tree") %>%
-      mutate(milestone_id = name)
+      mutate(milestone_id = name) %>%
+      slice(match(names(igraph::V(milestone_graph)), milestone_id))
     if(!is.null(milestones)) {
       milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     }
