@@ -10,7 +10,7 @@ Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynve
 
 Load in a toy dataset
 
-    task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_to_list(1)
+    task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_to_list(1) %>% root_trajectory()
 
 Plotting the topology and cellular positions
 --------------------------------------------
@@ -33,6 +33,10 @@ If the topology is more complex
     plot_graph(task)
 
 ![](.readme_files/graph-1.png)
+
+    plot_topology(task)
+
+![](.readme_files/unnamed-chunk-3-1.png)
 
 Plotting a grouping
 -------------------
@@ -80,8 +84,10 @@ Plotting expression of a lot of genes
 Comparing trajectories
 ----------------------
 
-    # pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
-    # prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>% 
-    #   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
-    # 
-    # plot_strip_onedim(task, prediction)
+    pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
+    prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>%
+      dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
+
+    plot_strip_onedim(task, prediction)
+
+![](.readme_files/unnamed-chunk-6-1.png)
