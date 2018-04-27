@@ -10,7 +10,7 @@ library(magrittr, warn.conflicts = FALSE)
 library(readr, warn.conflicts = FALSE)
 
 save_test <- function(x, name) {
-  write_rds(x, paste0("tests/testthat/", name, ".rds"))
+  write_rds(x, paste0("testthat/", name, ".rds"))
   x
 }
 
