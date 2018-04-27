@@ -52,7 +52,7 @@ plot_heatmap <- function(
   expression <- dynutils::scale_quantile(expression)
 
   # get genes oi
-  if (length(genes_oi) == 1 & is.numeric(genes_oi) & genes_oi > 0) {
+  if (length(genes_oi) == 1 & is.numeric(genes_oi) & genes_oi[1] > 0) {
     # make sure genes_oi is not larger than the number of genes
     if(ncol(expression) < genes_oi) {genes_oi <- ncol(expression)}
 
