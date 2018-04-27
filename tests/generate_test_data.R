@@ -7,6 +7,7 @@ library(purrr, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(tibble, warn.conflicts = FALSE)
 library(magrittr, warn.conflicts = FALSE)
+library(readr, warn.conflicts = FALSE)
 
 save_test <- function(x, name) {
   write_rds(x, paste0("tests/testthat/", name, ".rds"))
