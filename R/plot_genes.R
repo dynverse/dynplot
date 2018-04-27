@@ -1,20 +1,20 @@
-#' Plotting the genes
+#' Plotting the features
 #'
 #' @param task The task
-#' @param genes_oi The genes of interest
+#' @param features_oi The features of interest
 #' @param margin The margin to add
 #'
 #' @importFrom patchwork wrap_plots
 #' @export
-plot_genes <- function(
+plot_features <- function(
   task,
-  genes_oi = sample(colnames(task$counts), min(c(5, ncol(task$counts)))),
+  features_oi = sample(colnames(task$counts), min(c(5, ncol(task$counts)))),
   margin = 0.05
 ) {
   counts <- task$counts %>% as.data.frame() %>%
-    select(one_of(genes_oi)) %>%
+    select(one_of(features_oi)) %>%
     tibble::rownames_to_column("cell_id") %>%
-    gather("gene_id", "expression", -cell_id)
+    gather("feature_id", "expression", -cell_id)
 
   milestone_network <- optimize_order(task$milestone_network)
   linearised <- linearise_cells(milestone_network, task$progressions, one_edge = TRUE, margin = margin)
@@ -28,7 +28,7 @@ plot_genes <- function(
   expression_plot <- ggplot(plotdata, aes(cumpercentage, expression, color=edge_id)) +
     geom_point() +
     geom_smooth() +
-    facet_grid(gene_id~.) +
+    facet_grid(feature_id~.) +
     geom_vline(aes(xintercept=cumstart), data=milestone_network, alpha=0.2) +
     geom_vline(aes(xintercept=cumend), data=milestone_network, alpha=0.2) +
     # cowplot::theme_cowplot() +
@@ -42,6 +42,6 @@ plot_genes <- function(
     expression_plot,
     onedim_plot,
     ncol = 1,
-    heights = c(length(genes_oi), 1)
+    heights = c(length(features_oi), 1)
   )
 }

@@ -27,7 +27,7 @@ plot_graph <- dynutils::inherit_default_params(
     color_milestones,
     grouping_assignment,
     groups,
-    gene_oi,
+    feature_oi,
     pseudotime,
     expression_source,
     milestones,

@@ -15,7 +15,7 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells,
     grouping_assignment,
     groups,
-    gene_oi,
+    feature_oi,
     color_milestones,
     milestones,
     milestone_percentages,

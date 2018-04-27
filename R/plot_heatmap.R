@@ -25,8 +25,8 @@ order_cells <- function(milestone_network, progressions) {
 #' Plot the task as a heatmap
 #'
 #' @param task The task
-#' @param genes_oi Genes to plot, or the top number of genes to select
-#' @param clust The method to cluster the genes, or a hclust object
+#' @param features_oi features to plot, or the top number of features to select
+#' @param clust The method to cluster the features, or a hclust object
 #'
 #' @inheritParams plot_onedim
 #'
@@ -38,44 +38,45 @@ order_cells <- function(milestone_network, progressions) {
 plot_heatmap <- function(
   task,
   expression_source = "expression",
-  genes_oi = 20,
+  features_oi = 20,
   clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
   milestone_percentages = task$milestone_percentages,
   grouping_assignment = NULL,
-  groups = NULL
+  groups = NULL,
+  cell_feature_importances = NULL
 ) {
   # process expression
   expression <- check_expression_source(task, expression_source)
   expression <- dynutils::scale_quantile(expression)
 
-  # get genes oi
-  if (length(genes_oi) == 1 & is.numeric(genes_oi) & genes_oi[1] > 0) {
-    # make sure genes_oi is not larger than the number of genes
-    if(ncol(expression) < genes_oi) {genes_oi <- ncol(expression)}
+  # get features oi
+  if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
+    # make sure features_oi is not larger than the number of features
+    if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
 
-    message("No genes of interest provided, selecting the top ", genes_oi, " genes automatically")
+    message("No features of interest provided, selecting the top ", features_oi, " features automatically")
 
     # choose dynfeature if it is installed, otherwise use more simplistic approach
     if ("dynfeature" %in% rownames(installed.packages())) {
-      message("Using dynfeature for selecting the top ", genes_oi, " genes")
+      message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
-      genes_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:genes_oi]
+      features_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:features_oi]
     } else {
-      genes_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(genes_oi)
+      features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
     }
   }
 
-  expression <- expression[, genes_oi]
+  expression <- expression[, features_oi]
 
-  # cluster genes
+  # cluster features
   if(is.character(clust)) {
     clust <- hclust(as.dist(correlation_distance(t(expression))), method = clust)
   }
-  gene_order <- colnames(expression)[clust$order]
+  feature_order <- colnames(expression)[clust$order]
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
@@ -87,23 +88,38 @@ plot_heatmap <- function(
 
   # melt expression
   molten <- expression %>%
-    reshape2::melt(varnames=c("cell_id", "gene_id"), value.name="expression") %>%
+    reshape2::melt(varnames=c("cell_id", "feature_id"), value.name="expression") %>%
     mutate_if(is.factor, as.character) %>%
-    mutate(gene_id = as.numeric(factor(gene_id, gene_order))) %>%
+    mutate(feature_id = as.numeric(factor(feature_id, feature_order))) %>%
     left_join(linearised$progressions, "cell_id")
+
+  # check importances
+  if(!is.null(cell_feature_importances)) {
+    molten <- left_join(
+      molten,
+      cell_feature_importance,
+      c("cell_id", "feature_id")
+    )
+  }
 
   # plot heatmap
   x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
-  y_limits <- c(0.5, length(gene_order) + 0.5)
+  y_limits <- c(0.5, length(feature_order) + 0.5)
 
   heatmap <- ggplot(molten) +
-    # geom_point(aes(cumpercentage, gene_id, color=expression)) +
-    geom_tile(aes(cumpercentage, gene_id, fill=expression)) +
+    # geom_point(aes(cumpercentage, feature_id, color=expression)) +
+    geom_tile(aes(cumpercentage, feature_id, fill=expression)) +
     scale_fill_distiller(palette = "RdBu") +
     scale_color_distiller(palette = "RdBu") +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(gene_order), labels=gene_order, position="left", limits=y_limits) +
+    scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
     theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+
+  # plot feature importances
+  if (!is.null(cell_feature_importances)) {
+    heatmap <- heatmap +
+      geom_tile(aes(cumpercentage, feature_id, alpha=-sqrt(importance)), fill="black")
+  }
 
   # plot one dim
   onedim <- plot_onedim(
@@ -126,7 +142,7 @@ plot_heatmap <- function(
   # plot dendrogram
   dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
-    scale_x_continuous(limits=c(-0.5, length(gene_order)-0.5), expand=c(0, 0)) +
+    scale_x_continuous(limits=c(-0.5, length(feature_order)-0.5), expand=c(0, 0)) +
     scale_y_reverse() +
     coord_flip() +
     theme_graph() +

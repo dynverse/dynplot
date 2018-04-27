@@ -62,25 +62,25 @@ plot_graph(task, grouping_assignment=grouping_assignment)
 plot_dimred(task, grouping_assignment=grouping_assignment)
 ```
 
-## Plotting expression of one gene
+## Plotting expression of one feature
 ```{r}
-gene_oi <- first(colnames(task$counts))
+feature_oi <- first(colnames(task$counts))
 ```
 
 ```{r expression}
-plot_onedim(task, gene_oi = gene_oi)
-plot_dendro(task, gene_oi = gene_oi)
-plot_graph(task, gene_oi = gene_oi)
-plot_dimred(task, gene_oi = gene_oi)
+plot_onedim(task, feature_oi = feature_oi)
+plot_dendro(task, feature_oi = feature_oi)
+plot_graph(task, feature_oi = feature_oi)
+plot_dimred(task, feature_oi = feature_oi)
 ```
 
-## Plotting expression of a lot of genes
+## Plotting expression of a lot of features
 
 ```{r heatmap}
 plot_heatmap(task)
 ```
 ```{r line}
-# plot_genes(task)
+# plot_features(task)
 ```
 
 

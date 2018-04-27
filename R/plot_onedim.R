@@ -101,7 +101,7 @@ plot_onedim <- dynutils::inherit_default_params(
     progressions = task$progressions,
     grouping_assignment,
     groups,
-    gene_oi,
+    feature_oi,
     pseudotime,
     expression_source,
     color_milestones,

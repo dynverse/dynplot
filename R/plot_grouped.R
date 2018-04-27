@@ -6,15 +6,15 @@
 #'     color_milestones,
 #'     grouping_assignment = task$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
 #'     groups = tibble(group_id = task$milestone_ids),
-#'     order_cells = c("auto", "pseudotime", "gene"),
+#'     order_cells = c("auto", "pseudotime", "feature"),
 #'     pseudotime = NULL,
-#'     gene_oi = NULL,
+#'     feature_oi = NULL,
 #'     expression_source = "expression"
 #'   ) {
 #'     order_cells <- match.arg(order_cells)
 #'     if(order_cells == "auto") {
-#'       if(!is.null(gene_oi)) {
-#'         order_cells <- "gene"
+#'       if(!is.null(feature_oi)) {
+#'         order_cells <- "feature"
 #'       } else {
 #'         order_cells <- "pseudotime"
 #'       }
@@ -24,11 +24,11 @@
 #'       task <- check_pseudotime(task, pseudotime)
 #'       cell_positions <- tibble(cell_id = names(task$pseudotime), y = task$pseudotime)
 #'       y_scale <- scale_y_continuous("pseudotime")
-#'     } else if (order_cells == "gene") {
+#'     } else if (order_cells == "feature") {
 #'       expression <- check_expression_source(task, expression_source)
-#'       check_gene(expression, gene_oi)
-#'       cell_positions <- tibble(cell_id = rownames(task[[expression_source]]), y = task[[expression_source]][, gene_oi])
-#'       y_scale <- scale_y_continuous(paste0(gene_oi, " ", expression_source))
+#'       check_feature(expression, feature_oi)
+#'       cell_positions <- tibble(cell_id = rownames(task[[expression_source]]), y = task[[expression_source]][, feature_oi])
+#'       y_scale <- scale_y_continuous(paste0(feature_oi, " ", expression_source))
 #'     }
 #'
 #'     cell_positions <- left_join(cell_positions, grouping_assignment, "cell_id")
