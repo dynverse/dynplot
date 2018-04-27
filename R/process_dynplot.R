@@ -5,7 +5,7 @@
 #' @param expand Whether or not to leave space at the borders
 #'
 #' @export
-process_dynplot <- function(g, id, expand = TRUE) {
+process_dynplot <- function(g, id = NULL, expand = TRUE) {
   gbl <- ggplot_build(g)$layout
   if ("panel_params" %in% names(gbl)) {
     ranges <- gbl$panel_params[[1]]
@@ -23,7 +23,7 @@ process_dynplot <- function(g, id, expand = TRUE) {
   new_xrange2 <- mean(xrange) + c(-maxdiff, maxdiff)
   new_yrange2 <- mean(yrange) + c(-maxdiff, maxdiff)
 
-  g +
+  g <- g +
     theme(
       plot.title = element_text(size = 20, face = "bold", hjust = .5),
       panel.background = element_blank(),
@@ -35,8 +35,13 @@ process_dynplot <- function(g, id, expand = TRUE) {
       axis.text = element_blank(),
       axis.title = element_blank(),
       legend.key = element_blank()
-    ) +
-    ggtitle(id) +
+    )
+
+  if(!is.null(id)) {
+    g <- g + ggtitle(id)
+  }
+
+  g <- g +
     coord_equal(expand = expand, xlim = new_xrange, ylim = new_yrange) +
     xlim(new_xrange2[[1]], new_xrange2[[2]]) + ylim(new_yrange2[[1]], new_yrange2[[2]]) +
     expand_limits(x = new_xrange, y = new_yrange)
