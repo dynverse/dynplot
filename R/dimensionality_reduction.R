@@ -1,12 +1,12 @@
-#' PCA dimensionality reduction
-#' @param x Data matrix
-#' @param ndim Number of dimensions
+#' @rdname get_dimreds
 #' @export
 dimred_pca = function(x, ndim=3) {
   space = prcomp(t(x))$rotation[,seq_len(ndim)]
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
 dimred_simlr = function(x, ndim=3, nclusters=4) {
   dynutils::install_packages("SIMLR", "dynplot")
 
@@ -16,9 +16,7 @@ dimred_simlr = function(x, ndim=3, nclusters=4) {
   process_dimred(space)
 }
 
-#' MDS dimensionality reduction
-#' @param x Data matrix
-#' @param ndim Number of dimensions
+#' @rdname get_dimreds
 #' @export
 dimred_mds = function(x, ndim=3) {
   dynutils::install_packages("SCORPIUS", "dynplot")
@@ -27,6 +25,8 @@ dimred_mds = function(x, ndim=3) {
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
 dimred_mds_sammon = function(x, ndim=3) {
   dynutils::install_packages(c("SCORPIUS", "MASS"), "dynplot")
 
@@ -35,6 +35,8 @@ dimred_mds_sammon = function(x, ndim=3) {
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
 dimred_mds_isomds = function(x, ndim=3) {
   dynutils::install_packages(c("SCORPIUS", "MASS"), "dynplot")
 
@@ -43,6 +45,8 @@ dimred_mds_isomds = function(x, ndim=3) {
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
 dimred_mds_smacof = function(x, ndim=3) {
   dynutils::install_packages(c("SCORPIUS", "smacof"), "dynplot")
 
@@ -51,9 +55,7 @@ dimred_mds_smacof = function(x, ndim=3) {
   process_dimred(space)
 }
 
-#' tSNE dimensionality reduction
-#' @param x Data matrix
-#' @param ndim Number of dimensions
+#' @rdname get_dimreds
 #' @export
 dimred_tsne = function(x, ndim=3) {
   dynutils::install_packages(c("SCORPIUS", "Rtsne"), "dynplot")
@@ -63,10 +65,7 @@ dimred_tsne = function(x, ndim=3) {
   process_dimred(space)
 }
 
-#' DP dimensionality reduction
-#' @param x Data matrix
-#' @param ndim Number of dimensions
-#' @param neigen Number of eigen values
+#' @rdname get_dimreds
 #' @export
 dimred_dp = function(x, ndim=3, neigen=NULL) {
   dynutils::install_packages(c("SCORPIUS", "diffusionMap"), "dynplot")
@@ -75,9 +74,7 @@ dimred_dp = function(x, ndim=3, neigen=NULL) {
   process_dimred(space$X[,seq_len(ndim)])
 }
 
-#' ICA dimensionality reduction
-#' @param x Data matrix
-#' @param ndim Number of dimensions
+#' @rdname get_dimreds
 #' @export
 dimred_ica = function(x, ndim=3) {
   dynutils::install_packages(c("fastICA"), "dynplot")
@@ -86,6 +83,8 @@ dimred_ica = function(x, ndim=3) {
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
 dimred_lle = function(x, ndim=3) {
   dynutils::install_packages(c("lle"), "dynplot")
 
@@ -101,4 +100,14 @@ process_dimred = function(space) {
   space
 }
 
+#' Dimensionality reduction functions
+#' @param x Data matrix
+#' @param ndim Number of dimensions
+#' @param neigen Number of eigenvalues for diffusionMap
+#' @param nclusters Number of clusters for simlr
+#' @export
+get_dimreds <- function() {
+  dimreds <- lsf.str(asNamespace("dynplot"), pattern = "^dimred_")
 
+  dimreds[!dimreds %in% c("dimred_trajectory")]
+}

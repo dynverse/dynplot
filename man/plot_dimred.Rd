@@ -9,7 +9,7 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   groups = NULL, gene_oi = NULL, color_milestones = c("auto", "given",
   get_milestone_palette_names()), milestones = NULL,
   milestone_percentages = NULL, pseudotime = NULL,
-  expression_source = "expression", cell_positions,
+  expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
   plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)
   > 500, dimred_pca, dimred_mds))
@@ -34,8 +34,6 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 \item{pseudotime}{The pseudotime}
 
 \item{expression_source}{Source of the expression}
-
-\item{cell_positions}{The positions of the cells}
 
 \item{plot_milestone_network}{Whether to plot the milestone network}
 

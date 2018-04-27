@@ -1,11 +1,8 @@
 library(testthat)
 library(dynplot)
-library(dynutils)
-library(dynwrap)
 library(dplyr)
 library(ggplot2)
-library(purrr)
-
-Sys.setenv("R_TESTS" = "")
+library(tibble)
+library(readr)
 
 test_check("dynplot")

@@ -1,18 +1,23 @@
 context("Test plot_onedim")
 
-data("toy_tasks", package="dyntoy")
-
-toy_tasks <- toy_tasks %>% group_by(toy_tasks$trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
-
-for (taski in seq_len(nrow(toy_tasks))) {
-  task <- extract_row_to_list(toy_tasks, taski)
-
-  test_that(paste0("Plot onedim in ", task$id), {
+test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
+  test_that(paste0("plot_onedim on ", task$id), {
     g <- plot_onedim(task)
-    expect_is(g, "ggplot")
-
-    pdf("/dev/null")
-    print(g)
-    dev.off()
+    expect_ggplot(g)
   })
-}
+
+  test_that(paste0("plot_onedim on ", task$id, " with pseudotime"), {
+    g <- plot_onedim(task, color_cells = "pseudotime")
+    expect_ggplot(g)
+  })
+
+  test_that(paste0("plot_onedim on ", task$id, " with grouping"), {
+    g <- plot_onedim(task, grouping_assignment = task$grouping_assignment)
+    expect_ggplot(g)
+  })
+
+  test_that(paste0("plot_onedim on ", task$id, " with milestone"), {
+    g <- plot_onedim(task, "milestone")
+    expect_ggplot(g)
+  })
+})
