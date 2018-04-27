@@ -41,7 +41,9 @@ get_dimreds()
 
 \item{ndim}{Number of dimensions}
 
-\item{neigen}{Number of eigenvalues}
+\item{nclusters}{Number of clusters for simlr}
+
+\item{neigen}{Number of eigenvalues for diffusionMap}
 }
 \description{
 Dimensionality reduction functions
