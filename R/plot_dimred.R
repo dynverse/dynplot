@@ -123,8 +123,7 @@ plot_dimred <- dynutils::inherit_default_params(
             geom_point(aes(fill=color), data=milestone_positions, size=4, shape=21, color="#00000000")
         } else {
           plot <- plot +
-            geom_point(color="black", data=milestone_positions, size=6, alpha=0.5) +
-            geom_point(color="white", data=milestone_positions, size=4, alpha=0.5)
+            geom_point(color="#333333", data=milestone_positions, size=2, alpha=1)
         }
       }
 
