@@ -11,8 +11,8 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
-  plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)
-  > 500, dimred_pca, dimred_mds))
+  plot_milestone_labels = FALSE,
+  dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
 \item{task}{The task}

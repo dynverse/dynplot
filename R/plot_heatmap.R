@@ -64,8 +64,17 @@ plot_heatmap <- function(
 
     message("No features of interest provided, selecting the top ", features_oi, " features automatically")
 
-    # choose dynfeature if it is installed, otherwise use more simplistic approach
-    if ("dynfeature" %in% rownames(installed.packages())) {
+    # choose cell_feauture_importance if give, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
+    if (!is.null(cell_feature_importances)) {
+      message("Selecting features with top maximal feature importance across cells")
+
+      features_oi <- cell_feature_importances %>%
+        group_by(feature_id) %>%
+        summarise(importance=max(importance)) %>%
+        top_n(features_oi, importance) %>%
+        pull(feature_id)
+
+    } else if ("dynfeature" %in% rownames(installed.packages())) {
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
