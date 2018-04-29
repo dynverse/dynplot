@@ -40,16 +40,16 @@ unavailable <- empty + geom_text(aes(0, 0, label="----"))
 
 title <- list(
   dynplot:::empty_plot(), 
-  empty + geom_label(aes(0, 0, label="Topology")),
-  empty + geom_label(aes(0, 0, label="Milestones")),
-  empty + geom_label(aes(0, 0, label="Grouping")),
-  empty + geom_label(aes(0, 0, label="Single expression")), 
+  # empty + geom_label(aes(0, 0, label="Topology")),
+  empty + geom_label(aes(0, 0, label="Ordering")),
+  empty + geom_label(aes(0, 0, label="Grouping/clustering")),
+  empty + geom_label(aes(0, 0, label="Expression of \n a single gene")), 
   empty + geom_label(aes(0, 0, label="Pseudotime"))
 )
 
 dendro <- list(
   empty + geom_label(aes(0, 0, label="Dendrogram")),
-  plot_dendro(task),
+  # plot_dendro(task),
   plot_dendro(task, "milestone"),
   plot_dendro(task, grouping_assignment=grouping_assignment, groups=groups),
   plot_dendro(task, feature_oi=feature_oi),
@@ -58,7 +58,7 @@ dendro <- list(
 
 onedim <- list(
     empty + geom_label(aes(0, 0, label="Onedim")),
-    plot_onedim(task),
+    # plot_onedim(task),
     plot_onedim(task, "milestone"),
     plot_onedim(task, grouping_assignment=grouping_assignment, groups=groups),
     plot_onedim(task, feature_oi=feature_oi),
@@ -67,7 +67,7 @@ onedim <- list(
 
 graph <- list(
   empty + geom_label(aes(0, 0, label="Graph")),
-  plot_graph(task),
+  # plot_graph(task),
   plot_graph(task, "milestone"),
   plot_graph(task, grouping_assignment=grouping_assignment, groups=groups),
   plot_graph(task, feature_oi=feature_oi),
@@ -76,7 +76,7 @@ graph <- list(
 
 dimred <- list(
   empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
-  plot_dimred(task),
+  # plot_dimred(task),
   plot_dimred(task, "milestone"),
   plot_dimred(task, grouping_assignment=grouping_assignment, groups=groups),
   plot_dimred(task, feature_oi=feature_oi),
