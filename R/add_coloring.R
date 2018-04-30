@@ -30,8 +30,8 @@ add_milestone_coloring <- function(
 #' @param task The task
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
-#' @param gene_oi Gene to plot expression
-#' @param expression_source Source of the gene expression, defaults to `expression`
+#' @param feature_oi feature to plot expression
+#' @param expression_source Source of the feature expression, defaults to `expression`
 #' @param pseudotime The pseudotime
 #' @param milestone_percentages The milestone percentages
 #' @inheritParams add_milestone_coloring
@@ -39,11 +39,11 @@ add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
   function(
     cell_positions,
-    color_cells = c("auto", "invisible", "positions", "grouping", "gene", "milestone", "pseudotime"),
+    color_cells = c("auto", "invisible", "positions", "grouping", "feature", "milestone", "pseudotime"),
     task,
     grouping_assignment=NULL,
     groups=NULL,
-    gene_oi=NULL,
+    feature_oi=NULL,
     expression_source="expression",
     pseudotime=NULL,
     color_milestones=NULL,
@@ -56,9 +56,9 @@ add_cell_coloring <- dynutils::inherit_default_params(
       if(!is.null(grouping_assignment)) {
         message("Coloring by grouping")
         color_cells <- "grouping"
-      } else if (!is.null(gene_oi)) {
+      } else if (!is.null(feature_oi)) {
         message("Coloring by expression")
-        color_cells <- "gene"
+        color_cells <- "feature"
       } else if (!is.null(milestones) | !is.null(milestone_percentages)) {
         message("Coloring by milestone")
         color_cells <- "milestone"
@@ -71,9 +71,9 @@ add_cell_coloring <- dynutils::inherit_default_params(
     }
     if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
-    } else if (color_cells == "gene") {
+    } else if (color_cells == "feature") {
       expression <- check_expression_source(task, expression_source)
-      check_gene(expression, gene_oi)
+      check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
       if(is.null(milestone_percentages)) {
         message("Using milestone_percentages from task")
@@ -94,9 +94,9 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
       fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=10))
 
-    } else if (color_cells == "gene") {
-      cell_positions$color <- expression[cell_positions$cell_id, gene_oi]
-      fill_scale <- scale_fill_distiller(paste0(gene_oi, " ", expression_source), palette = "RdYlBu")
+    } else if (color_cells == "feature") {
+      cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
+      fill_scale <- scale_fill_distiller(paste0(feature_oi, " ", expression_source), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
       fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"=color_cells), guide="none")

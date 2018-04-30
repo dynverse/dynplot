@@ -11,7 +11,7 @@ plot_dendro <-dynutils::inherit_default_params(
     color_cells,
     grouping_assignment,
     groups,
-    gene_oi,
+    feature_oi,
     expression_source,
     pseudotime,
     color_milestones,

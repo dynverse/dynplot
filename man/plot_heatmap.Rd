@@ -4,19 +4,20 @@
 \alias{plot_heatmap}
 \title{Plot the task as a heatmap}
 \usage{
-plot_heatmap(task, expression_source = "expression", genes_oi = 20,
+plot_heatmap(task, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
   milestones = NULL, milestone_percentages = task$milestone_percentages,
-  grouping_assignment = NULL, groups = NULL)
+  grouping_assignment = NULL, groups = NULL,
+  cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"))
 }
 \arguments{
 \item{task}{The task}
 
-\item{expression_source}{Source of the gene expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to `expression`}
 
-\item{genes_oi}{Genes to plot, or the top number of genes to select}
+\item{features_oi}{features to plot, or the top number of features to select}
 
-\item{clust}{The method to cluster the genes, or a hclust object}
+\item{clust}{The method to cluster the features, or a hclust object}
 
 \item{margin}{Relative distance between milestones}
 
@@ -29,6 +30,10 @@ plot_heatmap(task, expression_source = "expression", genes_oi = 20,
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 
 \item{groups}{Tibble containing information of the cell groups}
+
+\item{cell_feature_importances}{The feature importances per cell}
+
+\item{heatmap_type}{The type of heatmap, either tiled or dotted}
 }
 \description{
 Plot the task as a heatmap

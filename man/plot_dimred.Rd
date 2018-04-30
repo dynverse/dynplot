@@ -5,14 +5,14 @@
 \title{Plot trajectory on dimensionality reduction}
 \usage{
 plot_dimred(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "gene", "milestone", "pseudotime"), grouping_assignment = NULL,
-  groups = NULL, gene_oi = NULL, color_milestones = c("auto", "given",
-  get_milestone_palette_names()), milestones = NULL,
-  milestone_percentages = NULL, pseudotime = NULL,
+  "grouping", "feature", "milestone", "pseudotime"),
+  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
+  color_milestones = c("auto", "given", get_milestone_palette_names()),
+  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
-  plot_milestone_labels = TRUE, dimred_method = ifelse(length(task$cell_ids)
-  > 500, dimred_pca, dimred_mds))
+  plot_milestone_labels = FALSE,
+  dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
 \item{task}{The task}
@@ -23,7 +23,7 @@ plot_dimred(task, color_cells = c("auto", "invisible", "positions",
 
 \item{groups}{Tibble containing information of the cell groups}
 
-\item{gene_oi}{Gene to plot expression}
+\item{feature_oi}{feature to plot expression}
 
 \item{color_milestones}{How to color the cells}
 

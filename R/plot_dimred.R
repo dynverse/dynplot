@@ -15,14 +15,14 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells,
     grouping_assignment,
     groups,
-    gene_oi,
+    feature_oi,
     color_milestones,
     milestones,
     milestone_percentages,
     pseudotime,
     expression_source = "expression",
     plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
-    plot_milestone_labels = TRUE,
+    plot_milestone_labels = FALSE,
     dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)
   ) {
     color_cells <- match.arg(color_cells)
@@ -121,6 +121,9 @@ plot_dimred <- dynutils::inherit_default_params(
           plot <- plot +
             geom_point(color="black", data=milestone_positions, size=6) +
             geom_point(aes(fill=color), data=milestone_positions, size=4, shape=21, color="#00000000")
+        } else {
+          plot <- plot +
+            geom_point(color="#333333", data=milestone_positions, size=2, alpha=1)
         }
       }
 

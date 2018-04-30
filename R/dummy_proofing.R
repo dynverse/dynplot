@@ -29,10 +29,10 @@ check_dimred <- function(dimred) {
 }
 
 
-check_gene <- function(expression, gene_oi) {
-  if(is.null(gene_oi)) {stop("Provide gene_oi")}
-  if(!gene_oi %in% colnames(expression)) {stop("Gene not found in expression")}
-  gene_oi
+check_feature <- function(expression, feature_oi) {
+  if(is.null(feature_oi)) {stop("Provide feature_oi")}
+  if(!feature_oi %in% colnames(expression)) {stop("feature not found in expression")}
+  feature_oi
 }
 
 check_expression_source <- function(task, expression_source) {

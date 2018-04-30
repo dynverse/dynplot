@@ -5,10 +5,10 @@
 \title{Plot onedim}
 \usage{
 plot_onedim(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "gene", "milestone", "pseudotime"),
+  "grouping", "feature", "milestone", "pseudotime"),
   milestone_network = task$milestone_network,
   progressions = task$progressions, grouping_assignment = NULL,
-  groups = NULL, gene_oi = NULL, pseudotime = NULL,
+  groups = NULL, feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", color_milestones = c("auto", "given",
   get_milestone_palette_names()), milestones = NULL,
   milestone_percentages = NULL, orientation = 1, margin = 0.05,
@@ -28,11 +28,11 @@ plot_onedim(task, color_cells = c("auto", "invisible", "positions",
 
 \item{groups}{Tibble containing information of the cell groups}
 
-\item{gene_oi}{Gene to plot expression}
+\item{feature_oi}{feature to plot expression}
 
 \item{pseudotime}{The pseudotime}
 
-\item{expression_source}{Source of the gene expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to `expression`}
 
 \item{color_milestones}{How to color the cells}
 

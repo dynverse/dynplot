@@ -5,8 +5,8 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
-  "positions", "grouping", "gene", "milestone", "pseudotime"), task,
-  grouping_assignment = NULL, groups = NULL, gene_oi = NULL,
+  "positions", "grouping", "feature", "milestone", "pseudotime"), task,
+  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
   color_milestones = c("auto", "given", get_milestone_palette_names()),
   milestones = NULL, milestone_percentages = NULL)
@@ -22,9 +22,9 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 
 \item{groups}{Tibble containing information of the cell groups}
 
-\item{gene_oi}{Gene to plot expression}
+\item{feature_oi}{feature to plot expression}
 
-\item{expression_source}{Source of the gene expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to `expression`}
 
 \item{pseudotime}{The pseudotime}
 
