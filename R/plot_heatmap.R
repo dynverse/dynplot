@@ -163,8 +163,7 @@ plot_heatmap <- function(
   # plot one dim
   onedim <- plot_onedim(
     task,
-    milestone_network = linearised$milestone_network,
-    progressions = linearised$progressions %>% mutate(percentage = percentage2) %>% select(from, to, cell_id, percentage),
+    linearised = linearised,
     orientation = -1,
     quasirandom_width = 0,
     margin = margin,
