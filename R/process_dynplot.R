@@ -45,4 +45,6 @@ process_dynplot <- function(g, id = NULL, expand = TRUE) {
     coord_equal(expand = expand, xlim = new_xrange, ylim = new_yrange) +
     xlim(new_xrange2[[1]], new_xrange2[[2]]) + ylim(new_yrange2[[1]], new_yrange2[[2]]) +
     expand_limits(x = new_xrange, y = new_yrange)
+
+  g
 }

@@ -5,11 +5,11 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
-  "positions", "grouping", "feature", "milestone", "pseudotime"), task,
+  "grouping", "feature", "milestone", "pseudotime"), task,
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given", get_milestone_palette_names()),
-  milestones = NULL, milestone_percentages = NULL)
+  color_milestones = c("auto", "given"), milestones = NULL,
+  milestone_percentages = NULL)
 }
 \arguments{
 \item{cell_positions}{The positions of the cells}

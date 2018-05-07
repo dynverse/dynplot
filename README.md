@@ -11,9 +11,25 @@ Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynve
 The package provides different ways to plot both the topology and
 cellular properties of a trajectory:
 
-![](.readme_files/unnamed-chunk-1-1.png)
+    library(dplyr)
+    library(dyntoy)
+    library(dynplot)
+    library(dynutils)
+    library(dynwrap)
+    library(tidyverse)
+
+    library(patchwork)
+
+    task <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
+    task <- task %>% root_trajectory()
+    grouping_assignment <- task$prior_information$grouping_assignment
+    groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color=dynplot:::milestone_palette_list$auto(n()))
+    features_oi <- apply(task$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
+    feature_oi <- features_oi[[1]]
+
+![](.readme_files/cells-1.png)
 
 And to plot the expression and feature importances of many genes along
 the trajectory
 
-![](.readme_files/unnamed-chunk-2-1.png)
+![](.readme_files/heatmap-1.png)

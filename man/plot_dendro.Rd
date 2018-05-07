@@ -4,12 +4,11 @@
 \alias{plot_dendro}
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
-plot_dendro(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "feature", "milestone", "pseudotime"),
-  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
-  expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given", get_milestone_palette_names()),
-  milestones = NULL, milestone_percentages = NULL, diag_offset = 0.05)
+plot_dendro(task, color_cells = c("auto", "invisible", "grouping", "feature",
+  "milestone", "pseudotime"), grouping_assignment = NULL, groups = NULL,
+  feature_oi = NULL, expression_source = "expression", pseudotime = NULL,
+  color_milestones = c("auto", "given"), milestones = NULL,
+  milestone_percentages = NULL, diag_offset = 0.05)
 }
 \arguments{
 \item{task}{The trajectory}

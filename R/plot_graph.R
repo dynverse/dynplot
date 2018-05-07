@@ -42,6 +42,38 @@ plot_graph <- dynutils::inherit_default_params(
     # check whether object has already been graph-dimredded
     dimred_task <- check_or_perform_dimred(task)
 
+    dimred_task$space_milestones
+    task$divergence_regions
+
+    # add extra lines encompassing divergence regions
+    if(nrow(task$divergence_regions)) {
+      space_lines_divergence_regions <- task$divergence_regions %>%
+        group_by(divergence_id) %>%
+        summarise(comb = list(combn(milestone_id, 2) %>% t() %>% as.data.frame() %>% mutate_if(is.factor, as.character))) %>%
+        unnest(comb) %>%
+        rename(from=V1, to=V2) %>%
+        select(from, to) %>%
+        mutate(line_type="divergence") %>%
+        mutate(directed = FALSE)
+    } else {
+      space_lines_divergence_regions <- tibble()
+    }
+
+    space_lines <- bind_rows(
+      task$milestone_network %>%
+        select(-length) %>%
+        mutate(line_type = "forward"),
+      space_lines_divergence_regions
+    ) %>%
+      group_by(from, to) %>%
+      filter(row_number() == 1) %>%
+      ungroup() %>%
+      left_join(dimred_task$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
+      left_join(dimred_task$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
+
+    space_regions <- task$divergence_regions %>% left_join(dimred_task$space_milestones, "milestone_id")
+
+
     if(plot_milestones) {
       if (!is.null(milestones)) {
         milestones <- left_join(dimred_task$space_milestones, milestones, "milestone_id")
@@ -79,30 +111,35 @@ plot_graph <- dynutils::inherit_default_params(
       #   aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
       #   dimred_task$space_lines %>% filter(directed),
       #   size = transition_size, colour = "grey",
-      #   arrow = arrow(length = arrow_length, type = "open")
+      #   arrow = arrow(length = arrow_length, type = "closed")
       # ) +
       # geom_segment(
       #   aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
       #   dimred_task$space_lines,
       #   size = transition_size, colour = "grey"
       # ) +
+    #
     geom_segment(
-      aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
-      dimred_task$space_lines,
-      size = transition_size + 2, colour = "black",
+      aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 1.5, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 1.5),
+      space_lines %>% filter(directed),
+      size = 1, colour = "grey",
+      arrow = arrow(length = arrow_length, type = "closed")
     ) +
-
-      geom_segment(
-        aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 1.5, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 1.5),
-        dimred_task$space_lines %>% filter(directed),
-        size = 1, colour = "black",
-        arrow = arrow(length = arrow_length, type = "open")
-      ) +
     geom_segment(
       aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
-      dimred_task$space_lines,
+      space_lines,
+      size = transition_size + 2, colour = "grey",
+    ) +
+    geom_segment(
+      aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+      space_lines,
       size = transition_size, colour = "white",
     ) +
+      geom_polygon(
+        aes(x = Comp1, y = Comp2),
+        space_regions,
+        fill="white"
+      ) +
       geom_point(
         aes(Comp1, Comp2, fill = color),
         cell_positions,

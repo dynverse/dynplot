@@ -5,12 +5,12 @@
 \alias{plot_default}
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
-plot_graph(task, color_cells = c("auto", "invisible", "positions", "grouping",
-  "feature", "milestone", "pseudotime"), color_milestones = c("auto", "given",
-  get_milestone_palette_names()), grouping_assignment = NULL, groups = NULL,
-  feature_oi = NULL, pseudotime = NULL, expression_source = "expression",
-  milestones = NULL, milestone_percentages = NULL, transition_size = 3,
-  cell_size = 2, milestone_size = 5, arrow_length = grid::unit(0.6, "cm"),
+plot_graph(task, color_cells = c("auto", "invisible", "grouping", "feature",
+  "milestone", "pseudotime"), color_milestones = c("auto", "given"),
+  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
+  pseudotime = NULL, expression_source = "expression", milestones = NULL,
+  milestone_percentages = NULL, transition_size = 3, cell_size = 2,
+  milestone_size = 5, arrow_length = grid::unit(1, "cm"),
   plot_label = c("leaves", "all", "none"), plot_milestones = FALSE)
 }
 \arguments{

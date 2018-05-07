@@ -3,9 +3,9 @@
 #' @param milestones Tibble containing the `milestone_id` and a `color` for each milestone
 add_milestone_coloring <- function(
   milestones=NULL,
-  color_milestones=c("auto", "given", get_milestone_palette_names())
+  color_milestones=c("auto", "given")
 ) {
-  color_milestones <- match.arg(color_milestones)
+  color_milestones <- match.arg(color_milestones[1], c("auto", "given", dynplot::get_milestone_palette_names()))
 
   if(color_milestones == "given") {
     if(!"color" %in% names(milestones)) {stop("Milestone colors need to be given")}
@@ -39,7 +39,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
   function(
     cell_positions,
-    color_cells = c("auto", "invisible", "positions", "grouping", "feature", "milestone", "pseudotime"),
+    color_cells = c("auto", "invisible", "grouping", "feature", "milestone", "pseudotime"),
     task,
     grouping_assignment=NULL,
     groups=NULL,
@@ -96,7 +96,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
-      fill_scale <- scale_fill_distiller(paste0(feature_oi, " ", expression_source), palette = "RdYlBu")
+      fill_scale <- scale_fill_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
       fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"=color_cells), guide="none")

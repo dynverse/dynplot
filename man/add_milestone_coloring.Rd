@@ -5,7 +5,7 @@
 \title{Add milestone coloring}
 \usage{
 add_milestone_coloring(milestones = NULL, color_milestones = c("auto",
-  "given", get_milestone_palette_names()))
+  "given"))
 }
 \arguments{
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}

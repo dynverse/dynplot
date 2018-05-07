@@ -111,7 +111,7 @@ plot_heatmap <- function(
   if(!is.null(cell_feature_importances)) {
     molten <- left_join(
       molten,
-      cell_feature_importance,
+      cell_feature_importances,
       c("cell_id", "feature_id")
     )
   }
