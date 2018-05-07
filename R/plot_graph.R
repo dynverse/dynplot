@@ -136,7 +136,7 @@ plot_graph <- dynutils::inherit_default_params(
       size = transition_size, colour = "white",
     ) +
       geom_polygon(
-        aes(x = Comp1, y = Comp2),
+        aes(x = Comp1, y = Comp2, group=divergence_id),
         space_regions,
         fill="white"
       ) +
