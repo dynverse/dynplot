@@ -20,11 +20,11 @@ cellular properties of a trajectory:
 
     library(patchwork)
 
-    task <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
-    task <- task %>% root_trajectory()
-    grouping_assignment <- task$prior_information$grouping_assignment
+    traj <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
+    traj <- traj %>% root_trajectory()
+    grouping_assignment <- traj$prior_information$grouping_assignment
     groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color=dynplot:::milestone_palette_list$auto(n()))
-    features_oi <- apply(task$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
+    features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
     feature_oi <- features_oi[[1]]
 
 ![](.readme_files/cells-1.png)
