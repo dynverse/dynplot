@@ -16,7 +16,7 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 
 \item{color_cells}{How to color the cells}
 
-\item{traj}{The traj}
+\item{traj}{The trajectory object}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 

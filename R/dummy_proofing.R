@@ -46,3 +46,32 @@ check_expression_source <- function(traj, expression_source) {
   }
   expression
 }
+
+
+check_features_oi <- function(traj, expression, features_oi, cell_feature_importances=NULL) {
+  if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
+    # make sure features_oi is not larger than the number of features
+    if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
+
+    message("No features of interest provided, selecting the top ", features_oi, " features automatically")
+
+    # choose cell_feauture_importance if givne, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
+    if (!is.null(cell_feature_importances)) {
+      message("Selecting features with top maximal feature importance across cells")
+
+      features_oi <- cell_feature_importances %>%
+        group_by(feature_id) %>%
+        summarise(importance=max(importance)) %>%
+        top_n(features_oi, importance) %>%
+        pull(feature_id)
+
+    } else if ("dynfeature" %in% rownames(installed.packages())) {
+      message("Using dynfeature for selecting the top ", features_oi, " features")
+      requireNamespace("dynfeature")
+
+      features_oi <- dynfeature::calculate_overall_feature_importance(traj, expression=expression)$feature_id[1:features_oi]
+    } else {
+      features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
+    }
+  }
+}

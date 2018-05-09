@@ -102,3 +102,6 @@ cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>
 plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping_assignment = traj$prior_information$grouping_assignment)
 ```
 
+```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
+plot_features(traj, features_oi = 5)
+```

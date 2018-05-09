@@ -1,6 +1,5 @@
 #' Plot a tree trajectory as a dendrogram
 #'
-#' @param traj The trajectory
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @inheritParams add_cell_coloring
 #' @export

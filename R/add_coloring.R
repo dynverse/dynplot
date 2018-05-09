@@ -27,7 +27,7 @@ add_milestone_coloring <- function(
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
-#' @param traj The traj
+#' @param traj The trajectory object
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression

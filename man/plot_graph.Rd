@@ -14,7 +14,7 @@ plot_graph(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   plot_label = c("leaves", "all", "none"), plot_milestones = FALSE)
 }
 \arguments{
-\item{traj}{The traj}
+\item{traj}{The trajectory object}
 
 \item{color_cells}{How to color the cells}
 

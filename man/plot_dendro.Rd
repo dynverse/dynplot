@@ -11,7 +11,7 @@ plot_dendro(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   milestone_percentages = NULL, diag_offset = 0.05)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{traj}{The trajectory object}
 
 \item{color_cells}{How to color the cells}
 
