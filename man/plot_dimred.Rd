@@ -14,7 +14,7 @@ plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
-\item{traj}{The trajectory object}
+\item{traj}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 

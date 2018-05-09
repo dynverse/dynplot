@@ -11,7 +11,7 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"))
 }
 \arguments{
-\item{traj}{The traj}
+\item{traj}{The trajectory}
 
 \item{expression_source}{Source of the feature expression, defaults to `expression`}
 

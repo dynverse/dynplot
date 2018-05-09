@@ -7,13 +7,13 @@
 plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 }
 \arguments{
-\item{traj1}{The first traj}
+\item{traj1}{The first trajectory}
 
 \item{traj2}{The second traj}
 
 \item{margin}{The margin to add}
 
-\item{reorder}{?? TODO: Zouter/wouters}
+\item{reorder}{Whether to reorder}
 }
 \description{
 Plot strip

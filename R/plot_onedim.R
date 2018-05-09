@@ -1,6 +1,5 @@
 #' Plot onedim
 #'
-#' @param traj A trajectory or milestone_network
 #' @param milestone_network Optional, the milestone network
 #' @param progressions The progressions used to put the cells on the graph
 #' @param linearised The linearised milestone network and progressions

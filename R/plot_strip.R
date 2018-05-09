@@ -1,9 +1,10 @@
 #' Plot strip
 #'
-#' @param traj1 The first traj
+#' @param traj1 The first trajectory
 #' @param traj2 The second traj
-#' @param margin The margin to add
-#' @param reorder ?? TODO: Zouter/wouters
+#' @param reorder Whether to reorder
+#'
+#' @inheritParams linearise_cells
 #'
 #' @export
 plot_strip <- function(traj1, traj2, margin=0.05, reorder = TRUE) {

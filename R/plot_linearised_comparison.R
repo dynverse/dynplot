@@ -3,8 +3,9 @@
 #' @param traj1 The first trajectory
 #' @param traj2 The second trajectory
 #' @param reorder Whether to reorder the trajectory
-#' @param margin The margin to add
 #' @param reorder_second_by How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)
+#'
+#' @inheritParams linearise_cells
 #'
 #' @export
 #' @importFrom patchwork wrap_plots

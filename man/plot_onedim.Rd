@@ -15,7 +15,7 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   plot_cells = TRUE)
 }
 \arguments{
-\item{traj}{A trajectory or milestone_network}
+\item{traj}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 

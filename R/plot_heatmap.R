@@ -24,7 +24,6 @@ order_cells <- function(milestone_network, progressions) {
 
 #' Plot the traj as a heatmap
 #'
-#' @param traj The traj
 #' @param features_oi features to plot, or the top number of features to select
 #' @param clust The method to cluster the features, or a hclust object
 #' @param cell_feature_importances The feature importances per cell
