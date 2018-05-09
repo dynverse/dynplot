@@ -19,18 +19,16 @@ dimred_simlr = function(x, ndim=3, nclusters=4) {
 #' @rdname get_dimreds
 #' @export
 dimred_mds = function(x, ndim=3) {
-  dynutils::install_packages("SCORPIUS", "dynplot")
-
-  space = SCORPIUS::reduce_dimensionality(SCORPIUS::correlation_distance(x),ndim = ndim)
+  space = space <- stats::cmdscale(dist, k = ndim)(dynutils::correlation_distance(x),ndim = ndim)
   process_dimred(space)
 }
 
 #' @rdname get_dimreds
 #' @export
 dimred_mds_sammon = function(x, ndim=3) {
-  dynutils::install_packages(c("SCORPIUS", "MASS"), "dynplot")
+  dynutils::install_packages(c("MASS"), "dynplot")
 
-  dist = SCORPIUS::correlation_distance(x)
+  dist = dynutils::correlation_distance(x)
   space <- MASS::sammon(dist, k = ndim)$points
   process_dimred(space)
 }
@@ -38,9 +36,9 @@ dimred_mds_sammon = function(x, ndim=3) {
 #' @rdname get_dimreds
 #' @export
 dimred_mds_isomds = function(x, ndim=3) {
-  dynutils::install_packages(c("SCORPIUS", "MASS"), "dynplot")
+  dynutils::install_packages(c("MASS"), "dynplot")
 
-  dist = SCORPIUS::correlation_distance(x)
+  dist = dynutils::correlation_distance(x)
   space <- MASS::isoMDS(dist, k = ndim)$points
   process_dimred(space)
 }
@@ -48,9 +46,9 @@ dimred_mds_isomds = function(x, ndim=3) {
 #' @rdname get_dimreds
 #' @export
 dimred_mds_smacof = function(x, ndim=3) {
-  dynutils::install_packages(c("SCORPIUS", "smacof"), "dynplot")
+  dynutils::install_packages(c("smacof"), "dynplot")
 
-  dist = SCORPIUS::correlation_distance(x)
+  dist = dynutils::correlation_distance(x)
   space <- smacof::mds(as.dist(dist), type = "ratio", ndim = ndim)$conf
   process_dimred(space)
 }
@@ -58,9 +56,9 @@ dimred_mds_smacof = function(x, ndim=3) {
 #' @rdname get_dimreds
 #' @export
 dimred_tsne = function(x, ndim=3) {
-  dynutils::install_packages(c("SCORPIUS", "Rtsne"), "dynplot")
+  dynutils::install_packages(c("Rtsne"), "dynplot")
 
-  space = Rtsne::Rtsne(as.dist(SCORPIUS::correlation_distance(x)), dims = ndim, is_distance = TRUE, perplexity=5)$Y
+  space = Rtsne::Rtsne(as.dist(dynutils::correlation_distance(x)), dims = ndim, is_distance = TRUE, perplexity=5)$Y
   rownames(space) = rownames(x)
   process_dimred(space)
 }
@@ -68,9 +66,9 @@ dimred_tsne = function(x, ndim=3) {
 #' @rdname get_dimreds
 #' @export
 dimred_dp = function(x, ndim=3, neigen=NULL) {
-  dynutils::install_packages(c("SCORPIUS", "diffusionMap"), "dynplot")
+  dynutils::install_packages(c("diffusionMap"), "dynplot")
 
-  space = diffusionMap::diffuse(as.dist(SCORPIUS::correlation_distance(x)), neigen=neigen, maxdim=ndim, delta=10e-5)
+  space = diffusionMap::diffuse(as.dist(dynutils::correlation_distance(x)), neigen=neigen, maxdim=ndim, delta=10e-5)
   process_dimred(space$X[,seq_len(ndim)])
 }
 

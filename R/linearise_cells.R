@@ -29,7 +29,8 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, no_mar
   margin <- sum(milestone_network$length) * margin
 
   if (no_margin_between_linear) {
-    milestone_network$add_margin <- milestone_network$to != lead(milestone_network$from, default="")
+    # add margin only if froms not directly connected, or if to is a forking milestone
+    milestone_network$add_margin <- (milestone_network$to != lead(milestone_network$from, default="")) | (table(milestone_network$from)[milestone_network$to] > 1)
   } else {
     milestone_network$add_margin <- TRUE
   }

@@ -5,7 +5,8 @@
 \title{Linearise a trajectory}
 \usage{
 linearise_cells(milestone_network, progressions, margin = 0.05,
-  one_edge = FALSE, equal_cell_width = FALSE)
+  no_margin_between_linear = TRUE, one_edge = FALSE,
+  equal_cell_width = FALSE)
 }
 \arguments{
 \item{milestone_network}{The milestone network}
@@ -13,6 +14,8 @@ linearise_cells(milestone_network, progressions, margin = 0.05,
 \item{progressions}{The progressions}
 
 \item{margin}{The margin to add}
+
+\item{no_margin_between_linear}{Whether to add a margin only when}
 
 \item{one_edge}{If TRUE, assigns each cell to one edge only}
 

@@ -44,7 +44,6 @@ Suggests:
   lle,
   MASS,
   Rtsne,
-  SCORPIUS,
   SIMLR,
   smacof,
   tsne

@@ -19,8 +19,6 @@ plot_heatmap(task, expression_source = "expression", features_oi = 20,
 
 \item{clust}{The method to cluster the features, or a hclust object}
 
-\item{margin}{Relative distance between milestones}
-
 \item{color_cells}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}

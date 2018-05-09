@@ -87,6 +87,10 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
     # now create the actual coloring
     if (color_cells == "grouping") {
+      if (!is.data.frame(grouping_assignment)) {
+        grouping_assignment <- tibble(cell_id = names(grouping_assignment), group_id = grouping_assignment)
+      }
+
       if (is.null(groups) | !("color" %in% names(groups))) {
         groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette("auto", n()))
       }
