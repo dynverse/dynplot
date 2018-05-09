@@ -4,12 +4,12 @@
 \alias{plot_strip}
 \title{Plot strip}
 \usage{
-plot_strip(task1, task2, margin = 0.05, reorder = TRUE)
+plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 }
 \arguments{
-\item{task1}{The first task}
+\item{traj1}{The first traj}
 
-\item{task2}{The second task}
+\item{traj2}{The second traj}
 
 \item{margin}{The margin to add}
 

@@ -5,7 +5,7 @@
 \alias{plot_default}
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
-plot_graph(task, color_cells = c("auto", "invisible", "grouping", "feature",
+plot_graph(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   "milestone", "pseudotime"), color_milestones = c("auto", "given"),
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   pseudotime = NULL, expression_source = "expression", milestones = NULL,
@@ -14,7 +14,7 @@ plot_graph(task, color_cells = c("auto", "invisible", "grouping", "feature",
   plot_label = c("leaves", "all", "none"), plot_milestones = FALSE)
 }
 \arguments{
-\item{task}{The task}
+\item{traj}{The traj}
 
 \item{color_cells}{How to color the cells}
 

@@ -11,7 +11,7 @@
 plot_dimred <- dynutils::inherit_default_params(
   list(add_cell_coloring,add_milestone_coloring),
   function(
-    task,
+    traj,
     color_cells,
     grouping_assignment,
     groups,
@@ -21,15 +21,15 @@ plot_dimred <- dynutils::inherit_default_params(
     milestone_percentages,
     pseudotime,
     expression_source = "expression",
-    plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
+    plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
     plot_milestone_labels = FALSE,
-    dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds)
+    dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)
   ) {
     color_cells <- match.arg(color_cells)
 
     dimred_method <- check_dimred_method(dimred_method)
 
-    expression <- check_expression_source(task, expression_source)
+    expression <- check_expression_source(traj, expression_source)
 
     # get cell positions
     cell_positions <- dimred_method(expression, ndim=2) %>% check_dimred()
@@ -37,7 +37,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # assign cells to closest milestone
     cell_positions <- left_join(
       cell_positions,
-      task$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(cell_id, milestone_id),
+      traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(cell_id, milestone_id),
       "cell_id"
     )
 
@@ -51,14 +51,14 @@ plot_dimred <- dynutils::inherit_default_params(
       # add missing groups (if no cells were added)
       milestone_positions <- bind_rows(
         map_df(
-          setdiff(task$milestone_ids, milestone_positions$milestone_id),
+          setdiff(traj$milestone_ids, milestone_positions$milestone_id),
           function(milestone_id) {
             close_milestone_ids <-
               c(
-                task$milestone_network %>%
+                traj$milestone_network %>%
                   filter(from == milestone_id) %>%
                   pull(to),
-                task$milestone_network %>%
+                traj$milestone_network %>%
                   filter(to == milestone_id) %>%
                   pull(from) %>%
                   rep(3)
@@ -76,7 +76,7 @@ plot_dimred <- dynutils::inherit_default_params(
       milestone_positions <- add_milestone_coloring(milestone_positions, color_milestones)
 
       # get milestone network
-      milestone_network <- task$milestone_network %>%
+      milestone_network <- traj$milestone_network %>%
         left_join(
           milestone_positions %>% rename_all(~paste0(., "_from")),
           by=c("from" = "milestone_id_from")

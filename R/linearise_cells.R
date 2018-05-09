@@ -48,7 +48,7 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, no_mar
     left_join(milestone_network, by=c("from", "to")) %>%
     mutate(cumpercentage = cumstart + percentage2 * length)
 
-  lst(milestone_network, progressions)
+  lst(milestone_network, progressions, margin)
 }
 
 

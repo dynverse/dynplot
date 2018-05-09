@@ -33,9 +33,9 @@ optimize_order <- function(milestone_network) {
 
 
 # will use the ordering of the first trajectory, to optimize the ordering of the second trajectory, maximizing the correlation between the two
-map_order <- function(task, rel_task) {
+map_order <- function(traj, rel_task) {
 
-  # first get the cell cumulative percentage of the relative task
+  # first get the cell cumulative percentage of the relative traj
   margin <- 0
   milestone_network <- rel_task$milestone_network %>%
     mutate(
@@ -45,8 +45,8 @@ map_order <- function(task, rel_task) {
 
   prog <- rel_task$progression %>% left_join(milestone_network, by=c("from", "to")) %>% mutate(cumpercentage=percentage*length + cumstart)
 
-  # use these cumulative percentages to find the optimal ordering of the task of interest, by calculating the mean relative cumulative percentage, and then ordering the milestone_network along this measure
-  milestone_network_ordered <- task$progressions %>%
+  # use these cumulative percentages to find the optimal ordering of the traj of interest, by calculating the mean relative cumulative percentage, and then ordering the milestone_network along this measure
+  milestone_network_ordered <- traj$progressions %>%
     left_join(
       prog %>%
         group_by(cell_id) %>%
@@ -57,7 +57,7 @@ map_order <- function(task, rel_task) {
 
   # add missing milestone edges (without any cells)
   milestone_network_ordered <- milestone_network_ordered %>%
-    right_join(task$milestone_network, by=c("from", "to")) %>%
+    right_join(traj$milestone_network, by=c("from", "to")) %>%
     mutate(mean_mincumpercentage=ifelse(is.na(mean_mincumpercentage), Inf, mean_mincumpercentage))
 
   milestone_network_ordered %>% arrange(mean_mincumpercentage) %>% select(from, to, length) %>% ungroup()

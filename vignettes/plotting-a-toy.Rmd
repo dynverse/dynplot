@@ -21,76 +21,76 @@ library(dynwrap)
 
 Load in a toy dataset
 ```{r}
-task <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_to_list(1) %>% root_trajectory()
+traj <- toy_tasks %>% filter(trajectory_type == "bifurcation") %>% extract_row_to_list(1) %>% root_trajectory()
 ```
 
 ## Plotting the topology and cellular positions
 
 If the topology is very simple (or should be represented in one dimension)
 ```{r onedim}
-plot_onedim(task)
+plot_onedim(traj)
 ```
 
 If the topology is a tree
 ```{r dendro}
-plot_dendro(task)
+plot_dendro(traj)
 ```
 
 If the topology is more complex
 ```{r graph}
-plot_graph(task)
+plot_graph(traj)
 
 ```
 
 ```{r}
-plot_topology(task)
+plot_topology(traj)
 ```
 
 ```{r}
-plot_dimred(task)
+plot_dimred(traj)
 ```
 
 ## Plotting a grouping or clustering
 ```{r}
-grouping_assignment <- task$prior_information$grouping_assignment
+grouping_assignment <- traj$prior_information$grouping_assignment
 ```
 
 ```{r grouping}
-plot_onedim(task, grouping_assignment=grouping_assignment)
-plot_dendro(task, grouping_assignment=grouping_assignment)
-plot_graph(task, grouping_assignment=grouping_assignment)
-plot_dimred(task, grouping_assignment=grouping_assignment)
+plot_onedim(traj, grouping_assignment=grouping_assignment)
+plot_dendro(traj, grouping_assignment=grouping_assignment)
+plot_graph(traj, grouping_assignment=grouping_assignment)
+plot_dimred(traj, grouping_assignment=grouping_assignment)
 ```
 
 ## Plotting expression of one feature
 ```{r}
-feature_oi <- first(colnames(task$counts))
+feature_oi <- first(colnames(traj$counts))
 ```
 
 ```{r expression}
-plot_onedim(task, feature_oi = feature_oi)
-plot_dendro(task, feature_oi = feature_oi)
-plot_graph(task, feature_oi = feature_oi)
-plot_dimred(task, feature_oi = feature_oi)
+plot_onedim(traj, feature_oi = feature_oi)
+plot_dendro(traj, feature_oi = feature_oi)
+plot_graph(traj, feature_oi = feature_oi)
+plot_dimred(traj, feature_oi = feature_oi)
 ```
 
 ## Plotting expression of a lot of features
 
 ```{r heatmap}
-plot_heatmap(task)
+plot_heatmap(traj)
 ```
 ```{r line}
-# plot_features(task)
+# plot_features(traj)
 ```
 
 
 
 ## Comparing trajectories
 ```{r}
-pseudotime <- task$counts %>% prcomp() %>% {.$x[, 1]}
-prediction <- dynwrap::wrap_data("dummy_prediction", task$cell_ids) %>%
+pseudotime <- traj$counts %>% prcomp() %>% {.$x[, 1]}
+prediction <- dynwrap::wrap_data("dummy_prediction", traj$cell_ids) %>%
   dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
 
-plot_strip_onedim(task, prediction)
+plot_strip_onedim(traj, prediction)
 ```
 

@@ -4,9 +4,9 @@
 \alias{plot_onedim}
 \title{Plot onedim}
 \usage{
-plot_onedim(task, color_cells = c("auto", "invisible", "grouping", "feature",
-  "milestone", "pseudotime"), milestone_network = task$milestone_network,
-  progressions = task$progressions, grouping_assignment = NULL,
+plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+  "milestone", "pseudotime"), milestone_network = traj$milestone_network,
+  progressions = traj$progressions, grouping_assignment = NULL,
   groups = NULL, feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", color_milestones = c("auto", "given"),
   milestones = NULL, milestone_percentages = NULL, orientation = 1,
@@ -15,7 +15,7 @@ plot_onedim(task, color_cells = c("auto", "invisible", "grouping", "feature",
   plot_cells = TRUE)
 }
 \arguments{
-\item{task}{A trajectory or milestone_network}
+\item{traj}{A trajectory or milestone_network}
 
 \item{color_cells}{How to color the cells}
 

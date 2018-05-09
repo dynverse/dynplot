@@ -1,10 +1,10 @@
-check_pseudotime <- function(task, pseudotime) {
+check_pseudotime <- function(traj, pseudotime) {
   if(is.null(pseudotime)) {
-    if(!"pseudotime" %in% names(task)) {
+    if(!"pseudotime" %in% names(traj)) {
       message("Pseudotime not provided, will calculate pseudotime from root milestone")
-      task$pseudotime <- dynwrap::calculate_pseudotime(task)
+      traj$pseudotime <- dynwrap::calculate_pseudotime(traj)
     }
-    task$pseudotime
+    traj$pseudotime
   } else {
     pseudotime
   }
@@ -35,10 +35,10 @@ check_feature <- function(expression, feature_oi) {
   feature_oi
 }
 
-check_expression_source <- function(task, expression_source) {
+check_expression_source <- function(traj, expression_source) {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
-    expression <- task[[expression_source]]
+    if(!expression_source %in% names(traj)) {stop("Expression source not in traj, did you run add_expression_to_wrapper?")}
+    expression <- traj[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
   } else {

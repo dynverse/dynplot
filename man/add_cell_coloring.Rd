@@ -5,7 +5,7 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
-  "grouping", "feature", "milestone", "pseudotime"), task,
+  "grouping", "feature", "milestone", "pseudotime"), traj,
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
   color_milestones = c("auto", "given"), milestones = NULL,
@@ -16,7 +16,7 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "invisible",
 
 \item{color_cells}{How to color the cells}
 
-\item{task}{The task}
+\item{traj}{The traj}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 

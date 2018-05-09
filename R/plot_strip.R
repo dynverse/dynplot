@@ -1,22 +1,22 @@
 #' Plot strip
 #'
-#' @param task1 The first task
-#' @param task2 The second task
+#' @param traj1 The first traj
+#' @param traj2 The second traj
 #' @param margin The margin to add
 #' @param reorder ?? TODO: Zouter/wouters
 #'
 #' @export
-plot_strip <- function(task1, task2, margin=0.05, reorder = TRUE) {
+plot_strip <- function(traj1, traj2, margin=0.05, reorder = TRUE) {
   if (reorder) {
-    task1$milestone_network <- optimize_order(task1$milestone_network)
-    task2$milestone_network <- map_order(task2, task1)
+    traj1$milestone_network <- optimize_order(traj1$milestone_network)
+    traj2$milestone_network <- map_order(traj2, traj1)
   }
 
-  linearised1 <- linearise_cells(task1$milestone_network, task1$progression, margin)
+  linearised1 <- linearise_cells(traj1$milestone_network, traj1$progression, margin)
   milestone_network1 <- linearised1$milestone_network
   prog1 <- linearised1$progressions %>% rename_at(vars(-cell_id), ~paste0(., 1))
 
-  linearised2 <- linearise_cells(task2$milestone_network, task2$progression, margin)
+  linearised2 <- linearise_cells(traj2$milestone_network, traj2$progression, margin)
   milestone_network2 <- linearised2$milestone_network
   prog2 <- linearised2$progressions %>% rename_at(vars(-cell_id), ~paste0(., 2))
 
@@ -33,6 +33,6 @@ plot_strip <- function(task1, task2, margin=0.05, reorder = TRUE) {
     geom_vline(aes(xintercept=cumend), data=milestone_network1, linetype="dashed", alpha=0.5) +
     geom_hline(aes(yintercept=cumstart), data=milestone_network2, alpha=0.5) +
     geom_hline(aes(yintercept=cumend), data=milestone_network2, linetype="dashed", alpha=0.5) +
-    ggtitle(paste0(task1$id, " -> ", task2$id)) +
+    ggtitle(paste0(traj1$id, " -> ", traj2$id)) +
     theme_clean()
 }

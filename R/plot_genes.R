@@ -1,28 +1,28 @@
 #' Plotting the features
 #'
-#' @param task The task
+#' @param traj The traj
 #' @param features_oi The features of interest
 #' @param margin The margin to add
 #'
 #' @importFrom patchwork wrap_plots
 #' @export
 plot_features <- function(
-  task,
-  features_oi = sample(colnames(task$counts), min(c(5, ncol(task$counts)))),
+  traj,
+  features_oi = sample(colnames(traj$counts), min(c(5, ncol(traj$counts)))),
   margin = 0.05
 ) {
-  counts <- task$counts %>% as.data.frame() %>%
+  counts <- traj$counts %>% as.data.frame() %>%
     select(one_of(features_oi)) %>%
     tibble::rownames_to_column("cell_id") %>%
     gather("feature_id", "expression", -cell_id)
 
-  milestone_network <- optimize_order(task$milestone_network)
-  linearised <- linearise_cells(milestone_network, task$progressions, one_edge = TRUE, margin = margin)
+  milestone_network <- optimize_order(traj$milestone_network)
+  linearised <- linearise_cells(milestone_network, traj$progressions, one_edge = TRUE, margin = margin)
   prog <- linearised$progressions
   milestone_network <- linearised$milestone_network
 
   plotdata <- counts %>%
-    left_join(task$prior_information$grouping_assignment, by="cell_id") %>%
+    left_join(traj$prior_information$grouping_assignment, by="cell_id") %>%
     left_join(prog, by="cell_id")
 
   expression_plot <- ggplot(plotdata, aes(cumpercentage, expression, color=edge_id)) +
@@ -36,7 +36,7 @@ plot_features <- function(
     scale_x_continuous(NULL, breaks = NULL) +
     theme(legend.position="none", panel.border = element_rect(color = "black", size=0.5, linetype="solid"), panel.background = element_blank())
 
-  onedim_plot <- plot_onedim(task, orientation = -1, margin = margin)
+  onedim_plot <- plot_onedim(traj, orientation = -1, margin = margin)
 
   patchwork::wrap_plots(
     expression_plot,

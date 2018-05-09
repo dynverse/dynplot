@@ -19,7 +19,7 @@ dimred_simlr = function(x, ndim=3, nclusters=4) {
 #' @rdname get_dimreds
 #' @export
 dimred_mds = function(x, ndim=3) {
-  space = space <- stats::cmdscale(dist, k = ndim)(dynutils::correlation_distance(x),ndim = ndim)
+  space <- stats::cmdscale(dynutils::correlation_distance(x), k = ndim)
   process_dimred(space)
 }
 

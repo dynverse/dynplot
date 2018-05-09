@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Plot the task as a heatmap}
+\title{Plot the traj as a heatmap}
 \usage{
-plot_heatmap(task, expression_source = "expression", features_oi = 20,
+plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
-  milestones = NULL, milestone_percentages = task$milestone_percentages,
+  milestones = NULL, milestone_percentages = traj$milestone_percentages,
   grouping_assignment = NULL, groups = NULL,
   cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"))
 }
 \arguments{
-\item{task}{The task}
+\item{traj}{The traj}
 
 \item{expression_source}{Source of the feature expression, defaults to `expression`}
 
@@ -34,5 +34,5 @@ plot_heatmap(task, expression_source = "expression", features_oi = 20,
 \item{heatmap_type}{The type of heatmap, either tiled or dotted}
 }
 \description{
-Plot the task as a heatmap
+Plot the traj as a heatmap
 }

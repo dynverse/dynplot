@@ -22,7 +22,7 @@
 plot_graph <- dynutils::inherit_default_params(
   list(add_cell_coloring, add_milestone_coloring),
   function(
-    task,
+    traj,
     color_cells,
     color_milestones,
     grouping_assignment,
@@ -40,14 +40,14 @@ plot_graph <- dynutils::inherit_default_params(
     plot_milestones = FALSE
   ) {
     # check whether object has already been graph-dimredded
-    dimred_task <- check_or_perform_dimred(task)
+    dimred_traj <- check_or_perform_dimred(traj)
 
-    dimred_task$space_milestones
-    task$divergence_regions
+    dimred_traj$space_milestones
+    traj$divergence_regions
 
     # add extra lines encompassing divergence regions
-    if(nrow(task$divergence_regions)) {
-      space_lines_divergence_regions <- task$divergence_regions %>%
+    if(nrow(traj$divergence_regions)) {
+      space_lines_divergence_regions <- traj$divergence_regions %>%
         group_by(divergence_id) %>%
         summarise(comb = list(combn(milestone_id, 2) %>% t() %>% as.data.frame() %>% mutate_if(is.factor, as.character))) %>%
         unnest(comb) %>%
@@ -60,7 +60,7 @@ plot_graph <- dynutils::inherit_default_params(
     }
 
     space_lines <- bind_rows(
-      task$milestone_network %>%
+      traj$milestone_network %>%
         select(-length) %>%
         mutate(line_type = "forward"),
       space_lines_divergence_regions
@@ -68,24 +68,24 @@ plot_graph <- dynutils::inherit_default_params(
       group_by(from, to) %>%
       filter(row_number() == 1) %>%
       ungroup() %>%
-      left_join(dimred_task$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
-      left_join(dimred_task$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
 
-    space_regions <- task$divergence_regions %>% left_join(dimred_task$space_milestones, "milestone_id")
+    space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
 
     if(plot_milestones) {
       if (!is.null(milestones)) {
-        milestones <- left_join(dimred_task$space_milestones, milestones, "milestone_id")
+        milestones <- left_join(dimred_traj$space_milestones, milestones, "milestone_id")
       } else {
-        milestones <- dimred_task$space_milestones
+        milestones <- dimred_traj$space_milestones
       }
 
       # color milestones & cells
       milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
     }
 
-    cell_positions <- dimred_task$space_samples
+    cell_positions <- dimred_traj$space_samples
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
     fill_scale <- cell_coloring_output$fill_scale
@@ -94,7 +94,7 @@ plot_graph <- dynutils::inherit_default_params(
     plot_label <- match.arg(plot_label)
     nodes_to_label <-
       if (plot_label == "leaves") {
-        dimred_task$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
+        dimred_traj$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
       } else if (plot_label == "all") {
         milestones$milestone_id
       } else if (plot_label == "none"){
@@ -109,13 +109,13 @@ plot_graph <- dynutils::inherit_default_params(
       theme(legend.position = "none") +
       # geom_segment(
       #   aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
-      #   dimred_task$space_lines %>% filter(directed),
+      #   dimred_traj$space_lines %>% filter(directed),
       #   size = transition_size, colour = "grey",
       #   arrow = arrow(length = arrow_length, type = "closed")
       # ) +
       # geom_segment(
       #   aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
-      #   dimred_task$space_lines,
+      #   dimred_traj$space_lines,
       #   size = transition_size, colour = "grey"
       # ) +
     #
@@ -151,7 +151,7 @@ plot_graph <- dynutils::inherit_default_params(
       theme(legend.position="bottom")
     # ggrepel::geom_label_repel(
     #   aes(Comp1, Comp2, label = milestone_id),
-    #   dimred_task$space_milestones %>% filter(milestone_id %in% nodes_to_label)
+    #   dimred_traj$space_milestones %>% filter(milestone_id %in% nodes_to_label)
     # ) +
 
     if (plot_milestones) {

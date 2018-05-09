@@ -2,10 +2,10 @@
 #' plot_grouped <- dynutils::inherit_default_params(
 #'   list(add_milestone_coloring),
 #'   function(
-#'     task,
+#'     traj,
 #'     color_milestones,
-#'     grouping_assignment = task$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
-#'     groups = tibble(group_id = task$milestone_ids),
+#'     grouping_assignment = traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
+#'     groups = tibble(group_id = traj$milestone_ids),
 #'     order_cells = c("auto", "pseudotime", "feature"),
 #'     pseudotime = NULL,
 #'     feature_oi = NULL,
@@ -21,13 +21,13 @@
 #'     }
 #'
 #'     if(order_cells == "pseudotime") {
-#'       task <- check_pseudotime(task, pseudotime)
-#'       cell_positions <- tibble(cell_id = names(task$pseudotime), y = task$pseudotime)
+#'       traj <- check_pseudotime(traj, pseudotime)
+#'       cell_positions <- tibble(cell_id = names(traj$pseudotime), y = traj$pseudotime)
 #'       y_scale <- scale_y_continuous("pseudotime")
 #'     } else if (order_cells == "feature") {
-#'       expression <- check_expression_source(task, expression_source)
+#'       expression <- check_expression_source(traj, expression_source)
 #'       check_feature(expression, feature_oi)
-#'       cell_positions <- tibble(cell_id = rownames(task[[expression_source]]), y = task[[expression_source]][, feature_oi])
+#'       cell_positions <- tibble(cell_id = rownames(traj[[expression_source]]), y = traj[[expression_source]][, feature_oi])
 #'       y_scale <- scale_y_continuous(paste0(feature_oi, " ", expression_source))
 #'     }
 #'

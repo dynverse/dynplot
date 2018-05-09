@@ -4,11 +4,11 @@
 \alias{plot_features}
 \title{Plotting the features}
 \usage{
-plot_features(task, features_oi = sample(colnames(task$counts), min(c(5,
-  ncol(task$counts)))), margin = 0.05)
+plot_features(traj, features_oi = sample(colnames(traj$counts), min(c(5,
+  ncol(traj$counts)))), margin = 0.05)
 }
 \arguments{
-\item{task}{The task}
+\item{traj}{The traj}
 
 \item{features_oi}{The features of interest}
 

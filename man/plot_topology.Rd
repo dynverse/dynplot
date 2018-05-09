@@ -4,11 +4,11 @@
 \alias{plot_topology}
 \title{Plotting the topology of a trajectory}
 \usage{
-plot_topology(task, color_milestones = c("auto", "given"),
+plot_topology(traj, color_milestones = c("auto", "given"),
   milestones = NULL)
 }
 \arguments{
-\item{task}{The task}
+\item{traj}{The traj}
 
 \item{color_milestones}{How to color the cells}
 

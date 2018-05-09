@@ -1,6 +1,6 @@
 #' Plot onedim
 #'
-#' @param task A trajectory or milestone_network
+#' @param traj A trajectory or milestone_network
 #' @param milestone_network Optional, the milestone network
 #' @param progressions The progressions used to put the cells on the graph
 #' @param linearised The linearised milestone network and progressions
@@ -14,10 +14,10 @@
 plot_onedim <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    task=NULL,
+    traj=NULL,
     color_cells,
-    milestone_network = task$milestone_network,
-    progressions = task$progressions,
+    milestone_network = traj$milestone_network,
+    progressions = traj$progressions,
     grouping_assignment,
     groups,
     feature_oi,
@@ -32,7 +32,7 @@ plot_onedim <- dynutils::inherit_default_params(
     quasirandom_width = 0.2,
     plot_cells = TRUE
   ) {
-    root <- task$milestone_network$from[[1]]
+    root <- traj$milestone_network$from[[1]]
 
     linearised <- make_connection_plotdata(linearised)
 
@@ -58,14 +58,18 @@ plot_onedim <- dynutils::inherit_default_params(
     )
 
     plot <- ggplot() +
-      geom_segment(aes(x_from, level, xend=x_to, yend=level), data=linearised$connections, linetype="dotted", color="#444444") +
-      geom_segment(aes(x_from, 0, xend=x_from, yend=level), data=linearised$connections, linetype="dotted", color="#444444") +
-      geom_segment(aes(x_to, 0, xend=x_to, yend=level), data=linearised$connections, linetype="dotted", color="#444444") +
       geom_segment(aes(cumstart, 0, xend=cumend, yend=0), data=linearised$milestone_network, color="black") +
       # geom_point(aes(from_pos, level), data=states %>% filter(start), color="black") +
       # geom_point(aes(to_pos, level), data=states %>% filter(end), shape=15, color="black") +
       theme_graph() +
       theme(legend.position="bottom")
+
+    # add connections
+    if(nrow(linearised$connections)) {
+      plot <- plot + geom_segment(aes(x_from, level, xend=x_to, yend=level), data=linearised$connections, linetype="longdash", color="#666666") +
+        geom_segment(aes(x_from, 0, xend=x_from, yend=level), data=linearised$connections, linetype="longdash", color="#666666") +
+        geom_segment(aes(x_to, 0, xend=x_to, yend=level), data=linearised$connections, linetype="longdash", color="#666666")
+    }
 
     # add the cells
     if (plot_cells) {
@@ -103,7 +107,8 @@ make_connection_plotdata <- function(linearised) {
   ) %>% mutate(
     x_diff = abs(x_to-x_from)
   ) %>% arrange(x_diff) %>%
-    mutate(level = NA)
+    mutate(level = NA) %>%
+    mutate(direct = near(x_diff, linearised$margin))
 
 
   for (i in seq_len(nrow(connections))) {
@@ -119,7 +124,11 @@ make_connection_plotdata <- function(linearised) {
     if (nrow(overlapping_connections)) {
       connections$level[i] <- max(overlapping_connections$level) + 1
     } else {
-      connections$level[i] <- 1
+      if (connections$direct[i]) {
+        connections$level[i] <- 0
+      } else {
+        connections$level[i] <- 1
+      }
     }
   }
 

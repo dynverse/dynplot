@@ -22,9 +22,9 @@ order_cells <- function(milestone_network, progressions) {
   ordered_progression %>% select(cell_id, edge_id) %>% ungroup() %>% mutate(position=seq_len(n()), edge_id=factor(edge_id))
 }
 
-#' Plot the task as a heatmap
+#' Plot the traj as a heatmap
 #'
-#' @param task The task
+#' @param traj The traj
 #' @param features_oi features to plot, or the top number of features to select
 #' @param clust The method to cluster the features, or a hclust object
 #' @param cell_feature_importances The feature importances per cell
@@ -38,14 +38,14 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @export
 plot_heatmap <- function(
-  task,
+  traj,
   expression_source = "expression",
   features_oi = 20,
   clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
-  milestone_percentages = task$milestone_percentages,
+  milestone_percentages = traj$milestone_percentages,
   grouping_assignment = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
@@ -54,7 +54,7 @@ plot_heatmap <- function(
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
-  expression <- check_expression_source(task, expression_source)
+  expression <- check_expression_source(traj, expression_source)
   expression <- dynutils::scale_quantile(expression)
 
   # get features oi
@@ -78,7 +78,7 @@ plot_heatmap <- function(
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
-      features_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:features_oi]
+      features_oi <- dynfeature::calculate_overall_feature_importance(traj, expression=expression)$feature_id[1:features_oi]
     } else {
       features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
     }
@@ -94,8 +94,8 @@ plot_heatmap <- function(
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
-    task$milestone_network,
-    task$progressions,
+    traj$milestone_network,
+    traj$progressions,
     equal_cell_width = TRUE,
     margin=margin
   )
@@ -162,7 +162,7 @@ plot_heatmap <- function(
 
   # plot one dim
   onedim <- plot_onedim(
-    task,
+    traj,
     linearised = linearised,
     orientation = -1,
     quasirandom_width = 0,

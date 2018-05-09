@@ -27,7 +27,7 @@ add_milestone_coloring <- function(
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
-#' @param task The task
+#' @param traj The traj
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression
@@ -40,7 +40,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
   function(
     cell_positions,
     color_cells = c("auto", "invisible", "grouping", "feature", "milestone", "pseudotime"),
-    task,
+    traj,
     grouping_assignment=NULL,
     groups=NULL,
     feature_oi=NULL,
@@ -72,16 +72,16 @@ add_cell_coloring <- dynutils::inherit_default_params(
     if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
     } else if (color_cells == "feature") {
-      expression <- check_expression_source(task, expression_source)
+      expression <- check_expression_source(traj, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
       if(is.null(milestone_percentages)) {
-        message("Using milestone_percentages from task")
-        milestone_percentages <- task$milestone_percentages
+        message("Using milestone_percentages from traj")
+        milestone_percentages <- traj$milestone_percentages
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
-      pseudotime <- check_pseudotime(task, pseudotime)
+      pseudotime <- check_pseudotime(traj, pseudotime)
       cell_positions$pseudotime <- pseudotime[cell_positions$cell_id]
     }
 
