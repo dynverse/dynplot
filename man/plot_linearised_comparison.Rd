@@ -5,18 +5,18 @@
 \title{Plot strip onedim}
 \usage{
 plot_linearised_comparison(traj1, traj2, reorder = TRUE, margin = 0.05,
-  reorder_second_by = "mapping")
+  reorder_second_by = c("mapping", "optimisation"))
 }
 \arguments{
-\item{traj1}{The first traj}
+\item{traj1}{The first trajectory}
 
-\item{traj2}{The second traj}
+\item{traj2}{The second trajectory}
 
-\item{reorder}{?? TODO: Zouter/wouters}
+\item{reorder}{Whether to reorder the trajectory}
 
 \item{margin}{The margin to add}
 
-\item{reorder_second_by}{?? TODO: Zouter/wouters}
+\item{reorder_second_by}{How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)}
 }
 \description{
 Plot strip onedim

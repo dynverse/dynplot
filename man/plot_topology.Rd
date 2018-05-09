@@ -8,8 +8,6 @@ plot_topology(traj, color_milestones = c("auto", "given"),
   milestones = NULL)
 }
 \arguments{
-\item{traj}{The traj}
-
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}

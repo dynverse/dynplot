@@ -1,6 +1,5 @@
 #' Plotting the topology of a trajectory
 #'
-#' @param traj The traj
 #' @inheritParams add_milestone_coloring
 #' @export
 plot_topology <- dynutils::inherit_default_params(

@@ -1,15 +1,16 @@
 #' Plot strip onedim
 #'
-#' @param traj1 The first traj
-#' @param traj2 The second traj
-#' @param reorder ?? TODO: Zouter/wouters
+#' @param traj1 The first trajectory
+#' @param traj2 The second trajectory
+#' @param reorder Whether to reorder the trajectory
 #' @param margin The margin to add
-#' @param reorder_second_by ?? TODO: Zouter/wouters
+#' @param reorder_second_by How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)
 #'
 #' @export
 #' @importFrom patchwork wrap_plots
 #' @export
-plot_linearised_comparison <- function(traj1, traj2, reorder=TRUE, margin=0.05, reorder_second_by="mapping") {
+plot_linearised_comparison <- function(traj1, traj2, reorder=TRUE, margin=0.05, reorder_second_by=c("mapping", "optimisation")) {
+  reorder_second_by <- match.arg(reorder_second_by)
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
     traj1$milestone_network <- optimize_order(traj1$milestone_network)

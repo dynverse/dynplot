@@ -7,8 +7,9 @@ env:
   global:
     - R_MAX_NUM_DLLS=250
 before_install:
- - wget -q -O - https://www.mongodb.org/static/pgp/server-3.2.pub | sudo apt-key add -
  - sudo apt-get --allow-unauthenticated update
+ - sudo apt-get upgrade
+ - wget -q -O - https://www.mongodb.org/static/pgp/server-3.2.pub | sudo apt-key add -
  - sudo apt-get --allow-unauthenticated install libgsl-dev libsdl1.2-dev libreadline-dev imagemagick libfftw3-dev libudunits2-dev -y
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
