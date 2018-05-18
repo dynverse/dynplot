@@ -6,10 +6,15 @@ cache: packages
 env:
   global:
     - R_MAX_NUM_DLLS=250
-before_install:
- - sudo apt-get update
- - sudo apt-get --allow-unauthenticated upgrade
- - sudo apt-get --allow-unauthenticated -y install libgsl-dev libsdl1.2-dev libreadline-dev imagemagick libfftw3-dev libudunits2-dev -y
+addons:
+  apt:
+    packages:
+      - libgsl0-dev
+      - libsdl1.2-dev
+      - libreadline-dev
+      - imagemagick
+      - libfftw3-dev
+      - libudunits2-dev
 install:
  - if [ `git branch | grep '* master' | wc -l` == 0 ]; then sed -i 's#\(dynverse/[^, ]*\)#\1@devel#' DESCRIPTION; fi
  - R -e 'if ("devtools" %in% rownames(installed.packages())) update.packages(oldPkgs = "devtools", ask = FALSE) else install.packages("devtools")'
