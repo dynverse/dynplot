@@ -96,7 +96,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
       cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
 
-      fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=10))
+      fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]

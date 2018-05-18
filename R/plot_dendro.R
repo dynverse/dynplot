@@ -22,7 +22,7 @@ plot_dendro <-dynutils::inherit_default_params(
     if ("root_milestone_id" %in% names(traj)) {
       root <- traj$root_milestone_id
     } else {
-      traj <- dynwrap::root_trajectory(traj, start_milestone_id = traj$milestone_ids[[1]])
+      traj <- dynwrap::root_trajectory(traj)
       root <- traj$root_milestone_id
     }
 
