@@ -8,16 +8,19 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
   milestones = NULL, milestone_percentages = traj$milestone_percentages,
   grouping_assignment = NULL, groups = NULL,
-  cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"))
+  cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"),
+  scale = dynutils::scale_quantile)
 }
 \arguments{
 \item{traj}{The trajectory}
 
 \item{expression_source}{Source of the feature expression, defaults to `expression`}
 
-\item{features_oi}{features to plot, or the top number of features to select}
+\item{features_oi}{The features of interest, either the number of features or a vector giving the names of the different features}
 
 \item{clust}{The method to cluster the features, or a hclust object}
+
+\item{margin}{The margin to add}
 
 \item{color_cells}{How to color the cells}
 
@@ -29,9 +32,11 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 
 \item{groups}{Tibble containing information of the cell groups}
 
-\item{cell_feature_importances}{The feature importances per cell}
+\item{cell_feature_importances}{The importances of every feature in every cell, as returned by [dynfeature::calculate_cell_feature_importance()]}
 
 \item{heatmap_type}{The type of heatmap, either tiled or dotted}
+
+\item{scale}{Whether to rescale the expression, can be a function or boolean}
 }
 \description{
 Plot the traj as a heatmap
