@@ -1,5 +1,6 @@
 #' Plotting the topology of a trajectory
 #'
+#' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @export
 plot_topology <- dynutils::inherit_default_params(

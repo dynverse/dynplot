@@ -39,6 +39,10 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 
 \item{milestone_percentages}{The milestone percentages}
 
+\item{orientation}{Whether to plot the connections in the top or}
+
+\item{margin}{The margin to add}
+
 \item{linearised}{The linearised milestone network and progressions}
 
 \item{quasirandom_width}{The width of the quasirandom cell spreading}

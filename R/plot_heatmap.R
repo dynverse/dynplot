@@ -1,9 +1,10 @@
 #' Plot the traj as a heatmap
 #'
-#' @param features_oi features to plot, or the top number of features to select
+#' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
 #' @param clust The method to cluster the features, or a hclust object
-#' @param cell_feature_importances The feature importances per cell
+#' @param cell_feature_importances The importances of every feature in every cell, as returned by [dynfeature::calculate_cell_feature_importance()]
 #' @param heatmap_type The type of heatmap, either tiled or dotted
+#' @param scale Whether to rescale the expression, can be a function or boolean
 #'
 #' @inheritParams plot_onedim
 #'
@@ -24,13 +25,19 @@ plot_heatmap <- function(
   grouping_assignment = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
-  heatmap_type = c("tiled", "dotted")
+  heatmap_type = c("tiled", "dotted"),
+  scale = dynutils::scale_quantile
 ) {
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
   expression <- check_expression_source(traj, expression_source)
-  expression <- dynutils::scale_quantile(expression)
+
+  if(is.function(scale)) {
+    expression <- scale(expression)
+  } else if (scale) {
+    expression <- dynutils::scale_quantile(expression)
+  }
 
   # get features oi
   features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)

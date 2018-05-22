@@ -5,9 +5,12 @@
 #' @param linearised The linearised milestone network and progressions
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
+#' @param orientation Whether to plot the connections in the top or
+#'
+#' @inheritParams add_cell_coloring
+#' @inheritParams linearise_cells
 #'
 #' @export
-#' @inheritParams add_cell_coloring
 #'
 #' @importFrom ggrepel geom_label_repel
 plot_onedim <- dynutils::inherit_default_params(

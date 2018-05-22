@@ -1,7 +1,9 @@
 #' Plotting a set of features in a line plot
 #'
-#' @param features_oi The features of interest
-#' @param margin The margin to add
+#' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
+#' @param margin The margin to add between milestones
+#'
+#' @inheritParams plot_heatmap
 #'
 #' @importFrom patchwork wrap_plots
 #' @export
@@ -11,12 +13,16 @@ plot_features <- function(
   features_oi = 2,
   margin = 0.02,
   cell_feature_importances = NULL,
-  scale = TRUE
+  scale = dynutils::scale_quantile
 ) {
+  requireNamespace("cobs")
+
   # process expression
   expression <- check_expression_source(traj, expression_source)
 
-  if (scale) {
+  if(is.function(scale)) {
+    expression <- scale(expression)
+  } else if (scale) {
     expression <- dynutils::scale_quantile(expression)
   }
 
