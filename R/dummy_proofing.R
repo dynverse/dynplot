@@ -55,7 +55,7 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 
     message("No features of interest provided, selecting the top ", features_oi, " features automatically")
 
-    # choose cell_feauture_importance if givne, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
+    # choose cell_feauture_importance if given, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
     if (!is.null(cell_feature_importances)) {
       message("Selecting features with top maximal feature importance across cells")
 
@@ -74,4 +74,6 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
       features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
     }
   }
+
+  features_oi
 }
