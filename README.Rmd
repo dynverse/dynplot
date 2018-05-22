@@ -98,7 +98,7 @@ wrap_plots(
 And to plot the expression and feature importances of many genes along the trajectory
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
-cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints_to_wrapper())
+cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
 plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping_assignment = traj$prior_information$grouping_assignment)
 ```
 

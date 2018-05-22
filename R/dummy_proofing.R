@@ -37,7 +37,7 @@ check_feature <- function(expression, feature_oi) {
 
 check_expression_source <- function(traj, expression_source) {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(traj)) {stop("Expression source not in traj, did you run add_expression_to_wrapper?")}
+    if(!expression_source %in% names(traj)) {stop("Expression source not in traj, did you run add_expression?")}
     expression <- traj[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source

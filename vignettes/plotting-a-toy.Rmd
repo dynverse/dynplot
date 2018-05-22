@@ -89,7 +89,7 @@ plot_heatmap(traj)
 ```{r}
 pseudotime <- traj$counts %>% prcomp() %>% {.$x[, 1]}
 prediction <- dynwrap::wrap_data("dummy_prediction", traj$cell_ids) %>%
-  dynwrap::add_linear_trajectory_to_wrapper(pseudotime)
+  dynwrap::add_linear_trajectory(pseudotime)
 
 plot_linearised_comparison(traj, prediction)
 ```
