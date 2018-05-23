@@ -26,7 +26,8 @@ plot_heatmap <- function(
   groups = NULL,
   cell_feature_importances = NULL,
   heatmap_type = c("tiled", "dotted"),
-  scale = dynutils::scale_quantile
+  scale = dynutils::scale_quantile,
+  label_milestones = TRUE
 ) {
   heatmap_type <- match.arg(heatmap_type)
 
@@ -129,7 +130,8 @@ plot_heatmap <- function(
     groups = groups,
     milestone_percentages = milestone_percentages,
     milestones = milestones,
-    plot_cells=FALSE
+    plot_cells=FALSE,
+    label_milestones = label_milestones
   ) +
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +
     theme(plot.margin=margin())

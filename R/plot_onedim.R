@@ -16,7 +16,7 @@
 plot_onedim <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    traj=NULL,
+    traj,
     color_cells,
     milestone_network = traj$milestone_network,
     progressions = traj$progressions,
@@ -32,7 +32,8 @@ plot_onedim <- dynutils::inherit_default_params(
     margin = 0.05,
     linearised = linearise_cells(milestone_network, progressions, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
-    plot_cells = TRUE
+    plot_cells = TRUE,
+    label_milestones = FALSE
   ) {
     root <- traj$milestone_network$from[[1]]
 
@@ -51,18 +52,21 @@ plot_onedim <- dynutils::inherit_default_params(
     # get x limit
     max_limit <- if(nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
 
-    # create begin and end states
-    states <- tibble(
-      milestone_id = unique(c(linearised$milestone_network$from, linearised$milestone_network$to))
-    ) %>% mutate(
-      start = milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
-      end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
-    )
+    # create begin and end milestones
+    milestones <-
+      bind_rows(
+        linearised$milestone_network %>% select(milestone_id = from, position = cumstart) %>% mutate(type="from"),
+        linearised$milestone_network %>% select(milestone_id = to, position = cumend) %>% mutate(type="to")
+      ) %>%
+      mutate(
+        start = milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
+        end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
+      )
 
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend=cumend, yend=0), data=linearised$milestone_network, color="black") +
-      # geom_point(aes(from_pos, level), data=states %>% filter(start), color="black") +
-      # geom_point(aes(to_pos, level), data=states %>% filter(end), shape=15, color="black") +
+      geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed")) +
+      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10) +
       theme_graph() +
       theme(legend.position="bottom")
 
@@ -87,6 +91,35 @@ plot_onedim <- dynutils::inherit_default_params(
     # } else {
     min_limit <- -0.2
     # }
+
+    if(label_milestones != FALSE) {
+
+      if(label_milestones == TRUE) {
+        labels <- get_milestone_labelling(traj)
+      } else {
+        labels <- label_milestones
+      }
+
+      # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
+      milestones_to_label <- milestones %>%
+        mutate(label = as.character(labels[milestone_id])) %>%
+        filter(!is.na(label)) %>%
+        group_by(milestone_id) %>%
+        arrange(desc(type)) %>%
+        filter(row_number() == 1)
+
+      plot <- plot + ggrepel::geom_label_repel(
+        aes(position, 0, label=label),
+        data=milestones_to_label,
+        direction = "x",
+        force = 0.8,
+        xlim = c(min(milestones$position), max(milestones$position)),
+        nudge_y = (max_limit + 0.5) * orientation,
+        segment.alpha = 0.3
+      )
+
+      max_limit <- max_limit + 1
+    }
 
     if(orientation == -1) {
       plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, min_limit))
