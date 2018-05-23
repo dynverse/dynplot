@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, e
 
 The package provides different ways to plot both the topology and cellular properties of a trajectory:
 
-```{r, fig.width=15, fig.height=6, echo=FALSE}
+```{r}
 library(dplyr)
 library(dyntoy)
 library(dynplot)
@@ -27,13 +27,16 @@ library(tidyverse)
 
 library(patchwork)
 
-task <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
-task <- task %>% root_trajectory()
-grouping_assignment <- task$prior_information$grouping_assignment
+traj <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
+traj <- traj %>% root_trajectory()
+grouping_assignment <- traj$prior_information$grouping_assignment
 groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color=dynplot:::milestone_palette_list$auto(n()))
-features_oi <- apply(task$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
+features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
 feature_oi <- features_oi[[1]]
+```
 
+
+```{r cells, fig.width=15, fig.height=10, echo=FALSE}
 empty <- ggplot() + theme_void()
 question <- empty + geom_text(aes(0, 0, label="????"))
 unavailable <- empty + geom_text(aes(0, 0, label="----"))
@@ -49,38 +52,38 @@ title <- list(
 
 dendro <- list(
   empty + geom_label(aes(0, 0, label="Dendrogram")),
-  # plot_dendro(task),
-  plot_dendro(task, "milestone"),
-  plot_dendro(task, grouping_assignment=grouping_assignment, groups=groups),
-  plot_dendro(task, feature_oi=feature_oi),
-  plot_dendro(task, "pseudotime")
+  # plot_dendro(traj),
+  plot_dendro(traj, "milestone"),
+  plot_dendro(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_dendro(traj, feature_oi=feature_oi),
+  plot_dendro(traj, "pseudotime")
 )
 
 onedim <- list(
     empty + geom_label(aes(0, 0, label="Onedim")),
-    # plot_onedim(task),
-    plot_onedim(task, "milestone"),
-    plot_onedim(task, grouping_assignment=grouping_assignment, groups=groups),
-    plot_onedim(task, feature_oi=feature_oi),
-    plot_onedim(task, "pseudotime")
+    # plot_onedim(traj),
+    plot_onedim(traj, "milestone"),
+    plot_onedim(traj, grouping_assignment=grouping_assignment, groups=groups),
+    plot_onedim(traj, feature_oi=feature_oi),
+    plot_onedim(traj, "pseudotime")
   )
 
 graph <- list(
   empty + geom_label(aes(0, 0, label="Graph")),
-  # plot_graph(task),
-  plot_graph(task, "milestone"),
-  plot_graph(task, grouping_assignment=grouping_assignment, groups=groups),
-  plot_graph(task, feature_oi=feature_oi),
-  plot_graph(task, "pseudotime")
+  # plot_graph(traj),
+  plot_graph(traj, "milestone"),
+  plot_graph(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_graph(traj, feature_oi=feature_oi),
+  plot_graph(traj, "pseudotime")
 )
 
 dimred <- list(
   empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
-  # plot_dimred(task),
-  plot_dimred(task, "milestone"),
-  plot_dimred(task, grouping_assignment=grouping_assignment, groups=groups),
-  plot_dimred(task, feature_oi=feature_oi),
-  plot_dimred(task, "pseudotime")
+  # plot_dimred(traj),
+  plot_dimred(traj, "milestone"),
+  plot_dimred(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_dimred(traj, feature_oi=feature_oi),
+  plot_dimred(traj, "pseudotime")
 )
 
 wrap_plots(
@@ -94,8 +97,11 @@ wrap_plots(
 
 And to plot the expression and feature importances of many genes along the trajectory
 
-```{r, echo=FALSE, fig.width=10, fig.height=6}
-cell_feature_importance <- dynfeature::calculate_cell_feature_importance(task %>% dynwrap::add_waypoints_to_wrapper())
-plot_heatmap(task, cell_feature_importance=cell_feature_importance, grouping_assignment = task$prior_information$grouping_assignment)
+```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
+cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
+plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping_assignment = traj$prior_information$grouping_assignment)
 ```
 
+```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
+plot_features(traj, features_oi = 5)
+```

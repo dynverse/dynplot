@@ -1,13 +1,12 @@
 #' Plot a tree trajectory as a dendrogram
 #'
-#' @param task The trajectory
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @inheritParams add_cell_coloring
 #' @export
 plot_dendro <-dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    task,
+    traj,
     color_cells,
     grouping_assignment,
     groups,
@@ -20,20 +19,20 @@ plot_dendro <-dynutils::inherit_default_params(
     diag_offset = 0.05
   ) {
     # root if necessary
-    if ("root_milestone_id" %in% names(task)) {
-      root <- task$root_milestone_id
+    if ("root_milestone_id" %in% names(traj)) {
+      root <- traj$root_milestone_id
     } else {
-      task <- dynwrap::root_trajectory(task, start_milestone_id = task$milestone_ids[[1]])
-      root <- task$root_milestone_id
+      traj <- dynwrap::root_trajectory(traj)
+      root <- traj$root_milestone_id
     }
 
     # make sure every cell is on only one edge
-    task$progressions <- progressions_one_edge(task$progressions)
+    traj$progressions <- progressions_one_edge(traj$progressions)
 
     # TODO: stop if not tree
 
     # convert to graph
-    milestone_network <- task$milestone_network %>% mutate(edge_id = seq_len(n()))
+    milestone_network <- traj$milestone_network %>% mutate(edge_id = seq_len(n()))
     milestone_graph <- milestone_network %>% tidygraph::as_tbl_graph()
 
     # determine leaves & position the leaves evenly
@@ -43,7 +42,7 @@ plot_dendro <-dynutils::inherit_default_params(
     leaves_y <- set_names(seq_along(leaves), leaves)
 
     # get leaves under each node (to get y positions later)
-    descendants <- map(task$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode="out", unreachable = F)$order))}) %>% set_names(task$milestone_ids)
+    descendants <- map(traj$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode="out", unreachable = F)$order))}) %>% set_names(traj$milestone_ids)
 
     # calculate diag offset based on largest distances between root and leaf
     max_x <- igraph::distances(milestone_graph, root, leaves, weights=igraph::E(milestone_graph)$length) %>% max
@@ -120,7 +119,7 @@ plot_dendro <-dynutils::inherit_default_params(
     )
 
     # put cells on tree
-    progressions <- task$progressions %>%
+    progressions <- traj$progressions %>%
       group_by(cell_id) %>%
       arrange(percentage) %>%
       filter(row_number() == 1) %>%

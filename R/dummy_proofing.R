@@ -1,10 +1,10 @@
-check_pseudotime <- function(task, pseudotime) {
+check_pseudotime <- function(traj, pseudotime) {
   if(is.null(pseudotime)) {
-    if(!"pseudotime" %in% names(task)) {
+    if(!"pseudotime" %in% names(traj)) {
       message("Pseudotime not provided, will calculate pseudotime from root milestone")
-      task$pseudotime <- dynwrap::calculate_pseudotime(task)
+      traj$pseudotime <- dynwrap::calculate_pseudotime(traj)
     }
-    task$pseudotime
+    traj$pseudotime
   } else {
     pseudotime
   }
@@ -35,14 +35,45 @@ check_feature <- function(expression, feature_oi) {
   feature_oi
 }
 
-check_expression_source <- function(task, expression_source) {
+check_expression_source <- function(traj, expression_source) {
   if (is.character(expression_source)) {
-    if(!expression_source %in% names(task)) {stop("Expression source not in task, did you run add_expression_to_wrapper?")}
-    expression <- task[[expression_source]]
+    if(!expression_source %in% names(traj)) {stop("Expression source not in traj, did you run add_expression?")}
+    expression <- traj[[expression_source]]
   } else if (is.matrix(expression_source)) {
     expression <- expression_source
   } else {
     stop("Invalid expression_source")
   }
   expression
+}
+
+
+check_features_oi <- function(traj, expression, features_oi, cell_feature_importances=NULL) {
+  if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
+    # make sure features_oi is not larger than the number of features
+    if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
+
+    message("No features of interest provided, selecting the top ", features_oi, " features automatically")
+
+    # choose cell_feauture_importance if given, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
+    if (!is.null(cell_feature_importances)) {
+      message("Selecting features with top maximal feature importance across cells")
+
+      features_oi <- cell_feature_importances %>%
+        group_by(feature_id) %>%
+        summarise(importance=max(importance)) %>%
+        top_n(features_oi, importance) %>%
+        pull(feature_id)
+
+    } else if ("dynfeature" %in% rownames(installed.packages())) {
+      message("Using dynfeature for selecting the top ", features_oi, " features")
+      requireNamespace("dynfeature")
+
+      features_oi <- dynfeature::calculate_overall_feature_importance(traj, expression=expression)$feature_id[1:features_oi]
+    } else {
+      features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
+    }
+  }
+
+  features_oi
 }

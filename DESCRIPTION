@@ -36,6 +36,7 @@ Imports:
   vipor,
   viridis
 Suggests:
+  cobs,
   dyntoy,
   knitr,
   rmarkdown,
@@ -44,7 +45,6 @@ Suggests:
   lle,
   MASS,
   Rtsne,
-  SCORPIUS,
   SIMLR,
   smacof,
   tsne
@@ -68,14 +68,14 @@ Collate:
     'plot_combined.R'
     'plot_dendro.R'
     'plot_dimred.R'
+    'plot_features.R'
     'plot_generic.R'
-    'plot_genes.R'
     'plot_graph.R'
     'plot_grouped.R'
     'plot_heatmap.R'
+    'plot_linearised_comparison.R'
     'plot_onedim.R'
     'plot_strip.R'
-    'plot_strip_connections.R'
     'plot_topology.R'
     'plot_trajectory_dimred.R'
     'process_dynplot.R'

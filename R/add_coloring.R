@@ -3,9 +3,9 @@
 #' @param milestones Tibble containing the `milestone_id` and a `color` for each milestone
 add_milestone_coloring <- function(
   milestones=NULL,
-  color_milestones=c("auto", "given", get_milestone_palette_names())
+  color_milestones=c("auto", "given")
 ) {
-  color_milestones <- match.arg(color_milestones)
+  color_milestones <- match.arg(color_milestones[1], c("auto", "given", dynplot::get_milestone_palette_names()))
 
   if(color_milestones == "given") {
     if(!"color" %in% names(milestones)) {stop("Milestone colors need to be given")}
@@ -27,7 +27,7 @@ add_milestone_coloring <- function(
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
-#' @param task The task
+#' @param traj The trajectory
 #' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression
@@ -39,8 +39,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
   function(
     cell_positions,
-    color_cells = c("auto", "invisible", "positions", "grouping", "feature", "milestone", "pseudotime"),
-    task,
+    color_cells = c("auto", "invisible", "grouping", "feature", "milestone", "pseudotime"),
+    traj,
     grouping_assignment=NULL,
     groups=NULL,
     feature_oi=NULL,
@@ -72,31 +72,35 @@ add_cell_coloring <- dynutils::inherit_default_params(
     if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
     } else if (color_cells == "feature") {
-      expression <- check_expression_source(task, expression_source)
+      expression <- check_expression_source(traj, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
       if(is.null(milestone_percentages)) {
-        message("Using milestone_percentages from task")
-        milestone_percentages <- task$milestone_percentages
+        message("Using milestone_percentages from traj")
+        milestone_percentages <- traj$milestone_percentages
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
-      pseudotime <- check_pseudotime(task, pseudotime)
+      pseudotime <- check_pseudotime(traj, pseudotime)
       cell_positions$pseudotime <- pseudotime[cell_positions$cell_id]
     }
 
     # now create the actual coloring
     if (color_cells == "grouping") {
+      if (!is.data.frame(grouping_assignment)) {
+        grouping_assignment <- tibble(cell_id = names(grouping_assignment), group_id = grouping_assignment)
+      }
+
       if (is.null(groups) | !("color" %in% names(groups))) {
         groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette("auto", n()))
       }
       cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
 
-      fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=10))
+      fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
-      fill_scale <- scale_fill_distiller(paste0(feature_oi, " ", expression_source), palette = "RdYlBu")
+      fill_scale <- scale_fill_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
       fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"=color_cells), guide="none")

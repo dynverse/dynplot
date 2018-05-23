@@ -4,18 +4,17 @@
 \alias{plot_dimred}
 \title{Plot trajectory on dimensionality reduction}
 \usage{
-plot_dimred(task, color_cells = c("auto", "invisible", "positions",
-  "grouping", "feature", "milestone", "pseudotime"),
-  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
-  color_milestones = c("auto", "given", get_milestone_palette_names()),
+plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+  "milestone", "pseudotime"), grouping_assignment = NULL, groups = NULL,
+  feature_oi = NULL, color_milestones = c("auto", "given"),
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
-  plot_milestone_network = dynwrap::is_wrapper_with_trajectory(task),
+  plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
   plot_milestone_labels = FALSE,
-  dimred_method = ifelse(length(task$cell_ids) > 500, dimred_pca, dimred_mds))
+  dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
-\item{task}{The task}
+\item{traj}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 

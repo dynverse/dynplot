@@ -1,34 +1,10 @@
-#' Order the cells according to their progression,
-#'  assign tented cells to the highest percentage
+#' Plot the traj as a heatmap
 #'
-#' @param milestone_network The milestone network
-#' @param progressions The progressions
-order_cells <- function(milestone_network, progressions) {
-  milestone_network <- milestone_network %>%
-    mutate(
-      cumstart = c(0, cumsum(length)[-length(length)]),
-      cumend = c(cumsum(length)),
-      edge_id = seq_len(n())
-    )
-  filtered_progression <- progressions %>% # a cell can only be in one edge (maximum in tents)
-    select(cell_id, from, to, percentage) %>%
-    left_join(milestone_network, by=c("from", "to")) %>%
-    group_by(cell_id) %>% arrange(-percentage) %>% filter(row_number() == 1)
-
-  ordered_progression <- filtered_progression %>%
-    mutate(cumpercentage=percentage*length + cumstart) %>%
-    arrange(cumpercentage)
-
-  ordered_progression %>% select(cell_id, edge_id) %>% ungroup() %>% mutate(position=seq_len(n()), edge_id=factor(edge_id))
-}
-
-#' Plot the task as a heatmap
-#'
-#' @param task The task
-#' @param features_oi features to plot, or the top number of features to select
+#' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
 #' @param clust The method to cluster the features, or a hclust object
-#' @param cell_feature_importances The feature importances per cell
+#' @param cell_feature_importances The importances of every feature in every cell, as returned by [dynfeature::calculate_cell_feature_importance()]
 #' @param heatmap_type The type of heatmap, either tiled or dotted
+#' @param scale Whether to rescale the expression, can be a function or boolean
 #'
 #' @inheritParams plot_onedim
 #'
@@ -38,52 +14,33 @@ order_cells <- function(milestone_network, progressions) {
 #'
 #' @export
 plot_heatmap <- function(
-  task,
+  traj,
   expression_source = "expression",
   features_oi = 20,
   clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
-  milestone_percentages = task$milestone_percentages,
+  milestone_percentages = traj$milestone_percentages,
   grouping_assignment = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
-  heatmap_type = c("tiled", "dotted")
+  heatmap_type = c("tiled", "dotted"),
+  scale = dynutils::scale_quantile
 ) {
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
-  expression <- check_expression_source(task, expression_source)
-  expression <- dynutils::scale_quantile(expression)
+  expression <- check_expression_source(traj, expression_source)
 
-  # get features oi
-  if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
-    # make sure features_oi is not larger than the number of features
-    if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
-
-    message("No features of interest provided, selecting the top ", features_oi, " features automatically")
-
-    # choose cell_feauture_importance if give, otherwise choose dynfeature if it is installed, otherwise use more simplistic approach
-    if (!is.null(cell_feature_importances)) {
-      message("Selecting features with top maximal feature importance across cells")
-
-      features_oi <- cell_feature_importances %>%
-        group_by(feature_id) %>%
-        summarise(importance=max(importance)) %>%
-        top_n(features_oi, importance) %>%
-        pull(feature_id)
-
-    } else if ("dynfeature" %in% rownames(installed.packages())) {
-      message("Using dynfeature for selecting the top ", features_oi, " features")
-      requireNamespace("dynfeature")
-
-      features_oi <- dynfeature::calculate_overall_feature_importance(task, expression=expression)$feature_id[1:features_oi]
-    } else {
-      features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
-    }
+  if(is.function(scale)) {
+    expression <- scale(expression)
+  } else if (scale) {
+    expression <- dynutils::scale_quantile(expression)
   }
 
+  # get features oi
+  features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)
   expression <- expression[, features_oi]
 
   # cluster features
@@ -94,8 +51,8 @@ plot_heatmap <- function(
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
-    task$milestone_network,
-    task$progressions,
+    traj$milestone_network,
+    traj$progressions,
     equal_cell_width = TRUE,
     margin=margin
   )
@@ -111,7 +68,7 @@ plot_heatmap <- function(
   if(!is.null(cell_feature_importances)) {
     molten <- left_join(
       molten,
-      cell_feature_importance,
+      cell_feature_importances,
       c("cell_id", "feature_id")
     )
   }
@@ -162,9 +119,8 @@ plot_heatmap <- function(
 
   # plot one dim
   onedim <- plot_onedim(
-    task,
-    milestone_network = linearised$milestone_network,
-    progressions = linearised$progressions %>% mutate(percentage = percentage2) %>% select(from, to, cell_id, percentage),
+    traj,
+    linearised = linearised,
     orientation = -1,
     quasirandom_width = 0,
     margin = margin,
