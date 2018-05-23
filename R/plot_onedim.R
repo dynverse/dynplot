@@ -34,7 +34,7 @@ plot_onedim <- dynutils::inherit_default_params(
     linearised = linearise_cells(milestone_network, progressions, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
-    label_milestones = FALSE
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj)
   ) {
     root <- traj$milestone_network$from[[1]]
 

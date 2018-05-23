@@ -12,7 +12,8 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   milestones = NULL, milestone_percentages = NULL, orientation = 1,
   margin = 0.05, linearised = linearise_cells(milestone_network,
   progressions, margin, one_edge = TRUE), quasirandom_width = 0.2,
-  plot_cells = TRUE, label_milestones = FALSE)
+  plot_cells = TRUE,
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj))
 }
 \arguments{
 \item{traj}{The trajectory}

@@ -22,7 +22,7 @@ plot_dimred <- dynutils::inherit_default_params(
     pseudotime,
     expression_source = "expression",
     plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
-    label_milestones = FALSE,
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
     dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)
   ) {
     color_cells <- match.arg(color_cells)

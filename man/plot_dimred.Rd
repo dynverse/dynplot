@@ -10,8 +10,8 @@ plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
-  label_milestones = FALSE, dimred_method = ifelse(length(traj$cell_ids) >
-  500, dimred_pca, dimred_mds))
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+  dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
 \item{traj}{The trajectory}
