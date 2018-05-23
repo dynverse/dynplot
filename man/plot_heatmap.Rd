@@ -9,7 +9,7 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   milestones = NULL, milestone_percentages = traj$milestone_percentages,
   grouping_assignment = NULL, groups = NULL,
   cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"),
-  scale = dynutils::scale_quantile)
+  scale = dynutils::scale_quantile, label_milestones = TRUE)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -37,6 +37,8 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 \item{heatmap_type}{The type of heatmap, either tiled or dotted}
 
 \item{scale}{Whether to rescale the expression, can be a function or boolean}
+
+\item{label_milestones}{Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels}
 }
 \description{
 Plot the traj as a heatmap

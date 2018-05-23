@@ -10,7 +10,7 @@ plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
-  plot_milestone_labels = FALSE,
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
   dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds))
 }
 \arguments{
@@ -36,7 +36,7 @@ plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 
 \item{plot_milestone_network}{Whether to plot the milestone network}
 
-\item{plot_milestone_labels}{Whether to overlay the milestone labels over the network}
+\item{label_milestones}{Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels}
 
 \item{dimred_method}{The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)}
 }
