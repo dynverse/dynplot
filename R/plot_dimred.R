@@ -2,9 +2,9 @@
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
+#' @inheritParams plot_onedim
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the milestone network
-#' @param plot_milestone_labels Whether to overlay the milestone labels over the network
 #' @param dimred_method The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)
 #'
 #' @export
@@ -22,7 +22,7 @@ plot_dimred <- dynutils::inherit_default_params(
     pseudotime,
     expression_source = "expression",
     plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
-    plot_milestone_labels = FALSE,
+    label_milestones = FALSE,
     dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)
   ) {
     color_cells <- match.arg(color_cells)
@@ -110,11 +110,13 @@ plot_dimred <- dynutils::inherit_default_params(
         ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_to, yend=Comp2_to), data=milestone_network) +
         ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_mid, yend=Comp2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
 
-      if (plot_milestone_labels) {
+      label_milestones <- check_milestone_labelling(traj, label_milestones)
+      if(length(label_milestones)) {
+        milestone_positions <- milestone_positions %>% mutate(label = label_milestones[milestone_id])
         if(color_cells == "milestone") {
-          plot <- plot + geom_label(aes(label=milestone_id, fill=color), data=milestone_positions)
+          plot <- plot + geom_label(aes(label=label, fill=color), data=milestone_positions %>% filter(!is.na(label)))
         } else {
-          plot <- plot + geom_label(aes(label=milestone_id), data=milestone_positions)
+          plot <- plot + geom_label(aes(label=label), data=milestone_positions %>% filter(!is.na(label)))
         }
       } else {
         if(color_cells == "milestone") {

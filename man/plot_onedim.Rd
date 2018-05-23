@@ -12,7 +12,7 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
   milestones = NULL, milestone_percentages = NULL, orientation = 1,
   margin = 0.05, linearised = linearise_cells(milestone_network,
   progressions, margin, one_edge = TRUE), quasirandom_width = 0.2,
-  plot_cells = TRUE)
+  plot_cells = TRUE, label_milestones = FALSE)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -39,7 +39,7 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 
 \item{milestone_percentages}{The milestone percentages}
 
-\item{orientation}{Whether to plot the connections in the top or}
+\item{orientation}{Whether to plot the connections in the top (1) or bottom (-1)}
 
 \item{margin}{The margin to add}
 
@@ -48,6 +48,8 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 \item{quasirandom_width}{The width of the quasirandom cell spreading}
 
 \item{plot_cells}{Whether to plot the cells}
+
+\item{label_milestones}{Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels}
 }
 \description{
 Plot onedim

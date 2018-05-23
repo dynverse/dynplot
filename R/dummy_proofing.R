@@ -77,3 +77,16 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 
   features_oi
 }
+
+
+
+check_milestone_labelling <- function(traj, label_milestones) {
+  if(label_milestones == TRUE) {
+    labels <- get_milestone_labelling(traj)
+  } else if (label_milestones != FALSE) {
+    labels <- label_milestones
+  } else {
+    labels <- character()
+  }
+  labels
+}

@@ -5,7 +5,8 @@
 #' @param linearised The linearised milestone network and progressions
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
-#' @param orientation Whether to plot the connections in the top or
+#' @param orientation Whether to plot the connections in the top (1) or bottom (-1)
+#' @param label_milestones Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
@@ -92,17 +93,13 @@ plot_onedim <- dynutils::inherit_default_params(
     min_limit <- -0.2
     # }
 
-    if(label_milestones != FALSE) {
+    # label milestones
+    label_milestones <- check_milestone_labelling(traj, label_milestones)
 
-      if(label_milestones == TRUE) {
-        labels <- get_milestone_labelling(traj)
-      } else {
-        labels <- label_milestones
-      }
-
+    if(length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
       milestones_to_label <- milestones %>%
-        mutate(label = as.character(labels[milestone_id])) %>%
+        mutate(label = as.character(label_milestones[milestone_id])) %>%
         filter(!is.na(label)) %>%
         group_by(milestone_id) %>%
         arrange(desc(type)) %>%
