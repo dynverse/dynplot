@@ -15,6 +15,8 @@ add_density_coloring(plot, cell_positions, color_density = c("none",
 
 \item{cell_positions}{The positions of the cells in 2D}
 
+\item{color_density}{How to color density, can be "none", "grouping", or "feature"}
+
 \item{traj}{The trajectory}
 
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
@@ -32,6 +34,8 @@ add_density_coloring(plot, cell_positions, color_density = c("none",
 \item{bw}{Bandwidth, relative to the size of the plot}
 
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
+
+\item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
 }
 \description{
 Color cells using a background density

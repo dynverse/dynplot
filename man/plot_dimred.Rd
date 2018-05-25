@@ -22,6 +22,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{color_cells}{How to color the cells}
 
+\item{color_density}{How to color density, can be "none", "grouping", or "feature"}
+
 \item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
 
 \item{groups}{Tibble containing information of the cell groups}
@@ -51,6 +53,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{bw}{Bandwidth, relative to the size of the plot}
 
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
+
+\item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
 }
 \description{
 Plot trajectory on dimensionality reduction

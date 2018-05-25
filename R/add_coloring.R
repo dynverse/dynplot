@@ -138,10 +138,12 @@ add_cell_coloring <- dynutils::inherit_default_params(
 #'
 #' @param plot The plot
 #' @param cell_positions The positions of the cells in 2D
+#' @param color_density How to color density, can be "none", "grouping", or "feature"
 #' @param padding The padding in the edges to the plot, relative to the size of the plot
 #' @param nbins Number of bins for calculating the density
 #' @param bw Bandwidth, relative to the size of the plot
 #' @param density_cutoff Cutoff for density, the lower the larger the areas
+#' @param density_cutoff_label Cutoff for density for labelling, the lower the further way from cells
 #' @inheritParams add_cell_coloring
 add_density_coloring <- function(
   plot,
