@@ -18,12 +18,16 @@ plot_features <- function(
   requireNamespace("cobs")
 
   # process expression
-  expression <- check_expression_source(traj, expression_source)
+  expression <- get_expression(traj, expression_source)
 
   if(is.function(scale)) {
     expression <- scale(expression)
+    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels=c("Low", "High"))
   } else if (scale) {
     expression <- dynutils::scale_quantile(expression)
+    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels=c("Low", "High"))
+  } else {
+    y_scale <- scale_y_continuous("expression")
   }
 
   # get features oi
@@ -90,13 +94,8 @@ plot_features <- function(
     geom_vline(aes(xintercept=cumend), data=linearised$milestone_network, alpha=0.2) +
     # cowplot::theme_cowplot()     theme_clean() +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0)) +
+    y_scale +
     theme_clean()
-
-  if (scale) {
-    expression_plot <- expression_plot + scale_y_continuous("expression", breaks = c(0, 1), labels=c("Low", "High"))
-  } else {
-    expression_plot <- expression_plot + scale_y_continuous("expression")
-  }
 
   onedim_plot <- plot_onedim(traj, linearised = linearised, orientation = -1, margin = margin) +
     scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0))
