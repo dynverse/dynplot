@@ -22,7 +22,7 @@ plot_dendro <-dynutils::inherit_default_params(
     if ("root_milestone_id" %in% names(traj)) {
       root <- traj$root_milestone_id
     } else {
-      traj <- dynwrap::root_trajectory(traj)
+      traj <- dynwrap::add_root(traj)
       root <- traj$root_milestone_id
     }
 
@@ -137,7 +137,7 @@ plot_dendro <-dynutils::inherit_default_params(
     # add cell coloring
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
+    color_scale <- cell_coloring_output$color_scale
 
     # generate layout
     layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)
@@ -151,8 +151,8 @@ plot_dendro <-dynutils::inherit_default_params(
       # the node labels
       # ggraph::geom_node_label(aes(label=node_id)) +
       # the cells
-      geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
-      fill_scale +
+      geom_point(aes(x, y, color=color), data=cell_positions) +
+      color_scale +
       # theme graph
       theme_graph() +
       ggraph::scale_edge_alpha_identity() +

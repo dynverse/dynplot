@@ -6,10 +6,10 @@
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
 #' @param orientation Whether to plot the connections in the top (1) or bottom (-1)
-#' @param label_milestones Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
+#' @inheritParams dynwrap::get_milestone_labelling
 #'
 #' @export
 #'
@@ -48,7 +48,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # add cell coloring
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
+    color_scale <- cell_coloring_output$color_scale
 
     # get x limit
     max_limit <- if(nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
@@ -81,8 +81,8 @@ plot_onedim <- dynutils::inherit_default_params(
     # add the cells
     if (plot_cells) {
       plot <- plot +
-        geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
-        fill_scale
+        geom_point(aes(x, y, color=color), data=cell_positions) +
+        color_scale
     }
 
 
@@ -94,7 +94,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # }
 
     # label milestones
-    label_milestones <- check_milestone_labelling(traj, label_milestones)
+    label_milestones <- get_milestone_labelling(traj, label_milestones)
 
     if(length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position

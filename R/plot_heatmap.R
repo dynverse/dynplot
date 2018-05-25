@@ -32,7 +32,7 @@ plot_heatmap <- function(
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
-  expression <- check_expression_source(traj, expression_source)
+  expression <- get_expression(traj, expression_source)
 
   if(is.function(scale)) {
     expression <- scale(expression)
@@ -162,8 +162,8 @@ plot_heatmap <- function(
   }
 
   cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
-    geom_tile(aes(cumpercentage, 1, fill=color)) +
-    cell_annotation_positions$fill_scale +
+    geom_point(aes(cumpercentage, 1, color=color)) +
+    cell_annotation_positions$color_scale +
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +
     theme_graph() +
     theme(legend.position="top")

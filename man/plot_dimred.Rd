@@ -4,14 +4,18 @@
 \alias{plot_dimred}
 \title{Plot trajectory on dimensionality reduction}
 \usage{
-plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
-  "milestone", "pseudotime"), grouping_assignment = NULL, groups = NULL,
+plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
+  "milestone", "pseudotime"), color_density = c("none", "grouping",
+  "feature"), grouping_assignment = NULL, groups = NULL,
   feature_oi = NULL, color_milestones = c("auto", "given"),
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression",
   plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds))
+  dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA,
+  ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)), padding = 0.1,
+  nbins = 1000, bw = 0.2, density_cutoff = 0.3,
+  density_cutoff_label = density_cutoff/10)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -36,9 +40,17 @@ plot_dimred(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 
 \item{plot_milestone_network}{Whether to plot the milestone network}
 
-\item{label_milestones}{Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
 
-\item{dimred_method}{The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)}
+\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
+
+\item{padding}{The padding in the edges to the plot, relative to the size of the plot}
+
+\item{nbins}{Number of bins for calculating the density}
+
+\item{bw}{Bandwidth, relative to the size of the plot}
+
+\item{density_cutoff}{Cutoff for density, the lower the larger the areas}
 }
 \description{
 Plot trajectory on dimensionality reduction

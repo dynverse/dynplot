@@ -9,22 +9,22 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   space <- dimred_pca(task$expression)
 
   test_that(paste0("plot_dimred on ", task$id, "with giving space"), {
-    g <- plot_dimred(task, dimred_method=space)
+    g <- plot_dimred(task, dimred=space)
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", task$id, " with pseudotime"), {
-    g <- plot_dimred(task, color_cells = "pseudotime", dimred_method = space)
+    g <- plot_dimred(task, color_cells = "pseudotime", dimred = space)
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", task$id, " with grouping"), {
-    g <- plot_dimred(task, grouping_assignment = task$grouping_assignment, dimred_method = space)
+    g <- plot_dimred(task, grouping_assignment = task$grouping_assignment, dimred = space)
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", task$id, " with milestone"), {
-    g <- plot_dimred(task, "milestone", dimred_method = space)
+    g <- plot_dimred(task, "milestone", dimred = space)
     expect_ggplot(g)
   })
 })
@@ -36,7 +36,7 @@ map(get_dimreds(), function(dimred_name) {
   space <- get(dimred_name)(task$expression)
 
   test_that(paste0("plot_dimred on ", task$id, " with ", dimred_name), {
-    g <- plot_dimred(task, dimred_method = space)
+    g <- plot_dimred(task, dimred = space)
     expect_ggplot(g)
   })
 })

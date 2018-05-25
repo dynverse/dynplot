@@ -68,8 +68,8 @@ plot_graph <- dynutils::inherit_default_params(
       group_by(from, to) %>%
       filter(row_number() == 1) %>%
       ungroup() %>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, Comp1, Comp2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
 
     space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
@@ -88,7 +88,7 @@ plot_graph <- dynutils::inherit_default_params(
     cell_positions <- dimred_traj$space_samples
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
+    color_scale <- cell_coloring_output$color_scale
 
     # check and process label
     plot_label <- match.arg(plot_label)
@@ -108,56 +108,55 @@ plot_graph <- dynutils::inherit_default_params(
       ggplot() +
       theme(legend.position = "none") +
       # geom_segment(
-      #   aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 2, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 2),
+      #   aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 2, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 2),
       #   dimred_traj$space_lines %>% filter(directed),
       #   size = transition_size, colour = "grey",
       #   arrow = arrow(length = arrow_length, type = "closed")
       # ) +
       # geom_segment(
-      #   aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+      #   aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
       #   dimred_traj$space_lines,
       #   size = transition_size, colour = "grey"
       # ) +
     #
     geom_segment(
-      aes(x = from.Comp1, xend = from.Comp1 + (to.Comp1 - from.Comp1) / 1.5, y = from.Comp2, yend = from.Comp2 + (to.Comp2 - from.Comp2) / 1.5),
+      aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
       space_lines %>% filter(directed),
       size = 1, colour = "grey",
       arrow = arrow(length = arrow_length, type = "closed")
     ) +
     geom_segment(
-      aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+      aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
       space_lines,
       size = transition_size + 2, colour = "grey",
     ) +
     geom_segment(
-      aes(x = from.Comp1, xend = to.Comp1, y = from.Comp2, yend = to.Comp2),
+      aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
       space_lines,
       size = transition_size, colour = "white",
     ) +
       geom_polygon(
-        aes(x = Comp1, y = Comp2, group=divergence_id),
+        aes(x = comp_1, y = comp_2, group=divergence_id),
         space_regions,
         fill="white"
       ) +
       geom_point(
-        aes(Comp1, Comp2, fill = color),
+        aes(comp_1, comp_2, color = color),
         cell_positions,
-        size = cell_size,
-        shape=21
+        size = cell_size
       ) +
-      fill_scale +
+      color_scale +
       theme_graph() +
       theme(legend.position="bottom")
     # ggrepel::geom_label_repel(
-    #   aes(Comp1, Comp2, label = milestone_id),
+    #   aes(comp_1, comp_2, label = milestone_id),
     #   dimred_traj$space_milestones %>% filter(milestone_id %in% nodes_to_label)
     # ) +
 
     if (plot_milestones) {
       g <- g +
         geom_point(
-          aes(Comp1, Comp2, color = color),
+          aes(comp_1, comp_2, color = color),
           milestone_positions,
           size = milestone_size, shape = 4, stroke = 2
         ) +

@@ -5,7 +5,7 @@
 \alias{plot_default}
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
-plot_graph(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), color_milestones = c("auto", "given"),
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   pseudotime = NULL, expression_source = "expression", milestones = NULL,

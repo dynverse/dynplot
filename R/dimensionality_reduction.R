@@ -94,7 +94,7 @@ dimred_lle = function(x, ndim=3) {
 
 process_dimred = function(space) {
   space = as.matrix(space)
-  colnames(space) = paste0("Comp", 1:ncol(space))
+  colnames(space) = paste0("comp_", 1:ncol(space))
   space
 }
 

@@ -25,7 +25,7 @@
 #'       cell_positions <- tibble(cell_id = names(traj$pseudotime), y = traj$pseudotime)
 #'       y_scale <- scale_y_continuous("pseudotime")
 #'     } else if (order_cells == "feature") {
-#'       expression <- check_expression_source(traj, expression_source)
+#'       expression <- get_expression(traj, expression_source)
 #'       check_feature(expression, feature_oi)
 #'       cell_positions <- tibble(cell_id = rownames(traj[[expression_source]]), y = traj[[expression_source]][, feature_oi])
 #'       y_scale <- scale_y_continuous(paste0(feature_oi, " ", expression_source))

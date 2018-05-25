@@ -4,7 +4,7 @@
 \alias{plot_dendro}
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
-plot_dendro(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), grouping_assignment = NULL, groups = NULL,
   feature_oi = NULL, expression_source = "expression", pseudotime = NULL,
   color_milestones = c("auto", "given"), milestones = NULL,

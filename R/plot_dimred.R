@@ -1,18 +1,25 @@
 #' Plot trajectory on dimensionality reduction
 #'
-#' @inheritParams add_cell_coloring
-#' @inheritParams add_milestone_coloring
-#' @inheritParams plot_onedim
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the milestone network
-#' @param dimred_method The dimred method or the dimensionality reduction (a dataframe containing at least Comp1, Comp2 and cell_id)
+#'
+#' @inheritParams add_cell_coloring
+#' @inheritParams add_milestone_coloring
+#' @inheritParams add_density_coloring
+#' @inheritParams dynwrap::get_milestone_labelling
+#' @inheritParams dynwrap::get_dimred
 #'
 #' @export
 plot_dimred <- dynutils::inherit_default_params(
-  list(add_cell_coloring,add_milestone_coloring),
+  list(
+    add_cell_coloring,
+    add_milestone_coloring,
+    add_density_coloring
+  ),
   function(
     traj,
     color_cells,
+    color_density = NULL,
     grouping_assignment,
     groups,
     feature_oi,
@@ -23,16 +30,20 @@ plot_dimred <- dynutils::inherit_default_params(
     expression_source = "expression",
     plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    dimred_method = ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)
+    dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA, ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
+    padding,
+    nbins,
+    bw,
+    density_cutoff,
+    density_cutoff_label
   ) {
     color_cells <- match.arg(color_cells)
 
-    dimred_method <- check_dimred_method(dimred_method)
-
-    expression <- check_expression_source(traj, expression_source)
+    expression <- get_expression(traj, expression_source)
+    dimred <- get_dimred(traj, dimred, expression)
 
     # get cell positions
-    cell_positions <- dimred_method(expression, ndim=2) %>% check_dimred()
+    cell_positions <- dimred %>% as.data.frame() %>% rownames_to_column("cell_id")
 
     # assign cells to closest milestone
     cell_positions <- left_join(
@@ -46,7 +57,7 @@ plot_dimred <- dynutils::inherit_default_params(
       # calculate position of milestones
       milestone_positions <- cell_positions %>%
         group_by(milestone_id) %>%
-        summarise_at(c("Comp1", "Comp2"), mean)
+        summarise_at(c("comp_1", "comp_2"), mean)
 
       # add missing groups (if no cells were added)
       milestone_positions <- bind_rows(
@@ -67,7 +78,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
             milestone_positions %>%
               slice(match(close_milestone_ids, milestone_id)) %>%
-              summarise_at(c("Comp1", "Comp2"), mean) %>%
+              summarise_at(c("comp_1", "comp_2"), mean) %>%
               mutate(milestone_id = !!milestone_id)
           }),
         milestone_positions
@@ -86,31 +97,43 @@ plot_dimred <- dynutils::inherit_default_params(
           by=c("to" = "milestone_id_to")
         ) %>%
         mutate(
-          Comp1_mid = Comp1_from + (Comp1_to - Comp1_from) /2,
-          Comp2_mid = Comp2_from + (Comp2_to - Comp2_from) /2
+          comp_1_mid = comp_1_from + (comp_1_to - comp_1_from) /2,
+          comp_2_mid = comp_2_from + (comp_2_to - comp_2_from) /2
         )
 
       milestones <- milestone_positions
     }
 
-    # add cell coloring
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
 
     cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
+    color_scale <- cell_coloring_output$color_scale
 
-    plot <- ggplot(cell_positions, aes(Comp1, Comp2)) +
-      geom_point(aes(fill=color), shape=21, color="#33333388") +
+    # base plot without cells
+    plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
       theme_graph() +
-      theme(legend.position="bottom") +
-      fill_scale
+      theme(legend.position="bottom")
+
+    # add density
+    if (!is.null(color_density)) {
+      plot <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir=environment()))
+    }
+
+
+    # add cells
+    plot <- plot +
+      geom_point(size=2.5, color="black") +
+      geom_point(aes(color=color), size=2) +
+      color_scale
 
     if (plot_milestone_network) {
+      # plot milestone network
       plot <- plot +
-        ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_to, yend=Comp2_to), data=milestone_network) +
-        ggraph::geom_edge_link(aes(x=Comp1_from, y=Comp2_from, xend=Comp1_mid, yend=Comp2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
+        ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_to, yend=comp_2_to), data=milestone_network) +
+        ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_mid, yend=comp_2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
 
-      label_milestones <- check_milestone_labelling(traj, label_milestones)
+      # plot milestone labels
+      label_milestones <- get_milestone_labelling(traj, label_milestones)
       if(length(label_milestones)) {
         milestone_positions <- milestone_positions %>% mutate(label = label_milestones[milestone_id])
         if(color_cells == "milestone") {
@@ -122,13 +145,12 @@ plot_dimred <- dynutils::inherit_default_params(
         if(color_cells == "milestone") {
           plot <- plot +
             geom_point(color="black", data=milestone_positions, size=6) +
-            geom_point(aes(fill=color), data=milestone_positions, size=4, shape=21, color="#00000000")
+            geom_point(aes(color=color), data=milestone_positions, size=4)
         } else {
           plot <- plot +
             geom_point(color="#333333", data=milestone_positions, size=2, alpha=1)
         }
       }
-
     }
 
     plot

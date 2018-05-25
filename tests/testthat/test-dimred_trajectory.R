@@ -13,17 +13,17 @@ for (taski in seq_len(nrow(toy_tasks))) {
     space_milestones <- dimred$space_milestones
     expect_equal( nrow(space_milestones), length(milestone_ids) )
     expect_equal( space_milestones$milestone_id, milestone_ids )
-    expect_true( all(is.finite(space_milestones$Comp1)) )
-    expect_true( all(is.finite(space_milestones$Comp2)) )
+    expect_true( all(is.finite(space_milestones$comp_1)) )
+    expect_true( all(is.finite(space_milestones$comp_2)) )
 
     # check dimred$milestone_network
     milestone_network <- task$milestone_network
     space_lines <- dimred$space_lines
     expect_equal( nrow(space_lines), nrow(milestone_network) )
-    expect_true( all(is.finite(space_lines$from.Comp1)) )
-    expect_true( all(is.finite(space_lines$from.Comp2)) )
-    expect_true( all(is.finite(space_lines$to.Comp1)) )
-    expect_true( all(is.finite(space_lines$to.Comp2)) )
+    expect_true( all(is.finite(space_lines$from.comp_1)) )
+    expect_true( all(is.finite(space_lines$from.comp_2)) )
+    expect_true( all(is.finite(space_lines$to.comp_1)) )
+    expect_true( all(is.finite(space_lines$to.comp_2)) )
     expect_equal( sort(unique(c(space_lines$from, space_lines$to))), sort(milestone_ids) )
 
     cell_ids <- task$cell_ids
