@@ -52,6 +52,8 @@ plot_dimred <- dynutils::inherit_default_params(
       "cell_id"
     )
 
+    # browser()
+
     # first do milestone coloring, so that these colors can be reused by the cells if necessary
     if (plot_milestone_network) {
       # calculate position of milestones
