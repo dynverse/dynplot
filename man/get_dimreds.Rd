@@ -11,6 +11,7 @@
 \alias{dimred_dp}
 \alias{dimred_ica}
 \alias{dimred_lle}
+\alias{dimred_umap}
 \alias{get_dimreds}
 \title{Dimensionality reduction functions}
 \usage{
@@ -33,6 +34,8 @@ dimred_dp(x, ndim = 3, neigen = NULL)
 dimred_ica(x, ndim = 3)
 
 dimred_lle(x, ndim = 3)
+
+dimred_umap(x, ndim = 2, n_neighbors = 15L)
 
 get_dimreds()
 }

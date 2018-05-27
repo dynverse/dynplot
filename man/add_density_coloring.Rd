@@ -4,15 +4,13 @@
 \alias{add_density_coloring}
 \title{Color cells using a background density}
 \usage{
-add_density_coloring(plot, cell_positions, color_density = c("none",
-  "grouping", "feature"), traj, grouping_assignment = NULL, groups = NULL,
+add_density_coloring(cell_positions, color_density = c("none", "grouping",
+  "feature"), traj, grouping_assignment = NULL, groups = NULL,
   feature_oi = NULL, expression_source = "expression", padding = 0.1,
   nbins = 1000, bw = 0.2, density_cutoff = 0.3,
   density_cutoff_label = density_cutoff/10)
 }
 \arguments{
-\item{plot}{The plot}
-
 \item{cell_positions}{The positions of the cells in 2D}
 
 \item{color_density}{How to color density, can be "none", "grouping", or "feature"}
@@ -36,6 +34,8 @@ add_density_coloring(plot, cell_positions, color_density = c("none",
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
 
 \item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
+
+\item{plot}{The plot}
 }
 \description{
 Color cells using a background density
