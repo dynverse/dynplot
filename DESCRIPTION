@@ -48,14 +48,16 @@ Suggests:
   Rtsne,
   SIMLR,
   smacof,
-  tsne
+  tsne,
+  umapr
 Remotes:
   dynverse/dynutils,
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
   dynverse/patchwork,
-  tidyverse/ggplot2
+  tidyverse/ggplot2,
+  ropenscilabs/umapr
 VignetteBuilder: knitr
 Collate: 
     'add_coloring.R'

@@ -92,6 +92,17 @@ dimred_lle = function(x, ndim=3) {
   process_dimred(space)
 }
 
+#' @rdname get_dimreds
+#' @export
+dimred_umap <- function(x, ndim=2, n_neighbors=15L) {
+  dynutils::install_packages(c("umapr"), "dynplot")
+
+  space <- umapr::umap(x, n_neighbors = n_neighbors, n_components = ndim)
+  space <- space[, (ncol(space)-ndim+1):ncol(space)]
+
+  process_dimred(space)
+}
+
 process_dimred = function(space) {
   space = as.matrix(space)
   colnames(space) = paste0("comp_", 1:ncol(space))
