@@ -146,7 +146,6 @@ add_cell_coloring <- dynutils::inherit_default_params(
 #' @param density_cutoff_label Cutoff for density for labelling, the lower the further way from cells
 #' @inheritParams add_cell_coloring
 add_density_coloring <- function(
-  plot,
   cell_positions,
   color_density = c("none", "grouping", "feature"),
   traj,
@@ -182,7 +181,7 @@ add_density_coloring <- function(
   ybw <- diff(ylims) * bw
 
   # calculate blank space
-  kde <- MASS::kde2d(cell_positions$comp_1, cell_positions$comp_2, h = c(xbw, ybw), lims=c(xlims, ylims), n=50)
+  kde <- MASS::kde2d(cell_positions$comp_1, cell_positions$comp_2, h = c(xbw, ybw), lims=c(xlims, ylims), n=100)
   blank_space <- reshape2::melt(kde$z, value.name="density") %>%
     filter(density < max(density) * density_cutoff_label) %>%
     mutate(
@@ -190,6 +189,9 @@ add_density_coloring <- function(
       comp_2 = kde$y[as.numeric(Var2)]
     ) %>%
     select(comp_1, comp_2)
+
+  # will contain the different plots and scales
+  density_plots <- list()
 
   # calculate specific density
   if(color_density == "grouping") {
@@ -217,13 +219,13 @@ add_density_coloring <- function(
       })) %>%
       unnest(contour)
 
-    plot <- plot +
-      geom_polygon(
-        aes(comp_1, comp_2, fill=group_id, group = contour_id),
-        data = group_density,
-        alpha = 0.4
-      ) +
-      scale_fill_manual(color_density, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
+    density_plots$polygon <- geom_polygon(
+      aes(comp_1, comp_2, fill=group_id, group = contour_id),
+      data = group_density,
+      alpha = 0.4
+    )
+
+    density_plots$scale <- scale_fill_manual(color_density, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
 
     # plot group labels
     centers <- group_density %>% group_by(group_id) %>% summarise_if(is.numeric, mean)
@@ -234,7 +236,7 @@ add_density_coloring <- function(
         blank_space
       ) %>%
       mutate(
-        distance = abs(comp_1_center - comp_1) + abs(comp_2_center - comp_2)
+        distance = sqrt((comp_1_center - comp_1)**2 + abs(comp_2_center - comp_2)**2)
       ) %>%
       group_by(group_id) %>%
       top_n(1, -distance)
@@ -249,13 +251,11 @@ add_density_coloring <- function(
     # plot +
     #   geom_label(aes(comp_1, comp_2, label=group_id, fill = group_id), group_label_positions)
 
-    plot <- plot +
-      ggrepel::geom_label_repel(
-        aes(comp_1, comp_2, label=group_id, fill = group_id),
-        group_label_positions,
-        min.segment.length = Inf
-      )
-
+    density_plots$labels <-      ggrepel::geom_label_repel(
+      aes(comp_1, comp_2, label=group_id, fill = group_id),
+      group_label_positions,
+      min.segment.length = Inf
+    )
 
   } else if (color_density == "feature") {
     # get expression
@@ -305,13 +305,12 @@ add_density_coloring <- function(
     }) %>%
       mutate(contour_id = factor(contour_id, levels=unique(contour_id)))
 
-    plot <- plot +
-      geom_polygon(aes(comp_1, comp_2, fill=expression, group=contour_id), contour_expression) +
-      scale_fill_distiller(palette="RdBu", limits = expression_range)
 
+    density_plots$polygon <- geom_polygon(aes(comp_1, comp_2, fill=expression, group=contour_id), contour_expression)
+    density_plots$scale <- scale_fill_distiller(palette="RdBu", limits = expression_range)
   }
 
-  plot
+  density_plots
 }
 
 

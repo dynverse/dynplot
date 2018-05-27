@@ -1,7 +1,8 @@
-#' Plot trajectory on dimensionality reduction
+#' Plot the trajectory on dimensionality reduction
 #'
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the milestone network
+#' @param plot_trajectory Whether to plot the trajectory
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
@@ -19,7 +20,12 @@ plot_dimred <- dynutils::inherit_default_params(
   function(
     traj,
     color_cells,
-    color_density = NULL,
+    dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA, ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
+    plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj),
+    plot_milestone_network = FALSE,
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+
+    # trajectory information
     grouping_assignment,
     groups,
     feature_oi,
@@ -28,14 +34,17 @@ plot_dimred <- dynutils::inherit_default_params(
     milestone_percentages,
     pseudotime,
     expression_source = "expression",
-    plot_milestone_network = dynwrap::is_wrapper_with_trajectory(traj),
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA, ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
+
+    # density params
+    color_density = NULL,
     padding,
     nbins,
     bw,
     density_cutoff,
-    density_cutoff_label
+    density_cutoff_label,
+
+    # plot trajectory params
+    sd = sum(traj$milestone_network$length) * 0.05
   ) {
     color_cells <- match.arg(color_cells)
 
@@ -51,8 +60,6 @@ plot_dimred <- dynutils::inherit_default_params(
       traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(cell_id, milestone_id),
       "cell_id"
     )
-
-    # browser()
 
     # first do milestone coloring, so that these colors can be reused by the cells if necessary
     if (plot_milestone_network) {
@@ -106,21 +113,29 @@ plot_dimred <- dynutils::inherit_default_params(
       milestones <- milestone_positions
     }
 
+
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
 
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
+
+    # calculate density
+    if (!is.null(color_density)) {
+      density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir=environment()))
+    } else {
+      density_plots <- list()
+    }
 
     # base plot without cells
     plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
       theme_graph() +
       theme(legend.position="bottom")
 
-    # add density
-    if (!is.null(color_density)) {
-      plot <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir=environment()))
-    }
-
+    # add density polygon
+    if (!is.null(density_plots$polygon))
+      plot <- plot + density_plots$polygon
+    if (!is.null(density_plots$scale))
+      plot <- plot + density_plots$scale
 
     # add cells
     plot <- plot +
@@ -128,13 +143,13 @@ plot_dimred <- dynutils::inherit_default_params(
       geom_point(aes(color=color), size=2) +
       color_scale
 
+    # add milestone network if requested
     if (plot_milestone_network) {
-      # plot milestone network
       plot <- plot +
         ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_to, yend=comp_2_to), data=milestone_network) +
         ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_mid, yend=comp_2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
 
-      # plot milestone labels
+      # add milestone labels if requested
       label_milestones <- get_milestone_labelling(traj, label_milestones)
       if(length(label_milestones)) {
         milestone_positions <- milestone_positions %>% mutate(label = label_milestones[milestone_id])
@@ -143,6 +158,8 @@ plot_dimred <- dynutils::inherit_default_params(
         } else {
           plot <- plot + geom_label(aes(label=label), data=milestone_positions %>% filter(!is.na(label)))
         }
+
+      # otherwise, just add nodes
       } else {
         if(color_cells == "milestone") {
           plot <- plot +
@@ -155,6 +172,66 @@ plot_dimred <- dynutils::inherit_default_params(
       }
     }
 
+    # add trajectory if requested
+    if (plot_trajectory) {
+      # get waypoints
+      waypoints <- traj %>% dynwrap::select_waypoints()
+
+      # project waypoints to dimensionality reduction using kernel and geodesic distances
+      # rate <- 5
+      # sd <- sum(traj$milestone_network$length) * 0.05
+      # dist_cutoff <- sum(milestone_network$length) * 0.05
+      # k <- 3
+      # weight_cutoff <- 0.01
+
+      # weights <- waypoints$geodesic_distances %>% dexp(rate=rate)
+      weights <- waypoints$geodesic_distances %>% dnorm(sd=sd)
+      # weights <- waypoints$geodesic_distances < dist_cutoff
+      # weights[weights < weight_cutoff] <- 0
+
+      weights <- weights / rowSums(weights)
+      positions <- cell_positions %>%
+        select(cell_id, comp_1, comp_2) %>%
+        slice(match(colnames(weights), cell_id)) %>%
+        column_to_rownames("cell_id") %>%
+        as.matrix()
+
+      waypoint_positions <- (weights %*% positions) %>%
+        as.data.frame() %>%
+        rownames_to_column("waypoint_id")
+
+      # positions of different edges
+      waypoints_edges <- waypoints$waypoint_network %>%
+        left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_from")), c("from"="waypoint_id")) %>%
+        left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_to")), c("to"="waypoint_id")) %>%
+        mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
+
+      # plot trajectory
+      n_arrows <- 10
+      waypoints_edges <- waypoints_edges %>% mutate(arrow = row_number() %% round(n()/n_arrows) == 0)
+
+      plot <- plot + geom_segment(
+        aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+        data=waypoints_edges
+      ) +
+        geom_segment(
+          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+          data=waypoints_edges %>% filter(arrow),
+          arrow = arrow(type="closed", length=(unit(0.1, "inches")))
+        )
+    }
+
+    # add density labels
+    if (!is.null(density_plots$labels))
+      plot <- plot + density_plots$labels
+
     plot
   }
 )
+
+
+
+
+project_trajectory <- function(traj, cell_positions, waypoints = dynwrap::select_waypoints(traj)) {
+
+}
