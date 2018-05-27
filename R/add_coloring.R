@@ -277,8 +277,6 @@ add_density_coloring <- function(
       lims = c(xlims, ylims)
     )
 
-    # browser()
-
     # fix outer expression, so that the contours become bounded
     minimal <- min(expression_oi) - 100
 

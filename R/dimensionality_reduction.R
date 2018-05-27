@@ -5,16 +5,16 @@ dimred_pca = function(x, ndim=3) {
   process_dimred(space)
 }
 
-#' @rdname get_dimreds
-#' @export
-dimred_simlr = function(x, ndim=3, nclusters=4) {
-  dynutils::install_packages("SIMLR", "dynplot")
-
-  result = SIMLR::SIMLR(t(x), nclusters)
-  S = result$S
-  space = tsne::tsne(as.dist(max(S)-S), k = ndim)
-  process_dimred(space)
-}
+# ' @rdname get_dimreds
+# ' @export
+# dimred_simlr = function(x, ndim=3, nclusters=4) {
+#   dynutils::install_packages("SIMLR", "dynplot")
+#
+#   result = SIMLR::SIMLR(t(x), nclusters)
+#   S = result$S
+#   space = tsne::tsne(as.dist(max(S)-S), k = ndim)
+#   process_dimred(space)
+# }
 
 #' @rdname get_dimreds
 #' @export
@@ -69,6 +69,7 @@ dimred_dp = function(x, ndim=3, neigen=NULL) {
   dynutils::install_packages(c("diffusionMap"), "dynplot")
 
   space = diffusionMap::diffuse(as.dist(dynutils::correlation_distance(x)), neigen=neigen, maxdim=ndim, delta=10e-5)
+  rownames(space$X) <- rownames(x)
   process_dimred(space$X[,seq_len(ndim)])
 }
 
@@ -89,6 +90,7 @@ dimred_lle = function(x, ndim=3) {
   k = lle::calc_k(t(scale(t(x))), ndim)
   k = k$k[which.min(k$rho)]
   space = lle::lle(t(scale(t(x))), ndim, k)$Y
+  rownames(space) <- rownames(x)
   process_dimred(space)
 }
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/dimensionality_reduction.R
 \name{dimred_pca}
 \alias{dimred_pca}
-\alias{dimred_simlr}
 \alias{dimred_mds}
 \alias{dimred_mds_sammon}
 \alias{dimred_mds_isomds}
@@ -16,8 +15,6 @@
 \title{Dimensionality reduction functions}
 \usage{
 dimred_pca(x, ndim = 3)
-
-dimred_simlr(x, ndim = 3, nclusters = 4)
 
 dimred_mds(x, ndim = 3)
 
@@ -44,9 +41,9 @@ get_dimreds()
 
 \item{ndim}{Number of dimensions}
 
-\item{nclusters}{Number of clusters for simlr}
-
 \item{neigen}{Number of eigenvalues for diffusionMap}
+
+\item{nclusters}{Number of clusters for simlr}
 }
 \description{
 Dimensionality reduction functions

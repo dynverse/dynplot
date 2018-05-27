@@ -66,10 +66,14 @@ plot_onedim <- dynutils::inherit_default_params(
 
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend=cumend, yend=0), data=linearised$milestone_network, color="black") +
-      geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed")) +
-      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10) +
       theme_graph() +
       theme(legend.position="bottom")
+
+    if (any(milestones$start & milestones$type == "from"))
+      plot <- plot + geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed"))
+
+    if (any(milestones$end & milestones$type == "to"))
+      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10)
 
     # add connections
     if(nrow(linearised$connections)) {
