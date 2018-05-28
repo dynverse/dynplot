@@ -115,7 +115,7 @@ process_dimred = function(space) {
 #' @param x Data matrix
 #' @param ndim Number of dimensions
 #' @param neigen Number of eigenvalues for diffusionMap
-#' @param nclusters Number of clusters for simlr
+#' @inheritParams umapr::umap
 #' @export
 get_dimreds <- function() {
   dimreds <- lsf.str(asNamespace("dynplot"), pattern = "^dimred_")

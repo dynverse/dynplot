@@ -136,7 +136,6 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
 #' Color cells using a background density
 #'
-#' @param plot The plot
 #' @param cell_positions The positions of the cells in 2D
 #' @param color_density How to color density, can be "none", "grouping", or "feature"
 #' @param padding The padding in the edges to the plot, relative to the size of the plot

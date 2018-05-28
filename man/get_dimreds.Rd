@@ -43,7 +43,7 @@ get_dimreds()
 
 \item{neigen}{Number of eigenvalues for diffusionMap}
 
-\item{nclusters}{Number of clusters for simlr}
+\item{n_neighbors}{numeric. The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation. Larger values result in more global views of the manifold, while smaller values result in more local data being preserved. In general values should be in the range 2 to 100.}
 }
 \description{
 Dimensionality reduction functions

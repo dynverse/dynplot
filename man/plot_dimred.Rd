@@ -8,8 +8,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"),
   dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA,
   ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
-  plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj),
-  plot_milestone_network = FALSE,
+  plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) &&
+  !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   color_milestones = c("auto", "given"), milestones = NULL,
@@ -17,7 +17,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   expression_source = "expression", color_density = c("none", "grouping",
   "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
-  sd = sum(traj$milestone_network$length) * 0.05)
+  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
+  n_arrows = 10)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -59,6 +60,10 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
 
 \item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
+
+\item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
+
+\item{n_arrows}{Number of arrows to add to trajectory projection}
 }
 \description{
 Plot the trajectory on dimensionality reduction
