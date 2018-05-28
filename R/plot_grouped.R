@@ -4,7 +4,7 @@
 #'   function(
 #'     traj,
 #'     color_milestones,
-#'     grouping_assignment = traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
+#'     grouping_assignment = traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
 #'     groups = tibble(group_id = traj$milestone_ids),
 #'     order_cells = c("auto", "pseudotime", "feature"),
 #'     pseudotime = NULL,

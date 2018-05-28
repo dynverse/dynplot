@@ -59,7 +59,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # assign cells to closest milestone
     cell_positions <- left_join(
       cell_positions,
-      traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(row_number() == 1) %>% select(cell_id, milestone_id),
+      traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(cell_id, milestone_id),
       "cell_id"
     )
 
@@ -210,7 +210,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       # plot trajectory
       n_arrows <- 10
-      waypoints_edges <- waypoints_edges %>% mutate(arrow = row_number() %% round(n()/n_arrows) == 0)
+      waypoints_edges <- waypoints_edges %>% mutate(arrow = dplyr::row_number() %% round(n()/n_arrows) == 0)
 
       plot <- plot + geom_segment(
         aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),

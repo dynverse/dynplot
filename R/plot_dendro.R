@@ -122,7 +122,7 @@ plot_dendro <-dynutils::inherit_default_params(
     progressions <- traj$progressions %>%
       group_by(cell_id) %>%
       arrange(percentage) %>%
-      filter(row_number() == 1) %>%
+      filter(dplyr::row_number() == 1) %>%
       ungroup()
 
     cell_positions <- progressions %>%
@@ -151,7 +151,8 @@ plot_dendro <-dynutils::inherit_default_params(
       # the node labels
       # ggraph::geom_node_label(aes(label=node_id)) +
       # the cells
-      geom_point(aes(x, y, color=color), data=cell_positions) +
+      geom_point(aes(x, y), size=2.5, color="black", data=cell_positions) +
+      geom_point(aes(x, y, color=color), size=2, data=cell_positions) +
       color_scale +
       # theme graph
       theme_graph() +

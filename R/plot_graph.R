@@ -4,7 +4,6 @@
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @param transition_size The size of the transition lines between milestones.
-#' @param cell_size The size of cells.
 #' @param milestone_size The size of milestones.
 #' @param arrow_length length of the arrow.
 #' @param plot_label What to label. Must be one of \code{"leaves"}, \code{"all"}, or \code{"none"}.
@@ -33,7 +32,6 @@ plot_graph <- dynutils::inherit_default_params(
     milestones,
     milestone_percentages,
     transition_size = 3,
-    cell_size = 2,
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
     plot_label = c("leaves", "all", "none"),
@@ -66,7 +64,7 @@ plot_graph <- dynutils::inherit_default_params(
       space_lines_divergence_regions
     ) %>%
       group_by(from, to) %>%
-      filter(row_number() == 1) %>%
+      filter(dplyr::row_number() == 1) %>%
       ungroup() %>%
       left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
       left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
@@ -140,11 +138,8 @@ plot_graph <- dynutils::inherit_default_params(
         space_regions,
         fill="white"
       ) +
-      geom_point(
-        aes(comp_1, comp_2, color = color),
-        cell_positions,
-        size = cell_size
-      ) +
+      geom_point(aes(comp_1, comp_2), size=2.5, color="black", data=cell_positions) +
+      geom_point(aes(comp_1, comp_2, color=color), size=2, data=cell_positions) +
       color_scale +
       theme_graph() +
       theme(legend.position="bottom")

@@ -85,7 +85,8 @@ plot_onedim <- dynutils::inherit_default_params(
     # add the cells
     if (plot_cells) {
       plot <- plot +
-        geom_point(aes(x, y, color=color), data=cell_positions) +
+        geom_point(aes(x, y), size=2.5, color="black", data=cell_positions) +
+        geom_point(aes(x, y, color=color), size=2, data=cell_positions) +
         color_scale
     }
 
@@ -107,7 +108,7 @@ plot_onedim <- dynutils::inherit_default_params(
         filter(!is.na(label)) %>%
         group_by(milestone_id) %>%
         arrange(desc(type)) %>%
-        filter(row_number() == 1)
+        filter(dplyr::row_number() == 1)
 
       plot <- plot + ggrepel::geom_label_repel(
         aes(position, 0, label=label),
@@ -152,7 +153,7 @@ make_connection_plotdata <- function(linearised) {
 
     overlapping_connections <- connections %>%
       filter(
-        row_number() < i,
+        dplyr::row_number() < i,
         pmax(x_from, x_to) > min(connection$x_from, connection$x_to),
         pmin(x_from, x_to) < max(connection$x_from, connection$x_to)
       )

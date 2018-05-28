@@ -1,6 +1,6 @@
 context("Testing dimred_trajectory")
 
-toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
+toy_tasks <- dyntoy::toy_tasks %>% group_by(trajectory_type) %>% filter(dplyr::row_number() == 1) %>% ungroup() %>% filter(trajectory_type != "disconnected_directed_graph")
 
 for (taski in seq_len(nrow(toy_tasks))) {
   task <- extract_row_to_list(toy_tasks, taski)
