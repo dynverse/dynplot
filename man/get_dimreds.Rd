@@ -26,7 +26,7 @@ dimred_mds_smacof(x, ndim = 3)
 
 dimred_tsne(x, ndim = 3)
 
-dimred_dp(x, ndim = 3, neigen = NULL)
+dimred_dp(x, ndim = 3)
 
 dimred_ica(x, ndim = 3)
 
@@ -41,9 +41,11 @@ get_dimreds()
 
 \item{ndim}{Number of dimensions}
 
-\item{neigen}{Number of eigenvalues for diffusionMap}
-
 \item{n_neighbors}{numeric. The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation. Larger values result in more global views of the manifold, while smaller values result in more local data being preserved. In general values should be in the range 2 to 100.}
+
+\item{numeric.}{The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation.}
+
+\item{neigen}{Number of eigenvalues for diffusionMap}
 }
 \description{
 Dimensionality reduction functions

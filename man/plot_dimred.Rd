@@ -64,6 +64,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
 
 \item{n_arrows}{Number of arrows to add to trajectory projection}
+
+\item{sd}{The standard deviation of the gaussian kernel}
 }
 \description{
 Plot the trajectory on dimensionality reduction
