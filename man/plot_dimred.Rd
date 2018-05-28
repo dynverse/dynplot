@@ -59,6 +59,8 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
 
 \item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
+
+\item{sd}{The standard deviation of the gaussian kernel}
 }
 \description{
 Plot the trajectory on dimensionality reduction

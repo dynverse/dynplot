@@ -5,6 +5,7 @@
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the projected milestone network on the dimensionality reduction
 #' @param plot_trajectory Whether to plot the projected trajectory on the dimensionality reduction
+#' @param sd The standard deviation of the gaussian kernel
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
