@@ -16,7 +16,7 @@ save_test <- function(x, name) {
 
 toy_tasks_tree_directed <- dyntoy::toy_tasks %>%
   group_by(trajectory_type) %>%
-  filter(row_number() == 1) %>%
+  filter(dplyr::row_number() == 1) %>%
   ungroup() %>%
   filter(trajectory_type %in% c("directed_linear", "bifurcation", "multifurcation", "rooted_tree", "rooted_binary_tree")) %>%
   save_test("toy_tasks_tree_directed")
@@ -31,7 +31,7 @@ toy_tasks_tree <- bind_rows(toy_tasks_tree_directed, toy_tasks_tree_undirected) 
 
 toy_tasks_connected_directed <- dyntoy::toy_tasks %>%
   group_by(trajectory_type) %>%
-  filter(row_number() == 1) %>% ungroup() %>%
+  filter(dplyr::row_number() == 1) %>% ungroup() %>%
   filter(trajectory_type != "disconnected_directed_graph") %>%
   save_test("toy_tasks_connected_directed")
 
