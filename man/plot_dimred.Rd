@@ -61,11 +61,11 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
 
-\item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
+\item{trajectory_projection_sd}{The standard deviation of the gaussian kernel to be used for projecting the trajectory.
+This is in the order of maginature as the lengths of the milestone_network.
+The lower, the more closely the trajectory will follow the cells}
 
 \item{n_arrows}{Number of arrows to add to trajectory projection}
-
-\item{sd}{The standard deviation of the gaussian kernel}
 }
 \description{
 Plot the trajectory on dimensionality reduction

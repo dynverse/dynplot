@@ -42,6 +42,8 @@ project_waypoints <- function(
     left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_to")), c("to"="waypoint_id")) %>%
     mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
 
+  browser()
+
   # plot trajectory
   waypoint_edges <- waypoint_edges %>% mutate(arrow = dplyr::row_number() %% round(n()/n_arrows) == 0)
 
@@ -59,7 +61,9 @@ project_waypoints <- function(
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the projected milestone network on the dimensionality reduction
 #' @param plot_trajectory Whether to plot the projected trajectory on the dimensionality reduction
-#' @param sd The standard deviation of the gaussian kernel
+#' @param trajectory_projection_sd The standard deviation of the gaussian kernel to be used for projecting the trajectory.
+#'   This is in the order of maginature as the lengths of the milestone_network.
+#'   The lower, the more closely the trajectory will follow the cells
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring

@@ -84,7 +84,6 @@ dimred_lle <- function(x, ndim = 3) {
 }
 
 #' @rdname get_dimreds
-#' @param numeric. The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation.
 #' @export
 dimred_umap <- function(x, ndim = 2, n_neighbors = 15L) {
   dynutils::install_packages(c("umapr"), "dynplot")
@@ -104,7 +103,6 @@ process_dimred <- function(space) {
 #' Dimensionality reduction functions
 #' @param x Data matrix
 #' @param ndim Number of dimensions
-#' @param neigen Number of eigenvalues for diffusionMap
 #' @inheritParams umapr::umap
 #' @export
 get_dimreds <- function() {
