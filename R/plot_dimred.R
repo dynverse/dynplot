@@ -42,10 +42,9 @@ project_waypoints <- function(
     left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_to")), c("to"="waypoint_id")) %>%
     mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
 
-  browser()
-
-  # plot trajectory
-  waypoint_edges <- waypoint_edges %>% mutate(arrow = dplyr::row_number() %% round(n()/n_arrows) == 0)
+  # add evenly distributed arrows
+  waypoint_edges <- waypoint_edges %>%
+    mutate(arrow = dplyr::row_number() %% round(n()/n_arrows) == 0)
 
   lst(
     positions=waypoint_positions,
@@ -126,7 +125,7 @@ plot_dimred <- dynutils::inherit_default_params(
     )
 
     # add milestone colors if necessary
-    if (plot_milestone_network || plot_trajectory) {
+    if ((plot_milestone_network || plot_trajectory) && color_cells == "milestone") {
       if(is.null(milestones)) {
         milestones <- add_milestone_coloring(tibble(milestone_id = traj$milestone_ids), color_milestones)
       }
@@ -193,8 +192,6 @@ plot_dimred <- dynutils::inherit_default_params(
         milestone_positions
       )
 
-      milestone_positions <- milestone_positions %>% left_join(milestones, "milestone_id")
-
       # get milestone network
       milestone_network <- traj$milestone_network %>%
         left_join(
@@ -237,8 +234,7 @@ plot_dimred <- dynutils::inherit_default_params(
       )
 
       milestone_positions <- waypoint_projection$positions %>%
-        filter(!is.na(milestone_id)) %>%
-        left_join(milestones, "milestone_id")
+        filter(!is.na(milestone_id))
 
       plot <- plot + geom_segment(
         aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
