@@ -34,8 +34,6 @@ add_density_coloring(cell_positions, color_density = c("none", "grouping",
 \item{density_cutoff}{Cutoff for density, the lower the larger the areas}
 
 \item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
-
-\item{plot}{The plot}
 }
 \description{
 Color cells using a background density

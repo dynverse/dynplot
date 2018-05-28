@@ -180,16 +180,7 @@ plot_dimred <- dynutils::inherit_default_params(
       waypoints <- traj %>% dynwrap::select_waypoints()
 
       # project waypoints to dimensionality reduction using kernel and geodesic distances
-      # rate <- 5
-      # sd <- sum(traj$milestone_network$length) * 0.05
-      # dist_cutoff <- sum(milestone_network$length) * 0.05
-      # k <- 3
-      # weight_cutoff <- 0.01
-
-      # weights <- waypoints$geodesic_distances %>% dexp(rate=rate)
       weights <- waypoints$geodesic_distances %>% dnorm(sd=sd)
-      # weights <- waypoints$geodesic_distances < dist_cutoff
-      # weights[weights < weight_cutoff] <- 0
 
       weights <- weights / rowSums(weights)
       positions <- cell_positions %>%
