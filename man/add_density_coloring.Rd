@@ -5,9 +5,9 @@
 \title{Color cells using a background density}
 \usage{
 add_density_coloring(cell_positions, color_density = c("none", "grouping",
-  "feature"), traj, grouping_assignment = NULL, groups = NULL,
-  feature_oi = NULL, expression_source = "expression", padding = 0.1,
-  nbins = 1000, bw = 0.2, density_cutoff = 0.3,
+  "feature"), traj, grouping = NULL, groups = NULL, feature_oi = NULL,
+  expression_source = "expression", padding = 0.1, nbins = 1000,
+  bw = 0.2, density_cutoff = 0.3,
   density_cutoff_label = density_cutoff/10)
 }
 \arguments{
@@ -17,7 +17,7 @@ add_density_coloring(cell_positions, color_density = c("none", "grouping",
 
 \item{traj}{The trajectory}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 

@@ -12,7 +12,7 @@ test_tasks(load_test_tasks("toy_tasks_tree"), function(task) {
   })
 
   test_that(paste0("plot_dendro on ", task$id, " with grouping"), {
-    g <- plot_dendro(task, grouping_assignment = task$grouping_assignment)
+    g <- plot_dendro(task, grouping = task$grouping)
     expect_ggplot(g)
   })
 

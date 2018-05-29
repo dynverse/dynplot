@@ -8,7 +8,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
 
   space <- dimred_pca(task$expression)
   feature_oi <- first(colnames(task$expression))
-  grouping_assignment <- task$prior_information$grouping_assignment
+  grouping <- task$prior_information$grouping_assignment
 
   test_that(paste0("plot_dimred on ", task$id, "with giving space"), {
     g <- plot_dimred(task, dimred=space)
@@ -21,7 +21,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   })
 
   test_that(paste0("plot_dimred on ", task$id, " with grouping"), {
-    g <- plot_dimred(task, grouping_assignment = grouping_assignment, dimred = space)
+    g <- plot_dimred(task, grouping = grouping, dimred = space)
     expect_ggplot(g)
   })
 
@@ -36,7 +36,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   })
 
   test_that(paste0("plot_dimred on ", task$id, " with grouping"), {
-    g <- plot_dimred(task, "milestone", dimred = space, color_density = "grouping", grouping_assignment = grouping_assignment)
+    g <- plot_dimred(task, "milestone", dimred = space, color_density = "grouping", grouping = grouping)
     expect_ggplot(g)
   })
 

@@ -7,8 +7,8 @@
 \usage{
 plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), color_milestones = c("auto", "given"),
-  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
-  pseudotime = NULL, expression_source = "expression", milestones = NULL,
+  grouping = NULL, groups = NULL, feature_oi = NULL, pseudotime = NULL,
+  expression_source = "expression", milestones = NULL,
   milestone_percentages = NULL, transition_size = 3, milestone_size = 5,
   arrow_length = grid::unit(1, "cm"), plot_label = c("leaves", "all",
   "none"), plot_milestones = FALSE)
@@ -20,7 +20,7 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{color_milestones}{How to color the cells}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 

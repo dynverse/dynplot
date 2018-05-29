@@ -8,7 +8,7 @@ plot_dendro <-dynutils::inherit_default_params(
   function(
     traj,
     color_cells,
-    grouping_assignment,
+    grouping,
     groups,
     feature_oi,
     expression_source,

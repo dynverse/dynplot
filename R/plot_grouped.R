@@ -4,7 +4,7 @@
 #'   function(
 #'     traj,
 #'     color_milestones,
-#'     grouping_assignment = traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
+#'     grouping = traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(-percentage) %>% rename(group_id = milestone_id),
 #'     groups = tibble(group_id = traj$milestone_ids),
 #'     order_cells = c("auto", "pseudotime", "feature"),
 #'     pseudotime = NULL,
@@ -31,7 +31,7 @@
 #'       y_scale <- scale_y_continuous(paste0(feature_oi, " ", expression_source))
 #'     }
 #'
-#'     cell_positions <- left_join(cell_positions, grouping_assignment, "cell_id")
+#'     cell_positions <- left_join(cell_positions, grouping, "cell_id")
 #'
 #'     groups <- add_milestone_coloring(groups, color_milestones)
 #'

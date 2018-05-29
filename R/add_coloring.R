@@ -28,7 +28,7 @@ add_milestone_coloring <- function(
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
 #' @param traj The trajectory
-#' @param grouping_assignment Tibble containing the assignment of cells to groups of cells
+#' @param grouping The grouping of the cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression
 #' @param expression_source Source of the feature expression, defaults to `expression`
@@ -41,7 +41,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
     cell_positions,
     color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
     traj,
-    grouping_assignment=NULL,
+    grouping=NULL,
     groups=NULL,
     feature_oi=NULL,
     expression_source="expression",
@@ -53,7 +53,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
     # check cell coloration
     color_cells <- match.arg(color_cells)
     if(color_cells == "auto") {
-      if(!is.null(grouping_assignment)) {
+      if(!is.null(grouping)) {
         message("Coloring by grouping")
         color_cells <- "grouping"
       } else if (!is.null(feature_oi)) {
@@ -70,8 +70,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
     }
     if(color_cells == "grouping") {
-      if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
-      grouping_assignment <- check_grouping_assignment(grouping_assignment)
+      if(is.null(grouping)) {stop("Provide grouping")}
+      grouping <- get_grouping(traj, grouping)
     } else if (color_cells == "feature") {
       expression <- get_expression(traj, expression_source)
       check_feature(expression, feature_oi)
@@ -88,9 +88,9 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
     # now create the actual coloring
     if (color_cells == "grouping") {
-      groups <- check_groups(grouping_assignment, groups)
+      groups <- check_groups(grouping, groups)
 
-      cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
+      cell_positions$color <- grouping[match(cell_positions$cell_id, names(grouping))]
 
       color_scale <- scale_color_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
 
@@ -148,7 +148,7 @@ add_density_coloring <- function(
   cell_positions,
   color_density = c("none", "grouping", "feature"),
   traj,
-  grouping_assignment = NULL,
+  grouping = NULL,
   groups = NULL,
   feature_oi = NULL,
   expression_source = "expression",
@@ -190,14 +190,14 @@ add_density_coloring <- function(
 
   # calculate specific density
   if(color_density == "grouping") {
-    if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
+    if(is.null(grouping)) {stop("Provide grouping")}
 
-    grouping_assignment <- check_grouping_assignment(grouping_assignment)
-    groups <- check_groups(grouping_assignment, groups)
+    grouping <- get_grouping(traj, grouping)
+    groups <- check_groups(grouping, groups)
 
     # plot density
     group_density <- cell_positions %>%
-      left_join(grouping_assignment, "cell_id") %>%
+      mutate(group_id = grouping[cell_id]) %>%
       select(comp_1, comp_2, group_id) %>%
       nest(comp_1, comp_2, .key="positions") %>%
       mutate(contour = map2(positions, group_id, function(positions, group_id) {

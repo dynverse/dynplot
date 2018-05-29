@@ -5,7 +5,7 @@
 \title{Plot a tree trajectory as a dendrogram}
 \usage{
 plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"), grouping_assignment = NULL, groups = NULL,
+  "milestone", "pseudotime"), grouping = NULL, groups = NULL,
   feature_oi = NULL, expression_source = "expression", pseudotime = NULL,
   color_milestones = c("auto", "given"), milestones = NULL,
   milestone_percentages = NULL, diag_offset = 0.05)
@@ -15,7 +15,7 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{color_cells}{How to color the cells}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 
