@@ -4,7 +4,7 @@
 \alias{plot_onedim}
 \title{Plot onedim}
 \usage{
-plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), milestone_network = traj$milestone_network,
   progressions = traj$progressions, grouping_assignment = NULL,
   groups = NULL, feature_oi = NULL, pseudotime = NULL,
@@ -50,7 +50,7 @@ plot_onedim(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 
 \item{plot_cells}{Whether to plot the cells}
 
-\item{label_milestones}{Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
 Plot onedim

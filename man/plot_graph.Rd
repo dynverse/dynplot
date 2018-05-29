@@ -5,13 +5,13 @@
 \alias{plot_default}
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
-plot_graph(traj, color_cells = c("auto", "invisible", "grouping", "feature",
+plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), color_milestones = c("auto", "given"),
   grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
   pseudotime = NULL, expression_source = "expression", milestones = NULL,
-  milestone_percentages = NULL, transition_size = 3, cell_size = 2,
-  milestone_size = 5, arrow_length = grid::unit(1, "cm"),
-  plot_label = c("leaves", "all", "none"), plot_milestones = FALSE)
+  milestone_percentages = NULL, transition_size = 3, milestone_size = 5,
+  arrow_length = grid::unit(1, "cm"), plot_label = c("leaves", "all",
+  "none"), plot_milestones = FALSE)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -35,8 +35,6 @@ plot_graph(traj, color_cells = c("auto", "invisible", "grouping", "feature",
 \item{milestone_percentages}{The milestone percentages}
 
 \item{transition_size}{The size of the transition lines between milestones.}
-
-\item{cell_size}{The size of cells.}
 
 \item{milestone_size}{The size of milestones.}
 

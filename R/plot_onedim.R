@@ -6,10 +6,10 @@
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
 #' @param orientation Whether to plot the connections in the top (1) or bottom (-1)
-#' @param label_milestones Whether to plot the labels of the milestones, or alternatively a named character vector mapping milestone_ids to labels
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
+#' @inheritParams dynwrap::get_milestone_labelling
 #'
 #' @export
 #'
@@ -48,7 +48,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # add cell coloring
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
-    fill_scale <- cell_coloring_output$fill_scale
+    color_scale <- cell_coloring_output$color_scale
 
     # get x limit
     max_limit <- if(nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
@@ -66,10 +66,14 @@ plot_onedim <- dynutils::inherit_default_params(
 
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend=cumend, yend=0), data=linearised$milestone_network, color="black") +
-      geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed")) +
-      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10) +
       theme_graph() +
       theme(legend.position="bottom")
+
+    if (any(milestones$start & milestones$type == "from"))
+      plot <- plot + geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed"))
+
+    if (any(milestones$end & milestones$type == "to"))
+      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10)
 
     # add connections
     if(nrow(linearised$connections)) {
@@ -81,8 +85,9 @@ plot_onedim <- dynutils::inherit_default_params(
     # add the cells
     if (plot_cells) {
       plot <- plot +
-        geom_point(aes(x, y, fill=color), data=cell_positions, shape=21, color="#33333388") +
-        fill_scale
+        geom_point(aes(x, y), size=2.5, color="black", data=cell_positions) +
+        geom_point(aes(x, y, color=color), size=2, data=cell_positions) +
+        color_scale
     }
 
 
@@ -94,7 +99,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # }
 
     # label milestones
-    label_milestones <- check_milestone_labelling(traj, label_milestones)
+    label_milestones <- get_milestone_labelling(traj, label_milestones)
 
     if(length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
@@ -103,7 +108,7 @@ plot_onedim <- dynutils::inherit_default_params(
         filter(!is.na(label)) %>%
         group_by(milestone_id) %>%
         arrange(desc(type)) %>%
-        filter(row_number() == 1)
+        filter(dplyr::row_number() == 1)
 
       plot <- plot + ggrepel::geom_label_repel(
         aes(position, 0, label=label),
@@ -148,7 +153,7 @@ make_connection_plotdata <- function(linearised) {
 
     overlapping_connections <- connections %>%
       filter(
-        row_number() < i,
+        dplyr::row_number() < i,
         pmax(x_from, x_to) > min(connection$x_from, connection$x_to),
         pmin(x_from, x_to) < max(connection$x_from, connection$x_to)
       )

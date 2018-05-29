@@ -57,6 +57,6 @@ progressions_one_edge <- function(progressions) {
   progressions %>%
     group_by(cell_id) %>%
     arrange(-percentage) %>%
-    filter(row_number() == 1) %>%
+    filter(dplyr::row_number() == 1) %>%
     ungroup()
 }

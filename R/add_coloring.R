@@ -39,7 +39,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
   function(
     cell_positions,
-    color_cells = c("auto", "invisible", "grouping", "feature", "milestone", "pseudotime"),
+    color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
     traj,
     grouping_assignment=NULL,
     groups=NULL,
@@ -71,8 +71,9 @@ add_cell_coloring <- dynutils::inherit_default_params(
     }
     if(color_cells == "grouping") {
       if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
+      grouping_assignment <- check_grouping_assignment(grouping_assignment)
     } else if (color_cells == "feature") {
-      expression <- check_expression_source(traj, expression_source)
+      expression <- get_expression(traj, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
       if(is.null(milestone_percentages)) {
@@ -87,26 +88,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
     # now create the actual coloring
     if (color_cells == "grouping") {
-      if (!is.data.frame(grouping_assignment)) {
-        grouping_assignment <- tibble(cell_id = names(grouping_assignment), group_id = grouping_assignment)
-      }
+      groups <- check_groups(grouping_assignment, groups)
 
-      if (is.null(groups) | !("color" %in% names(groups))) {
-        groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette("auto", n()))
-      }
       cell_positions$color <- grouping_assignment$group_id[match(cell_positions$cell_id, grouping_assignment$cell_id)]
 
-      fill_scale <- scale_fill_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
+      color_scale <- scale_color_manual(color_cells, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
-      fill_scale <- scale_fill_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
+      color_scale <- scale_color_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
-      fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"=color_cells), guide="none")
-    } else if (color_cells == "invisible") {
-      cell_positions$color <- "trajectories_are_awesome"
-      fill_scale <- scale_fill_manual(NULL, values=c("trajectories_are_awesome"="#00000000"), guide="none")
+      color_scale <- scale_color_manual(NULL, values=c("trajectories_are_awesome"=color_cells), guide="none")
     } else if (color_cells == "milestone") {
       if(is.null(milestones) | !"color" %in% names(milestones)) {
         milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
@@ -128,12 +121,217 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
       cell_positions <- left_join(cell_positions, cell_colors, "cell_id")
 
-      fill_scale <- scale_fill_identity(NULL, guide="none")
+      color_scale <- scale_color_identity(NULL, guide="none")
     } else if (color_cells == "pseudotime") {
       cell_positions$color <- cell_positions$pseudotime
-      fill_scale <- viridis::scale_fill_viridis("pseudotime")
+      color_scale <- viridis::scale_color_viridis("pseudotime")
+    } else if (color_cells == "none") {
+      cell_positions$color <- "black"
+      color_scale <- scale_color_identity()
     }
 
-    lst(cell_positions, fill_scale)
+    lst(cell_positions, color_scale)
   }
 )
+
+#' Color cells using a background density
+#'
+#' @param cell_positions The positions of the cells in 2D
+#' @param color_density How to color density, can be "none", "grouping", or "feature"
+#' @param padding The padding in the edges to the plot, relative to the size of the plot
+#' @param nbins Number of bins for calculating the density
+#' @param bw Bandwidth, relative to the size of the plot
+#' @param density_cutoff Cutoff for density, the lower the larger the areas
+#' @param density_cutoff_label Cutoff for density for labelling, the lower the further way from cells
+#' @inheritParams add_cell_coloring
+add_density_coloring <- function(
+  cell_positions,
+  color_density = c("none", "grouping", "feature"),
+  traj,
+  grouping_assignment = NULL,
+  groups = NULL,
+  feature_oi = NULL,
+  expression_source = "expression",
+  padding = 0.1,
+  nbins = 1000,
+  bw = 0.2,
+  density_cutoff = 0.3,
+  density_cutoff_label = density_cutoff / 10
+) {
+  color_density <- match.arg(color_density)
+
+  if(any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
+
+  xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
+  ylims <- c(min(cell_positions$comp_2), max(cell_positions$comp_2))
+
+  xpad <- diff(xlims) * padding
+  ypad <- diff(ylims) * padding
+
+  xlims <- xlims + c(-xpad, xpad)
+  ylims <- ylims + c(-ypad, ypad)
+
+  n_bins <- 1000
+  xbw <- diff(xlims) * bw
+  ybw <- diff(ylims) * bw
+
+  # calculate blank space
+  kde <- MASS::kde2d(cell_positions$comp_1, cell_positions$comp_2, h = c(xbw, ybw), lims=c(xlims, ylims), n=100)
+  blank_space <- reshape2::melt(kde$z, value.name="density") %>%
+    filter(density < max(density) * density_cutoff_label) %>%
+    mutate(
+      comp_1 = kde$x[as.numeric(Var1)],
+      comp_2 = kde$y[as.numeric(Var2)]
+    ) %>%
+    select(comp_1, comp_2)
+
+  # will contain the different plots and scales
+  density_plots <- list()
+
+  # calculate specific density
+  if(color_density == "grouping") {
+    if(is.null(grouping_assignment)) {stop("Provide grouping_assignment")}
+
+    grouping_assignment <- check_grouping_assignment(grouping_assignment)
+    groups <- check_groups(grouping_assignment, groups)
+
+    # plot density
+    group_density <- cell_positions %>%
+      left_join(grouping_assignment, "cell_id") %>%
+      select(comp_1, comp_2, group_id) %>%
+      nest(comp_1, comp_2, .key="positions") %>%
+      mutate(contour = map2(positions, group_id, function(positions, group_id) {
+        density <- MASS::kde2d(positions[,1], positions[,2], h = c(xbw, ybw), lims=c(xlims, ylims), n=n_bins)
+        level <- max(density$z) * density_cutoff
+        contour <- with(density, contourLines(x, y, z, levels = level))
+        map2_df(contour, seq_along(contour), function(contour, contour_i) {
+          tibble(
+            comp_1=contour$x,
+            comp_2=contour$y,
+            contour_id=paste0(group_id, "_", contour_i)
+          )
+        })
+      })) %>%
+      unnest(contour)
+
+    density_plots$polygon <- geom_polygon(
+      aes(comp_1, comp_2, fill=group_id, group = contour_id),
+      data = group_density,
+      alpha = 0.4
+    )
+
+    density_plots$scale <- scale_fill_manual(color_density, values=set_names(groups$color, groups$group_id), guide=guide_legend(ncol=5))
+
+    # plot group labels
+    centers <- group_density %>% group_by(group_id) %>% summarise_if(is.numeric, mean)
+
+    # find closest empty position to put label
+    group_label_positions <- crossing(
+        centers %>% rename_if(is.numeric, ~paste0(., "_center")),
+        blank_space
+      ) %>%
+      mutate(
+        distance = sqrt((comp_1_center - comp_1)**2 + abs(comp_2_center - comp_2)**2)
+      ) %>%
+      group_by(group_id) %>%
+      top_n(1, -distance)
+
+    # group_label_positions <- group_density %>%
+    #   left_join(centers %>% rename_if(is.numeric, ~paste0(., "_center")), "group_id") %>%
+    #   mutate(distance = abs(comp_1_center - comp_1) + abs(comp_2_center - comp_2)) %>%
+    #   group_by(group_id) %>%
+    #   top_n(1, -distance) %>%
+    #   ungroup()
+
+    # plot +
+    #   geom_label(aes(comp_1, comp_2, label=group_id, fill = group_id), group_label_positions)
+
+    density_plots$labels <-      ggrepel::geom_label_repel(
+      aes(comp_1, comp_2, label=group_id, fill = group_id),
+      group_label_positions,
+      min.segment.length = Inf
+    )
+
+  } else if (color_density == "feature") {
+    # get expression
+    expression <- get_expression(traj, expression_source)
+    check_feature(expression, feature_oi)
+    expression_oi <- expression[, feature_oi]
+
+    # positions of each cell and their expression
+    expression_positions <- cell_positions %>%
+      mutate(expression = expression_oi[cell_id])
+
+    # calculate smoothed expression
+    smoothed_expression <- smooth_2d(
+      expression_positions$comp_1,
+      expression_positions$comp_2,
+      c(xbw, ybw),
+      expression_positions$expression,
+      n = 500,
+      lims = c(xlims, ylims)
+    )
+
+    # fix outer expression, so that the contours become bounded
+    minimal <- min(expression_oi) - 100
+
+    smoothed_expression$z[, 1] <- minimal
+    smoothed_expression$z[, ncol(smoothed_expression$z)] <- minimal
+    smoothed_expression$z[1, ] <- minimal
+    smoothed_expression$z[nrow(smoothed_expression$z), ] <- minimal
+
+    # remove expression with no cells in neighboorhood
+    smoothed_expression$z[smoothed_expression$density < mean(smoothed_expression$density) * density_cutoff] <- minimal
+
+    # build contour lines
+    expression_range <- c(min(expression_oi), max(expression_oi))
+    levels <- pretty(expression_range, 10)
+    contour <- with(smoothed_expression, contourLines(x, y, z, levels=levels))
+
+    contour_expression <- map2_df(contour, seq_along(contour), function(contour, contour_i) {
+      tibble(
+        comp_1=contour$x,
+        comp_2=contour$y,
+        contour_id=contour_i,
+        expression=contour$level
+      )
+    }) %>%
+      mutate(contour_id = factor(contour_id, levels=unique(contour_id)))
+
+
+    density_plots$polygon <- geom_polygon(aes(comp_1, comp_2, fill=expression, group=contour_id), contour_expression)
+    density_plots$scale <- scale_fill_distiller(palette="RdBu", limits = expression_range)
+  }
+
+  density_plots
+}
+
+
+smooth_2d <- function(x, y, h, e, n, lims) {
+  # create points
+  gx <- seq(lims[1], lims[2], length = n)
+  gy <- seq(lims[3], lims[4], length = n)
+
+  points <- expand.grid(gx, gy) %>% as.matrix()
+  colnames(points) <- c("x", "y")
+
+  # distance between points and original points
+  dist <- as.matrix(pdist::pdist(points, as.matrix(data.frame(x=x, y=y))))
+
+  # contributions of each point
+  contributions <- dnorm(dist, sd=mean(h)/4)
+
+  # calculate the weights based on the data
+  weights <- matrix(rep(e, nrow(dist)), nrow=nrow(dist), byrow = TRUE)
+
+  # create values
+  z <- rowSums(contributions * weights) / (rowSums(contributions))
+
+  # write points
+  list(
+    x = gx,
+    y = gy,
+    z = matrix(z, nrow=length(gy), ncol=length(gx)),
+    density = matrix(rowSums(contributions), nrow=length(gy), ncol=length(gx))
+  )
+}

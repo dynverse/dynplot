@@ -2,7 +2,6 @@
 % Please edit documentation in R/dimensionality_reduction.R
 \name{dimred_pca}
 \alias{dimred_pca}
-\alias{dimred_simlr}
 \alias{dimred_mds}
 \alias{dimred_mds_sammon}
 \alias{dimred_mds_isomds}
@@ -11,12 +10,11 @@
 \alias{dimred_dp}
 \alias{dimred_ica}
 \alias{dimred_lle}
+\alias{dimred_umap}
 \alias{get_dimreds}
 \title{Dimensionality reduction functions}
 \usage{
 dimred_pca(x, ndim = 3)
-
-dimred_simlr(x, ndim = 3, nclusters = 4)
 
 dimred_mds(x, ndim = 3)
 
@@ -28,11 +26,13 @@ dimred_mds_smacof(x, ndim = 3)
 
 dimred_tsne(x, ndim = 3)
 
-dimred_dp(x, ndim = 3, neigen = NULL)
+dimred_dp(x, ndim = 3)
 
 dimred_ica(x, ndim = 3)
 
 dimred_lle(x, ndim = 3)
+
+dimred_umap(x, ndim = 2, n_neighbors = 15L)
 
 get_dimreds()
 }
@@ -41,9 +41,7 @@ get_dimreds()
 
 \item{ndim}{Number of dimensions}
 
-\item{nclusters}{Number of clusters for simlr}
-
-\item{neigen}{Number of eigenvalues for diffusionMap}
+\item{n_neighbors}{numeric. The size of local neighborhood (in terms of number of neighboring sample points) used for manifold approximation. Larger values result in more global views of the manifold, while smaller values result in more local data being preserved. In general values should be in the range 2 to 100.}
 }
 \description{
 Dimensionality reduction functions

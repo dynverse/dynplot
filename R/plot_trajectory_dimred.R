@@ -50,7 +50,7 @@ dimred_trajectory <- function(
   layout <- layout %>%
     dynutils::scale_uniform() %>%
     set_rownames(milestone_ids) %>%
-    set_colnames(paste0("Comp", seq_len(ncol(.))))
+    set_colnames(paste0("comp_", seq_len(ncol(.))))
   space_milest_df <- layout %>%
     as.data.frame() %>%
     rownames_to_column()
@@ -78,8 +78,8 @@ dimred_trajectory <- function(
   # create output for edges between milestones
   space_lines <- milestone_network %>%
     mutate(name) %>%
-    left_join(space_milest_df %>% select(from = rowname, from.Comp1 = Comp1, from.Comp2 = Comp2), by = "from") %>%
-    left_join(space_milest_df %>% select(to = rowname, to.Comp1 = Comp1, to.Comp2 = Comp2), by = "to")
+    left_join(space_milest_df %>% select(from = rowname, from.comp_1 = comp_1, from.comp_2 = comp_2), by = "from") %>%
+    left_join(space_milest_df %>% select(to = rowname, to.comp_1 = comp_1, to.comp_2 = comp_2), by = "to")
 
   # return all output
   l <- lst(
