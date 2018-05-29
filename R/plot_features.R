@@ -72,7 +72,9 @@ plot_features <- function(
     cobs::cobs(
       data$cumpercentage,
       data$expression,
-      pointwise=rbind(c(0, cumstart, expression_from), c(0, cumend, expression_to))
+      pointwise=rbind(c(0, cumstart, expression_from), c(0, cumend, expression_to)),
+      print.warn = FALSE,
+      print.mesg = FALSE
     )
   }
 
