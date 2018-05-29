@@ -21,7 +21,7 @@ plot_onedim <- dynutils::inherit_default_params(
     color_cells,
     milestone_network = traj$milestone_network,
     progressions = traj$progressions,
-    grouping_assignment,
+    grouping,
     groups,
     feature_oi,
     pseudotime,

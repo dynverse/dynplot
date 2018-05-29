@@ -22,7 +22,7 @@ plot_heatmap <- function(
   color_cells = NULL,
   milestones = NULL,
   milestone_percentages = traj$milestone_percentages,
-  grouping_assignment = NULL,
+  grouping = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
   heatmap_type = c("tiled", "dotted"),
@@ -126,7 +126,7 @@ plot_heatmap <- function(
     quasirandom_width = 0,
     margin = margin,
     color_cells = color_cells,
-    grouping_assignment = grouping_assignment,
+    grouping = grouping,
     groups = groups,
     milestone_percentages = milestone_percentages,
     milestones = milestones,
@@ -146,12 +146,12 @@ plot_heatmap <- function(
     theme(plot.margin=margin())
 
   # plot cell information
-  # TODO: Allow multiple cell info here, even "external" which does not fit into grouping_assignment,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
-  if (!is.null(grouping_assignment)) {
+  # TODO: Allow multiple cell info here, even "external" which does not fit into grouping,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
+  if (!is.null(grouping)) {
     cell_annotation_positions <- linearised$progressions %>%
       add_cell_coloring(
         "grouping",
-        grouping_assignment=grouping_assignment
+        grouping=grouping
       )
   } else if (!is.null(milestone_percentages)) {
     cell_annotation_positions <- linearised$progressions %>%

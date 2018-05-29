@@ -88,7 +88,7 @@ plot_dimred <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
 
     # trajectory information
-    grouping_assignment,
+    grouping,
     groups,
     feature_oi,
     color_milestones,
@@ -217,7 +217,7 @@ plot_dimred <- dynutils::inherit_default_params(
       if(color_cells == "milestone") {
         plot <- plot +
           geom_point(color="black", data=milestone_positions, size=6) +
-          geom_point(aes(color=color), data=milestone_positions, size=4)
+          geom_point(aes(color=color), data=milestone_positions %>% left_join(milestones, "milestone_id"), size=4)
       } else {
         plot <- plot +
           geom_point(color="#333333", data=milestone_positions, size=6, alpha=1)

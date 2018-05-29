@@ -52,14 +52,14 @@ plot_dimred(traj)
 
 ## Plotting a grouping or clustering
 ```{r}
-grouping_assignment <- traj$prior_information$grouping_assignment
+grouping <- traj$prior_information$grouping_assignment
 ```
 
 ```{r grouping}
-plot_onedim(traj, grouping_assignment=grouping_assignment)
-plot_dendro(traj, grouping_assignment=grouping_assignment)
-plot_graph(traj, grouping_assignment=grouping_assignment)
-plot_dimred(traj, grouping_assignment=grouping_assignment)
+plot_onedim(traj, grouping=grouping)
+plot_dendro(traj, grouping=grouping)
+plot_graph(traj, grouping=grouping)
+plot_dimred(traj, grouping=grouping)
 ```
 
 ## Plotting expression of one feature

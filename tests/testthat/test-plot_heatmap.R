@@ -17,7 +17,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   })
 
   test_that(paste0("Plotting heatmap of ", task$id, " with grouping"), {
-    g <- plot_heatmap(task, grouping_assignment = task$prior_information$grouping_assignment)
+    g <- plot_heatmap(task, grouping = task$prior_information$grouping_assignment)
     expect_ggplot(g)
   })
 })

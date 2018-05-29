@@ -12,7 +12,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   })
 
   test_that(paste0("plot_onedim on ", task$id, " with grouping"), {
-    g <- plot_onedim(task, grouping_assignment = task$grouping_assignment)
+    g <- plot_onedim(task, grouping = task$grouping)
     expect_ggplot(g)
   })
 

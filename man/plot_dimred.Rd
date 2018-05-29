@@ -11,7 +11,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) &&
   !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  grouping_assignment = NULL, groups = NULL, feature_oi = NULL,
+  grouping = NULL, groups = NULL, feature_oi = NULL,
   color_milestones = c("auto", "given"), milestones = NULL,
   milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression", color_density = c("none", "grouping",
@@ -33,7 +33,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 

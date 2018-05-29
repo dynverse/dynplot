@@ -7,9 +7,9 @@
 plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
   milestones = NULL, milestone_percentages = traj$milestone_percentages,
-  grouping_assignment = NULL, groups = NULL,
-  cell_feature_importances = NULL, heatmap_type = c("tiled", "dotted"),
-  scale = dynutils::scale_quantile, label_milestones = TRUE)
+  grouping = NULL, groups = NULL, cell_feature_importances = NULL,
+  heatmap_type = c("tiled", "dotted"), scale = dynutils::scale_quantile,
+  label_milestones = TRUE)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -28,7 +28,7 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 
 \item{milestone_percentages}{The milestone percentages}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 

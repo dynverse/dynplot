@@ -47,17 +47,9 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 }
 
 
-check_grouping_assignment <- function(grouping_assignment) {
-  if (!is.data.frame(grouping_assignment)) {
-    grouping_assignment <- tibble(cell_id = names(grouping_assignment), group_id = grouping_assignment)
-  }
-  grouping_assignment
-}
-
-
-check_groups <- function(grouping_assignment, groups) {
+check_groups <- function(grouping, groups) {
   if (is.null(groups) | !("color" %in% names(groups))) {
-    groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color = milestone_palette("auto", n()))
+    groups <- tibble(group_id = unique(grouping)) %>% mutate(color = milestone_palette("auto", n()))
   }
   groups
 }

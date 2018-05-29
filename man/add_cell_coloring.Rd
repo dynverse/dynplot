@@ -5,7 +5,7 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "none", "grouping",
-  "feature", "milestone", "pseudotime"), traj, grouping_assignment = NULL,
+  "feature", "milestone", "pseudotime"), traj, grouping = NULL,
   groups = NULL, feature_oi = NULL, expression_source = "expression",
   pseudotime = NULL, color_milestones = c("auto", "given"),
   milestones = NULL, milestone_percentages = NULL)
@@ -17,7 +17,7 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "none", "grouping",
 
 \item{traj}{The trajectory}
 
-\item{grouping_assignment}{Tibble containing the assignment of cells to groups of cells}
+\item{grouping}{The grouping of the cells}
 
 \item{groups}{Tibble containing information of the cell groups}
 

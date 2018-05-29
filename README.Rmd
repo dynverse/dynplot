@@ -29,8 +29,9 @@ library(patchwork)
 
 traj <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
 traj <- traj %>% add_root()
-grouping_assignment <- traj$prior_information$grouping_assignment
-groups <- tibble(group_id = unique(grouping_assignment$group_id)) %>% mutate(color=dynplot:::milestone_palette_list$auto(n()))
+grouping <- traj$prior_information$grouping_assignment
+groups <- tibble(group_id = unique(grouping)) %>% 
+  mutate(color=dynplot:::milestone_palette_list$auto(n()))
 features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
 feature_oi <- features_oi[[1]]
 ```
@@ -54,7 +55,7 @@ dendro <- list(
   empty + geom_label(aes(0, 0, label="Dendrogram")),
   # plot_dendro(traj),
   plot_dendro(traj, "milestone"),
-  plot_dendro(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_dendro(traj, grouping=grouping, groups=groups),
   plot_dendro(traj, feature_oi=feature_oi),
   plot_dendro(traj, "pseudotime")
 )
@@ -63,7 +64,7 @@ onedim <- list(
     empty + geom_label(aes(0, 0, label="Onedim")),
     # plot_onedim(traj),
     plot_onedim(traj, "milestone"),
-    plot_onedim(traj, grouping_assignment=grouping_assignment, groups=groups),
+    plot_onedim(traj, grouping=grouping, groups=groups),
     plot_onedim(traj, feature_oi=feature_oi),
     plot_onedim(traj, "pseudotime")
   )
@@ -72,7 +73,7 @@ graph <- list(
   empty + geom_label(aes(0, 0, label="Graph")),
   # plot_graph(traj),
   plot_graph(traj, "milestone"),
-  plot_graph(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_graph(traj, grouping=grouping, groups=groups),
   plot_graph(traj, feature_oi=feature_oi),
   plot_graph(traj, "pseudotime")
 )
@@ -81,7 +82,7 @@ dimred <- list(
   empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
   # plot_dimred(traj),
   plot_dimred(traj, "milestone"),
-  plot_dimred(traj, grouping_assignment=grouping_assignment, groups=groups),
+  plot_dimred(traj, grouping=grouping, groups=groups),
   plot_dimred(traj, feature_oi=feature_oi),
   plot_dimred(traj, "pseudotime")
 )
@@ -99,7 +100,7 @@ And to plot the expression and feature importances of many genes along the traje
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
 cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
-plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping_assignment = traj$prior_information$grouping_assignment)
+plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping = traj$prior_information$grouping_assignment)
 ```
 
 ```{r features, echo=FALSE, fig.width=10, fig.height=6, include=FALSE}
