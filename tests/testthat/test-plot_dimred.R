@@ -55,16 +55,3 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
     expect_ggplot(g)
   })
 })
-
-
-context("Test plot_dimred and dimensionality_reduction")
-
-task <- load_test_tasks("toy_tasks_connected") %>% filter(trajectory_type == "directed_linear") %>% extract_row_to_list(1)
-map(get_dimreds(), function(dimred_name) {
-  space <- get(dimred_name)(task$expression)
-
-  test_that(paste0("plot_dimred on ", task$id, " with ", dimred_name), {
-    g <- plot_dimred(task, dimred = space)
-    expect_ggplot(g)
-  })
-})
