@@ -14,6 +14,7 @@ Imports:
   dplyr,
   dynutils,
   dynfeature,
+  dyndimred,
   dynwrap,
   GA,
   ggbeeswarm,
@@ -21,6 +22,7 @@ Imports:
   ggraph,
   ggrepel,
   igraph,
+  MASS,
   magrittr,
   methods,
   patchwork,
@@ -40,28 +42,18 @@ Suggests:
   cobs,
   dyntoy,
   knitr,
-  rmarkdown,
-  diffusionMap,
-  fastICA,
-  lle,
-  MASS,
-  Rtsne,
-  SIMLR,
-  smacof,
-  tsne,
-  umapr
+  rmarkdown
 Remotes:
   dynverse/dynutils,
+  dynverse/dyndimred,
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
   dynverse/patchwork,
-  tidyverse/ggplot2,
-  ropenscilabs/umapr
+  tidyverse/ggplot2
 VignetteBuilder: knitr
 Collate: 
     'add_coloring.R'
-    'dimensionality_reduction.R'
     'dummy_proofing.R'
     'is_colour_vector.R'
     'linearise_cells.R'
