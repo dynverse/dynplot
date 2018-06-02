@@ -211,9 +211,6 @@ plot_dimred <- dynutils::inherit_default_params(
         ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_to, yend=comp_2_to), data=milestone_network) +
         ggraph::geom_edge_link(aes(x=comp_1_from, y=comp_2_from, xend=comp_1_mid, yend=comp_2_mid), data=milestone_network, arrow=arrow(type="closed", length = unit(0.4, "cm")))
 
-      # add milestone labels if requested
-      label_milestones <- get_milestone_labelling(traj, label_milestones)
-
       if(color_cells == "milestone") {
         plot <- plot +
           geom_point(color="black", data=milestone_positions, size=6) +
@@ -249,9 +246,10 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add milestone labels
     # the positions of the milestones are calculated in the previous sections
+    label_milestones <- get_milestone_labelling(traj, label_milestones)
     if((plot_trajectory || plot_milestone_network) && length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
-        mutate(label = get_milestone_labelling(traj, label_milestones)[milestone_id]) %>%
+        mutate(label = label_milestones[milestone_id]) %>%
         filter(!is.na(label))
 
       plot <- plot + geom_label(aes(label=label), data=milestone_labels)
