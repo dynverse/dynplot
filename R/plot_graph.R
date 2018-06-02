@@ -3,10 +3,10 @@
 #' @inheritParams check_or_perform_dimred
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
+#' @inheritParams plot_dimred
 #' @param transition_size The size of the transition lines between milestones.
 #' @param milestone_size The size of milestones.
 #' @param arrow_length length of the arrow.
-#' @param plot_label What to label. Must be one of \code{"leaves"}, \code{"all"}, or \code{"none"}.
 #' @param plot_milestones Whether to plot the milestones.
 #'
 #'
@@ -34,8 +34,8 @@ plot_graph <- dynutils::inherit_default_params(
     transition_size = 3,
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
-    plot_label = c("leaves", "all", "none"),
-    plot_milestones = FALSE
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+    plot_milestones = TRUE
   ) {
     # check whether object has already been graph-dimredded
     dimred_traj <- check_or_perform_dimred(traj)
@@ -71,38 +71,23 @@ plot_graph <- dynutils::inherit_default_params(
 
     space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
-
-    if(plot_milestones) {
-      if (!is.null(milestones)) {
-        milestones <- left_join(dimred_traj$space_milestones, milestones, "milestone_id")
-      } else {
-        milestones <- dimred_traj$space_milestones
-      }
-
-      # color milestones & cells
-      milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
+    # get information of milestones
+    if (!is.null(milestones)) {
+      milestones <- left_join(dimred_traj$space_milestones, milestones, "milestone_id")
+    } else {
+      milestones <- dimred_traj$space_milestones
     }
 
+    milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
+
+    # get information of cells
     cell_positions <- dimred_traj$space_samples
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
-    # check and process label
-    plot_label <- match.arg(plot_label)
-    nodes_to_label <-
-      if (plot_label == "leaves") {
-        dimred_traj$space_lines %>% {c(setdiff(.$from, .$to), setdiff(.$to, .$from))}
-      } else if (plot_label == "all") {
-        milestones$milestone_id
-      } else if (plot_label == "none"){
-        c()
-      } else {
-        stop(sQuote("plot_label"), " should be one of: \"leaves\", \"all\", or \"none\"")
-      }
-
     # make plot
-    g <-
+    plot <-
       ggplot() +
       theme(legend.position = "none") +
       # geom_segment(
@@ -143,24 +128,19 @@ plot_graph <- dynutils::inherit_default_params(
       color_scale +
       theme_graph() +
       theme(legend.position="bottom")
-    # ggrepel::geom_label_repel(
-    #   aes(comp_1, comp_2, label = milestone_id),
-    #   dimred_traj$space_milestones %>% filter(milestone_id %in% nodes_to_label)
-    # ) +
 
-    if (plot_milestones) {
-      g <- g +
-        geom_point(
-          aes(comp_1, comp_2, color = color),
-          milestone_positions,
-          size = milestone_size, shape = 4, stroke = 2
-        ) +
-        scale_color_identity()
+    # label milestones
+    label_milestones <- get_milestone_labelling(traj, label_milestones)
+
+    if(length(label_milestones)) {
+      milestone_labels <- milestone_positions %>%
+        mutate(label = label_milestones[milestone_id]) %>%
+        filter(!is.na(label))
+
+      plot <- plot + geom_label(aes(comp_1, comp_2, label=label), data=milestone_labels)
     }
 
-    g
-
-    # process_dynplot(g, object$id)
+    plot
   })
 
 #' @export
