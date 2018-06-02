@@ -22,11 +22,10 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   })
 
   test_that(paste0("plot_graph on ", task$id, " with plotting of milestones and plotting of labels"), {
-    g <- plot_graph(task, plot_milestones = TRUE)
+    g <- plot_graph(task, label_milestones = TRUE)
     expect_ggplot(g)
-    g <- plot_graph(task, plot_label = "none")
-    expect_ggplot(g)
-    g <- plot_graph(task, plot_label = "all")
+
+    g <- plot_graph(task, label_milestones = FALSE)
     expect_ggplot(g)
   })
 })
