@@ -36,7 +36,7 @@ plot_heatmap <- function(
 
   if(is.function(scale)) {
     expression <- scale(expression)
-  } else if (scale) {
+  } else if (is.logical(scale) && scale) {
     expression <- dynutils::scale_quantile(expression)
   }
 
