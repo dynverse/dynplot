@@ -20,4 +20,16 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
     g <- plot_onedim(task, "milestone")
     expect_ggplot(g)
   })
+
+  test_that(paste0("plot_onedim on ", task$id, " with milestones from different trajectory"), {
+    pred <- dynwrap::infer_trajectory(task, method = "comp1")
+
+    g <- plot_onedim(
+      pred,
+      color_cells = "milestone",
+      milestones = task$milestone_ids,
+      milestone_percentages = task$milestone_percentages
+    )
+    expect_ggplot(g)
+  })
 })
