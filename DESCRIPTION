@@ -53,11 +53,11 @@ Remotes:
   tidyverse/ggplot2
 VignetteBuilder: knitr
 Collate: 
+    'milestone_palette.R'
     'add_coloring.R'
     'dummy_proofing.R'
     'is_colour_vector.R'
     'linearise_cells.R'
-    'milestone_palette.R'
     'optimize_order.R'
     'package.R'
     'plot_combined.R'

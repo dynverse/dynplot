@@ -6,11 +6,11 @@
 \title{Plot a dimensionality reduced trajectory as a 2D graph}
 \usage{
 plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"), color_milestones = c("auto", "given"),
-  grouping = NULL, groups = NULL, feature_oi = NULL, pseudotime = NULL,
-  expression_source = "expression", milestones = NULL,
-  milestone_percentages = NULL, transition_size = 3, milestone_size = 5,
-  arrow_length = grid::unit(1, "cm"),
+  "milestone", "pseudotime"), color_milestones = c("auto", "given",
+  "cubeHelix", "Set3", "rainbow"), grouping = NULL, groups = NULL,
+  feature_oi = NULL, pseudotime = NULL, expression_source = "expression",
+  milestones = NULL, milestone_percentages = NULL, transition_size = 3,
+  milestone_size = 5, arrow_length = grid::unit(1, "cm"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
   plot_milestones = TRUE)
 }

@@ -8,10 +8,11 @@ plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), milestone_network = traj$milestone_network,
   progressions = traj$progressions, grouping = NULL, groups = NULL,
   feature_oi = NULL, pseudotime = NULL, expression_source = "expression",
-  color_milestones = c("auto", "given"), milestones = NULL,
-  milestone_percentages = NULL, orientation = 1, margin = 0.05,
-  linearised = linearise_cells(milestone_network, progressions, margin,
-  one_edge = TRUE), quasirandom_width = 0.2, plot_cells = TRUE,
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL, milestone_percentages = NULL, orientation = 1,
+  margin = 0.05, linearised = linearise_cells(milestone_network,
+  progressions, margin, one_edge = TRUE), quasirandom_width = 0.2,
+  plot_cells = TRUE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj))
 }
 \arguments{
