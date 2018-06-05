@@ -8,9 +8,10 @@ library(dplyr, warn.conflicts = FALSE)
 library(tibble, warn.conflicts = FALSE)
 library(magrittr, warn.conflicts = FALSE)
 library(readr, warn.conflicts = FALSE)
+library(dyndimred, warn.conflicts = FALSE)
 
 save_test <- function(x, name) {
-  write_rds(x, paste0("testthat/", name, ".rds"))
+  write_rds(x, paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
   x
 }
 
