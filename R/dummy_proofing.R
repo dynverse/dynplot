@@ -53,3 +53,11 @@ check_groups <- function(grouping, groups) {
   }
   groups
 }
+
+check_milestone_data_frame <- function(milestones) {
+  if (!is.data.frame(milestones) && is.character(milestones)) {
+    data_frame(milestone_id = milestones)
+  } else {
+    milestones
+  }
+}

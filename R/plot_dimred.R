@@ -111,6 +111,9 @@ plot_dimred <- dynutils::inherit_default_params(
   ) {
     color_cells <- match.arg(color_cells)
 
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestone_data_frame(milestones)
+
     dimred <- get_dimred(
       data_wrapper = traj,
       dimred = dimred,

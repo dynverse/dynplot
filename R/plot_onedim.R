@@ -45,8 +45,11 @@ plot_onedim <- dynutils::inherit_default_params(
       rename(x = cumpercentage) %>%
       mutate(y = vipor::offsetX(x, edge_id, method="quasirandom", width=quasirandom_width))
 
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestone_data_frame(milestones)
+
     # add cell coloring
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
