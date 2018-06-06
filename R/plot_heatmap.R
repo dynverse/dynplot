@@ -36,9 +36,12 @@ plot_heatmap <- function(
 
   if(is.function(scale)) {
     expression <- scale(expression)
-  } else if (scale) {
+  } else if (is.logical(scale) && scale) {
     expression <- dynutils::scale_quantile(expression)
   }
+
+  # check milestones, make sure it's a data_frame
+  milestones <- check_milestone_data_frame(milestones)
 
   # get features oi
   features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)
@@ -55,7 +58,7 @@ plot_heatmap <- function(
     traj$milestone_network,
     traj$progressions,
     equal_cell_width = TRUE,
-    margin=margin
+    margin = margin
   )
 
   # melt expression
@@ -116,8 +119,6 @@ plot_heatmap <- function(
     }
   }
 
-
-
   # plot one dim
   onedim <- plot_onedim(
     traj,
@@ -130,7 +131,7 @@ plot_heatmap <- function(
     groups = groups,
     milestone_percentages = milestone_percentages,
     milestones = milestones,
-    plot_cells=FALSE,
+    plot_cells = FALSE,
     label_milestones = label_milestones
   ) +
     scale_x_continuous(expand=c(0, 0), limits=x_limits) +

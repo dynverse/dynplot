@@ -37,11 +37,16 @@ plot_graph <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
     plot_milestones = TRUE
   ) {
+
+    # TODO: 'milestones', in this function, is both used as the colouring of the cells (which could be from a different traj),
+    # and plotting the milestones in the same dimred as the cells.
+    # it's so confusing
+
     # check whether object has already been graph-dimredded
     dimred_traj <- check_or_perform_dimred(traj)
 
-    dimred_traj$space_milestones
-    traj$divergence_regions
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestone_data_frame(milestones)
 
     # add extra lines encompassing divergence regions
     if(nrow(traj$divergence_regions)) {
@@ -71,6 +76,12 @@ plot_graph <- dynutils::inherit_default_params(
 
     space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
+    # get information of cells
+    cell_positions <- dimred_traj$space_samples
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+    cell_positions <- cell_coloring_output$cell_positions
+    color_scale <- cell_coloring_output$color_scale
+
     # get information of milestones
     if (!is.null(milestones)) {
       milestones <- left_join(dimred_traj$space_milestones, milestones, "milestone_id")
@@ -79,12 +90,6 @@ plot_graph <- dynutils::inherit_default_params(
     }
 
     milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
-
-    # get information of cells
-    cell_positions <- dimred_traj$space_samples
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
-    cell_positions <- cell_coloring_output$cell_positions
-    color_scale <- cell_coloring_output$color_scale
 
     # make plot
     plot <-
@@ -111,12 +116,12 @@ plot_graph <- dynutils::inherit_default_params(
     geom_segment(
       aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
       space_lines,
-      size = transition_size + 2, colour = "grey",
+      size = transition_size + 2, colour = "grey"
     ) +
     geom_segment(
       aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
       space_lines,
-      size = transition_size, colour = "white",
+      size = transition_size, colour = "white"
     ) +
       geom_polygon(
         aes(x = comp_1, y = comp_2, group=divergence_id),

@@ -3,7 +3,7 @@
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @inheritParams add_cell_coloring
 #' @export
-plot_dendro <-dynutils::inherit_default_params(
+plot_dendro <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
     traj,
@@ -26,10 +26,11 @@ plot_dendro <-dynutils::inherit_default_params(
       root <- traj$root_milestone_id
     }
 
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestone_data_frame(milestones)
+
     # make sure every cell is on only one edge
     traj$progressions <- progressions_one_edge(traj$progressions)
-
-    # TODO: stop if not tree
 
     # convert to graph
     milestone_network <- traj$milestone_network %>% mutate(edge_id = seq_len(n()))

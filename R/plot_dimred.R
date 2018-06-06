@@ -20,7 +20,7 @@ project_waypoints <- function(
   # weight_cutoff <- 0.01
 
   # weights <- waypoints$geodesic_distances %>% dexp(rate=rate)
-  weights <- waypoints$geodesic_distances %>% dnorm(sd=trajectory_projection_sd)
+  weights <- waypoints$geodesic_distances %>% dnorm(sd = trajectory_projection_sd)
   # weights <- waypoints$geodesic_distances < dist_cutoff
   # weights[weights < weight_cutoff] <- 0
 
@@ -47,8 +47,8 @@ project_waypoints <- function(
     mutate(arrow = dplyr::row_number() %% round(n()/n_arrows) == 0)
 
   lst(
-    positions=waypoint_positions,
-    edges=waypoint_edges
+    positions = waypoint_positions,
+    edges = waypoint_edges
   )
 }
 
@@ -111,8 +111,14 @@ plot_dimred <- dynutils::inherit_default_params(
   ) {
     color_cells <- match.arg(color_cells)
 
-    expression <- get_expression(traj, expression_source)
-    dimred <- get_dimred(traj, dimred, expression)
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestone_data_frame(milestones)
+
+    dimred <- get_dimred(
+      data_wrapper = traj,
+      dimred = dimred,
+      expression_source = expression_source
+    )
 
     # get cell positions
     cell_positions <- dimred %>% as.data.frame() %>% rownames_to_column("cell_id")

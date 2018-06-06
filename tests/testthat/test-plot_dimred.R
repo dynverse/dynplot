@@ -11,7 +11,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
   grouping <- task$prior_information$grouping_assignment
 
   test_that(paste0("plot_dimred on ", task$id, "with giving space"), {
-    g <- plot_dimred(task, dimred=space)
+    g <- plot_dimred(task, dimred = space)
     expect_ggplot(g)
   })
 
@@ -52,6 +52,18 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
 
   test_that(paste0("plot_dimred on ", task$id, " with trajectory projection"), {
     g <- plot_dimred(task, "milestone", dimred = space, plot_trajectory = TRUE)
+    expect_ggplot(g)
+  })
+
+  test_that(paste0("plot_dimred on ", task$id, " with milestones from different trajectory"), {
+    pred <- dynwrap::infer_trajectory(task, method = "comp1")
+
+    g <- plot_dimred(
+      pred,
+      color_cells = "milestone",
+      milestones = task$milestone_ids,
+      milestone_percentages = task$milestone_percentages
+    )
     expect_ggplot(g)
   })
 })

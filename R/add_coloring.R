@@ -1,27 +1,31 @@
 #' Add milestone coloring
 #' @param color_milestones How to color the cells
 #' @param milestones Tibble containing the `milestone_id` and a `color` for each milestone
+#'
+#' @include milestone_palette.R
 add_milestone_coloring <- function(
-  milestones=NULL,
-  color_milestones=c("auto", "given")
+  milestones = NULL,
+  color_milestones = c("auto", "given", get_milestone_palette_names())
 ) {
-  color_milestones <- match.arg(color_milestones[1], c("auto", "given", dynplot::get_milestone_palette_names()))
+  color_milestones <- match.arg(color_milestones)
+
+  # check milestones, make sure it's a data_frame
+  milestones <- check_milestone_data_frame(milestones)
 
   if(color_milestones == "given") {
-    if(!"color" %in% names(milestones)) {stop("Milestone colors need to be given")}
-  } else if (color_milestones == "auto") {
     if(!"color" %in% names(milestones)) {
-      milestones <- milestones %>%
-        mutate(color = milestone_palette("Set3", n = n()))
+      stop("Milestone colors need to be given")
     }
   } else if (color_milestones %in% get_milestone_palette_names()) {
-    milestones <- milestones %>%
-      mutate(color = milestone_palette(color_milestones, n = n()))
+    if (!(color_milestones == "auto" && "color" %in% names(milestones))) {
+      milestones <- milestones %>%
+        mutate(color = milestone_palette(color_milestones, n = n()))
+    }
   }
 
   milestones
 }
-
+formals(add_milestone_coloring)$color_milestones <- unique(c("auto", "given", get_milestone_palette_names()))
 
 
 #' Add coloring
@@ -69,7 +73,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
         color_cells <- "grey"
       }
     }
-    if(color_cells == "grouping") {
+    if (color_cells == "grouping") {
       if(is.null(grouping)) {stop("Provide grouping")}
       grouping <- get_grouping(traj, grouping)
     } else if (color_cells == "feature") {
