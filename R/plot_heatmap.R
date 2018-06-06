@@ -152,13 +152,15 @@ plot_heatmap <- function(
     cell_annotation_positions <- linearised$progressions %>%
       add_cell_coloring(
         "grouping",
-        grouping=grouping
+        grouping = grouping,
+        traj = traj
       )
   } else if (!is.null(milestone_percentages)) {
     cell_annotation_positions <- linearised$progressions %>%
       add_cell_coloring(
         "milestone",
-        milestone_percentages=milestone_percentages
+        milestone_percentages = milestone_percentages,
+        traj = traj
       )
   }
 
