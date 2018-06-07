@@ -43,15 +43,15 @@ plot_dendro <- dynutils::inherit_default_params(
     leaves_y <- set_names(seq_along(leaves), leaves)
 
     # get leaves under each node (to get y positions later)
-    descendants <- map(traj$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode="out", unreachable = F)$order))}) %>% set_names(traj$milestone_ids)
+    descendants <- map(traj$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode = "out", unreachable = F)$order))}) %>% set_names(traj$milestone_ids)
 
     # calculate diag offset based on largest distances between root and leaf
-    max_x <- igraph::distances(milestone_graph, root, leaves, weights=igraph::E(milestone_graph)$length) %>% max
+    max_x <- igraph::distances(milestone_graph, root, leaves, weights = igraph::E(milestone_graph)$length) %>% max
     diag_offset <- max_x * diag_offset
 
     # now recursively go from root to leaves
     # each time adding the x and the y
-    search <- function(from, milestone_positions = tibble(node_id = from, x = 0, y=mean(leaves_y[descendants[[from]]]))) {
+    search <- function(from, milestone_positions = tibble(node_id = from, x = 0, y = mean(leaves_y[descendants[[from]]]))) {
       milestone_network_to <- milestone_network %>% filter(from %in% !!from, !to %in% milestone_positions$node_id)
       milestone_positions <- bind_rows(
         milestone_positions,
@@ -133,10 +133,10 @@ plot_dendro <- dynutils::inherit_default_params(
         x = x_from + (x_to - x_from) * percentage,
         y = y_from
       ) %>%
-      mutate(y = y + vipor::offsetX(x, edge_id, method="quasirandom", width=0.2))
+      mutate(y = y + vipor::offsetX(x, edge_id, method = "quasirandom", width = 0.2))
 
     # add cell coloring
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
@@ -146,22 +146,22 @@ plot_dendro <- dynutils::inherit_default_params(
     # start plotting!
     dendro <- ggplot(layout) +
       # the main edges
-      ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour="grey") +
+      ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha=ifelse(node1.node_type == "milestone", 0, 1)), arrow=arrow(type="closed"), colour="grey") +
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = ifelse(node1.node_type == "milestone", 0, 1)), arrow = arrow(type = "closed"), colour = "grey") +
       # the node labels
-      # ggraph::geom_node_label(aes(label=node_id)) +
+      # ggraph::geom_node_label(aes(label = node_id)) +
       # the cells
-      geom_point(aes(x, y), size=2.5, color="black", data=cell_positions) +
-      geom_point(aes(x, y, color=color), size=2, data=cell_positions) +
+      geom_point(aes(x, y), size = 2.5, color = "black", data = cell_positions) +
+      geom_point(aes(x, y, color = color), size = 2, data = cell_positions) +
       color_scale +
       # theme graph
       theme_graph() +
       ggraph::scale_edge_alpha_identity() +
-      ggraph::scale_edge_linetype_manual(values=c("milestone"="solid", "fake_milestone"="dotted"), guide="none") +
-      ggraph::scale_edge_width_manual(values=c("milestone"=3, "fake_milestone"=1), guide="none") +
+      ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
+      ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
 
-      theme(legend.position="bottom")
+      theme(legend.position = "bottom")
 
     dendro
   }

@@ -19,5 +19,5 @@ theme_graph <- function() {
 
 #' Create an empty plot for spacing
 empty_plot <- function() {
-  ggplot(tibble(x=character())) + geom_point(aes(x, x)) + theme_graph()
+  ggplot(tibble(x = character())) + geom_point(aes(x, x)) + theme_graph()
 }

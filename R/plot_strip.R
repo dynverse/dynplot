@@ -7,7 +7,7 @@
 #' @inheritParams linearise_cells
 #'
 #' @export
-plot_strip <- function(traj1, traj2, margin=0.05, reorder = TRUE) {
+plot_strip <- function(traj1, traj2, margin = 0.05, reorder = TRUE) {
   if (reorder) {
     traj1$milestone_network <- optimize_order(traj1$milestone_network)
     traj2$milestone_network <- map_order(traj2, traj1)
@@ -21,19 +21,19 @@ plot_strip <- function(traj1, traj2, margin=0.05, reorder = TRUE) {
   milestone_network2 <- linearised2$milestone_network
   prog2 <- linearised2$progressions %>% rename_at(vars(-cell_id), ~paste0(., 2))
 
-  prog <- full_join(prog1, prog2, by=c("cell_id"))
+  prog <- full_join(prog1, prog2, by = c("cell_id"))
 
   ymax <- max(milestone_network2$cumend)
   xmax <- max(milestone_network1$cumend)
 
   ggplot(prog) +
-    geom_rect(aes(xmin=cumstart, xmax=cumend, ymin=0, ymax=ymax), data=milestone_network1, alpha=0.1) +
-    geom_rect(aes(ymin=cumstart, ymax=cumend, xmin=0, xmax=xmax), data=milestone_network2, alpha=0.1) +
+    geom_rect(aes(xmin = cumstart, xmax = cumend, ymin = 0, ymax = ymax), data = milestone_network1, alpha = 0.1) +
+    geom_rect(aes(ymin = cumstart, ymax = cumend, xmin = 0, xmax = xmax), data = milestone_network2, alpha = 0.1) +
     geom_point(aes(cumpercentage1, cumpercentage2)) +
-    geom_vline(aes(xintercept=cumstart), data=milestone_network1, alpha=0.5) +
-    geom_vline(aes(xintercept=cumend), data=milestone_network1, linetype="dashed", alpha=0.5) +
-    geom_hline(aes(yintercept=cumstart), data=milestone_network2, alpha=0.5) +
-    geom_hline(aes(yintercept=cumend), data=milestone_network2, linetype="dashed", alpha=0.5) +
+    geom_vline(aes(xintercept = cumstart), data = milestone_network1, alpha = 0.5) +
+    geom_vline(aes(xintercept = cumend), data = milestone_network1, linetype = "dashed", alpha = 0.5) +
+    geom_hline(aes(yintercept = cumstart), data = milestone_network2, alpha = 0.5) +
+    geom_hline(aes(yintercept = cumend), data = milestone_network2, linetype = "dashed", alpha = 0.5) +
     ggtitle(paste0(traj1$id, " -> ", traj2$id)) +
     theme_clean()
 }
