@@ -6,7 +6,14 @@
 #' @param no_margin_between_linear Whether to add a margin only when
 #' @param one_edge If TRUE, assigns each cell to one edge only
 #' @param equal_cell_width if TRUE, will give each cell equal width
-linearise_cells <- function(milestone_network, progressions, margin=0.05, no_margin_between_linear = TRUE, one_edge=FALSE, equal_cell_width=FALSE) {
+linearise_cells <- function(
+  milestone_network,
+  progressions,
+  margin=0.05,
+  no_margin_between_linear = TRUE,
+  one_edge=FALSE,
+  equal_cell_width=FALSE
+) {
   if(one_edge | equal_cell_width) {
     progressions <- progressions_one_edge(progressions)
   }
@@ -14,13 +21,14 @@ linearise_cells <- function(milestone_network, progressions, margin=0.05, no_mar
   if (equal_cell_width) {
     progressions <- progressions %>%
       group_by(from, to) %>%
-      mutate(percentage2 = percentage + runif(n(), 0, 1e-6)) %>%
+      mutate(percentage2 = percentage + runif(n(), 0, 1e-6)) %>% # randomly position cells at same position
       mutate(percentage2 = (rank(percentage2)-1)/n())
 
     milestone_network <- progressions %>%
       group_by(from, to) %>%
       summarise(length=n()) %>%
       right_join(milestone_network %>% select(-length), c("from", "to")) %>%
+      mutate(length = ifelse(is.na(length), 1e-6, length)) %>% # add length of edges with no cells
       ungroup()
   } else {
     progressions$percentage2 <- progressions$percentage
