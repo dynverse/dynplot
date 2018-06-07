@@ -36,8 +36,8 @@
 #'     groups <- add_milestone_coloring(groups, color_milestones)
 #'
 #'     ggplot(cell_positions, aes(group_id, y)) +
-#'       ggbeeswarm::geom_quasirandom(aes(fill=group_id), shape=21) +
-#'       scale_fill_manual("grouping", values=set_names(groups$color, groups$group_id)) +
+#'       ggbeeswarm::geom_quasirandom(aes(fill = group_id), shape = 21) +
+#'       scale_fill_manual("grouping", values = set_names(groups$color, groups$group_id)) +
 #'       y_scale +
 #'       theme_clean()
 #'   }

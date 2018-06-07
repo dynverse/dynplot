@@ -22,10 +22,10 @@ plot_features <- function(
 
   if(is.function(scale)) {
     expression <- scale(expression)
-    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels=c("Low", "High"))
+    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels = c("Low", "High"))
   } else if (scale) {
     expression <- dynutils::scale_quantile(expression)
-    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels=c("Low", "High"))
+    y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels = c("Low", "High"))
   } else {
     y_scale <- scale_y_continuous("expression")
   }
@@ -35,7 +35,7 @@ plot_features <- function(
   expression <- expression[, features_oi]
 
   # linearise
-  linearised <- linearise_cells(traj$milestone_network, traj$progressions, one_edge=TRUE, margin=margin)
+  linearised <- linearise_cells(traj$milestone_network, traj$progressions, one_edge = TRUE, margin = margin)
 
   # melt
   molten <- expression %>% as.data.frame() %>%
@@ -51,7 +51,7 @@ plot_features <- function(
     "cell_id"
   ) %>%
     group_by(milestone_id, feature_id) %>%
-    summarise(expression=mean(expression)) %>%
+    summarise(expression = mean(expression)) %>%
     ungroup()
 
   edge_constraints <- linearised$milestone_network %>%
@@ -72,7 +72,7 @@ plot_features <- function(
     cobs::cobs(
       data$cumpercentage,
       data$expression,
-      pointwise=rbind(c(0, cumstart, expression_from), c(0, cumend, expression_to)),
+      pointwise = rbind(c(0, cumstart, expression_from), c(0, cumend, expression_to)),
       print.warn = FALSE,
       print.mesg = FALSE
     )
@@ -81,7 +81,7 @@ plot_features <- function(
   splined <- nested %>%
     mutate(spline = pmap(., smooth_constrained)) %>%
     mutate(
-      x = map2(cumstart, cumend, seq, length.out=100),
+      x = map2(cumstart, cumend, seq, length.out = 100),
       y = map2(spline, x, ~predict(.x, .y)[, "fit"])
     )
 
@@ -91,16 +91,16 @@ plot_features <- function(
 
   expression_plot <- smoothed %>%
     ggplot() +
-    geom_line(aes(x, y, color=feature_id, group=paste0(feature_id, edge_id))) +
-    geom_vline(aes(xintercept=cumstart), data=linearised$milestone_network, alpha=0.2) +
-    geom_vline(aes(xintercept=cumend), data=linearised$milestone_network, alpha=0.2) +
+    geom_line(aes(x, y, color = feature_id, group = paste0(feature_id, edge_id))) +
+    geom_vline(aes(xintercept = cumstart), data = linearised$milestone_network, alpha = 0.2) +
+    geom_vline(aes(xintercept = cumend), data = linearised$milestone_network, alpha = 0.2) +
     # cowplot::theme_cowplot()     theme_clean() +
-    scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0)) +
+    scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0)) +
     y_scale +
     theme_clean()
 
   onedim_plot <- plot_onedim(traj, linearised = linearised, orientation = -1, margin = margin) +
-    scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0))
+    scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0))
 
   patchwork::wrap_plots(
     expression_plot,

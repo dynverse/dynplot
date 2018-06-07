@@ -10,7 +10,7 @@
 #' @export
 #' @importFrom patchwork wrap_plots
 #' @export
-plot_linearised_comparison <- function(traj1, traj2, reorder=TRUE, margin=0.05, reorder_second_by=c("mapping", "optimisation")) {
+plot_linearised_comparison <- function(traj1, traj2, reorder = TRUE, margin = 0.05, reorder_second_by = c("mapping", "optimisation")) {
   reorder_second_by <- match.arg(reorder_second_by)
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
@@ -24,7 +24,7 @@ plot_linearised_comparison <- function(traj1, traj2, reorder=TRUE, margin=0.05, 
 
   empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
 
-  strip_plot <- plot_strip(traj1, traj2, reorder = FALSE, margin=margin)
+  strip_plot <- plot_strip(traj1, traj2, reorder = FALSE, margin = margin)
 
   onedim_plot1 <- plot_onedim(traj1, orientation = -1)
   onedim_plot2 <- plot_onedim(traj2, orientation = -1) + coord_flip()

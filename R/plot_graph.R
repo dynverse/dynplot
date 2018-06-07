@@ -54,9 +54,9 @@ plot_graph <- dynutils::inherit_default_params(
         group_by(divergence_id) %>%
         summarise(comb = list(combn(milestone_id, 2) %>% t() %>% as.data.frame() %>% mutate_if(is.factor, as.character))) %>%
         unnest(comb) %>%
-        rename(from=V1, to=V2) %>%
+        rename(from = V1, to = V2) %>%
         select(from, to) %>%
-        mutate(line_type="divergence") %>%
+        mutate(line_type = "divergence") %>%
         mutate(directed = FALSE)
     } else {
       space_lines_divergence_regions <- tibble()
@@ -71,14 +71,14 @@ plot_graph <- dynutils::inherit_default_params(
       group_by(from, to) %>%
       filter(dplyr::row_number() == 1) %>%
       ungroup() %>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from"="from.milestone_id"))%>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to"="to.milestone_id"))
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from" = "from.milestone_id"))%>%
+      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to" = "to.milestone_id"))
 
     space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
     # get information of cells
     cell_positions <- dimred_traj$space_samples
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir=environment()))
+    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
@@ -124,15 +124,15 @@ plot_graph <- dynutils::inherit_default_params(
       size = transition_size, colour = "white"
     ) +
       geom_polygon(
-        aes(x = comp_1, y = comp_2, group=divergence_id),
+        aes(x = comp_1, y = comp_2, group = divergence_id),
         space_regions,
-        fill="white"
+        fill = "white"
       ) +
-      geom_point(aes(comp_1, comp_2), size=2.5, color="black", data=cell_positions) +
-      geom_point(aes(comp_1, comp_2, color=color), size=2, data=cell_positions) +
+      geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
+      geom_point(aes(comp_1, comp_2, color = color), size = 2, data = cell_positions) +
       color_scale +
       theme_graph() +
-      theme(legend.position="bottom")
+      theme(legend.position = "bottom")
 
     # label milestones
     label_milestones <- get_milestone_labelling(traj, label_milestones)
@@ -142,7 +142,7 @@ plot_graph <- dynutils::inherit_default_params(
         mutate(label = label_milestones[milestone_id]) %>%
         filter(!is.na(label))
 
-      plot <- plot + geom_label(aes(comp_1, comp_2, label=label), data=milestone_labels)
+      plot <- plot + geom_label(aes(comp_1, comp_2, label = label), data = milestone_labels)
     }
 
     plot

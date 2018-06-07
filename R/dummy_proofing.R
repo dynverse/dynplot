@@ -16,7 +16,7 @@ check_feature <- function(expression, feature_oi) {
   feature_oi
 }
 
-check_features_oi <- function(traj, expression, features_oi, cell_feature_importances=NULL) {
+check_features_oi <- function(traj, expression, features_oi, cell_feature_importances = NULL) {
   if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
     # make sure features_oi is not larger than the number of features
     if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
@@ -29,7 +29,7 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 
       features_oi <- cell_feature_importances %>%
         group_by(feature_id) %>%
-        summarise(importance=max(importance)) %>%
+        summarise(importance = max(importance)) %>%
         top_n(features_oi, importance) %>%
         pull(feature_id)
 
@@ -37,7 +37,7 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
-      features_oi <- dynfeature::calculate_overall_feature_importance(traj, expression=expression)$feature_id[1:features_oi]
+      features_oi <- dynfeature::calculate_overall_feature_importance(traj, expression = expression)$feature_id[1:features_oi]
     } else {
       features_oi <- apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
     }
