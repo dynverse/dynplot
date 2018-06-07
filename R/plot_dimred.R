@@ -115,7 +115,7 @@ plot_dimred <- dynutils::inherit_default_params(
     milestones <- check_milestone_data_frame(milestones)
 
     dimred <- get_dimred(
-      data_wrapper = traj,
+      model = traj,
       dimred = dimred,
       expression_source = expression_source
     )
