@@ -30,7 +30,7 @@ process_dynplot <- function(g, id = NULL, expand = TRUE) {
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
       axis.line = element_line(colour = "black"),
-      panel.border = element_rect(colour = "black", fill=NA),
+      panel.border = element_rect(colour = "black", fill = NA),
       axis.ticks = element_blank(),
       axis.text = element_blank(),
       axis.title = element_blank(),

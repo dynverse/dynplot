@@ -63,7 +63,7 @@ plot_heatmap <- function(
 
   # melt expression
   molten <- expression %>%
-    reshape2::melt(varnames=c("cell_id", "feature_id"), value.name="expression") %>%
+    reshape2::melt(varnames = c("cell_id", "feature_id"), value.name = "expression") %>%
     mutate_if(is.factor, as.character) %>%
     mutate(feature_position = as.numeric(factor(feature_id, feature_order))) %>%
     left_join(linearised$progressions, "cell_id")
@@ -84,38 +84,38 @@ plot_heatmap <- function(
   if (heatmap_type == "tiled") {
     if (is.null(cell_feature_importances)) {
       heatmap <- ggplot(molten) +
-        geom_tile(aes(cumpercentage, feature_position, fill=expression)) +
+        geom_tile(aes(cumpercentage, feature_position, fill = expression)) +
         scale_fill_distiller(palette = "RdBu") +
-        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
-        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
     } else {
       heatmap <- ggplot(molten) +
-        # geom_tile(aes(cumpercentage, feature_position, alpha=importance), fill="black") +
-        geom_rect(aes(xmin=cumpercentage-0.5, xmax=cumpercentage+0.5, ymin=feature_position+scale_minmax(importance)/10*5, ymax=feature_position-scale_minmax(importance)/10*5, fill=expression)) +
+        # geom_tile(aes(cumpercentage, feature_position, alpha = importance), fill = "black") +
+        geom_rect(aes(xmin = cumpercentage-0.5, xmax = cumpercentage+0.5, ymin = feature_position+scale_minmax(importance)/10*5, ymax = feature_position-scale_minmax(importance)/10*5, fill = expression)) +
         scale_fill_distiller(palette = "RdBu") +
-        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
-        scale_alpha_continuous(range=c(0, 1)) +
-        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+        scale_alpha_continuous(range = c(0, 1)) +
+        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
     }
   } else if (heatmap_type == "dotted") {
     if (is.null(cell_feature_importances)) {
       heatmap <- ggplot(molten) +
-        geom_point(aes(cumpercentage, feature_position, color=expression, size=expression)) +
+        geom_point(aes(cumpercentage, feature_position, color = expression, size = expression)) +
         scale_color_distiller(palette = "RdBu") +
-        scale_size_continuous(range=c(0, 6)) +
-        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
-        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+        scale_size_continuous(range = c(0, 6)) +
+        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
     } else {
       heatmap <- ggplot(molten) +
-        geom_point(aes(cumpercentage, feature_position, color=expression, size=importance**2)) +
+        geom_point(aes(cumpercentage, feature_position, color = expression, size = importance**2)) +
         scale_color_distiller(palette = "RdBu") +
-        scale_size_continuous(range=c(0, 6)) +
-        scale_x_continuous(NULL, breaks = NULL, expand=c(0, 0), limits=x_limits) +
-        scale_y_continuous(NULL, expand=c(0, 0), breaks = seq_along(feature_order), labels=feature_order, position="left", limits=y_limits) +
-        theme(legend.position="none", plot.margin=margin(), plot.background = element_blank(), panel.background = element_blank())
+        scale_size_continuous(range = c(0, 6)) +
+        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
     }
   }
 
@@ -134,17 +134,17 @@ plot_heatmap <- function(
     plot_cells = FALSE,
     label_milestones = label_milestones
   ) +
-    scale_x_continuous(expand=c(0, 0), limits=x_limits) +
-    theme(plot.margin=margin())
+    scale_x_continuous(expand = c(0, 0), limits = x_limits) +
+    theme(plot.margin = margin())
 
   # plot dendrogram
   dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
-    scale_x_continuous(limits=c(-0.5, length(feature_order)-0.5), expand=c(0, 0)) +
+    scale_x_continuous(limits = c(-0.5, length(feature_order)-0.5), expand = c(0, 0)) +
     scale_y_reverse() +
     coord_flip() +
     theme_graph() +
-    theme(plot.margin=margin())
+    theme(plot.margin = margin())
 
   # plot cell information
   # TODO: Allow multiple cell info here, even "external" which does not fit into grouping,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
@@ -165,11 +165,11 @@ plot_heatmap <- function(
   }
 
   cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
-    geom_point(aes(cumpercentage, 1, color=color)) +
+    geom_point(aes(cumpercentage, 1, color = color)) +
     cell_annotation_positions$color_scale +
-    scale_x_continuous(expand=c(0, 0), limits=x_limits) +
+    scale_x_continuous(expand = c(0, 0), limits = x_limits) +
     theme_graph() +
-    theme(legend.position="top")
+    theme(legend.position = "top")
 
   patchwork::wrap_plots(
     empty_plot(),
@@ -180,7 +180,7 @@ plot_heatmap <- function(
     onedim,
     ncol = 2,
     widths = c(2, 10),
-    heights=c(0.5, 10, 2)
+    heights = c(0.5, 10, 2)
   )
 }
 

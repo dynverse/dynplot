@@ -9,10 +9,10 @@
 linearise_cells <- function(
   milestone_network,
   progressions,
-  margin=0.05,
+  margin = 0.05,
   no_margin_between_linear = TRUE,
-  one_edge=FALSE,
-  equal_cell_width=FALSE
+  one_edge = FALSE,
+  equal_cell_width = FALSE
 ) {
   if(one_edge | equal_cell_width) {
     progressions <- progressions_one_edge(progressions)
@@ -26,7 +26,7 @@ linearise_cells <- function(
 
     milestone_network <- progressions %>%
       group_by(from, to) %>%
-      summarise(length=n()) %>%
+      summarise(length = n()) %>%
       right_join(milestone_network %>% select(-length), c("from", "to")) %>%
       mutate(length = ifelse(is.na(length), 1e-6, length)) %>% # add length of edges with no cells
       ungroup()
@@ -38,7 +38,7 @@ linearise_cells <- function(
 
   if (no_margin_between_linear) {
     # add margin only if froms not directly connected, or if to is a forking milestone
-    milestone_network$add_margin <- (milestone_network$to != lead(milestone_network$from, default="")) | (table(milestone_network$from)[milestone_network$to] > 1)
+    milestone_network$add_margin <- (milestone_network$to != lead(milestone_network$from, default = "")) | (table(milestone_network$from)[milestone_network$to] > 1)
   } else {
     milestone_network$add_margin <- TRUE
   }
@@ -53,7 +53,7 @@ linearise_cells <- function(
     )
 
   progressions <- progressions %>%
-    left_join(milestone_network, by=c("from", "to")) %>%
+    left_join(milestone_network, by = c("from", "to")) %>%
     mutate(cumpercentage = cumstart + percentage2 * length)
 
   lst(milestone_network, progressions, margin)

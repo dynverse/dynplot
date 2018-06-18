@@ -43,7 +43,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # cell positions
     cell_positions <- linearised$progressions %>%
       rename(x = cumpercentage) %>%
-      mutate(y = vipor::offsetX(x, edge_id, method="quasirandom", width=quasirandom_width))
+      mutate(y = vipor::offsetX(x, edge_id, method = "quasirandom", width = quasirandom_width))
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestone_data_frame(milestones)
@@ -59,8 +59,8 @@ plot_onedim <- dynutils::inherit_default_params(
     # create begin and end milestones
     milestones <-
       bind_rows(
-        linearised$milestone_network %>% select(milestone_id = from, position = cumstart) %>% mutate(type="from"),
-        linearised$milestone_network %>% select(milestone_id = to, position = cumend) %>% mutate(type="to")
+        linearised$milestone_network %>% select(milestone_id = from, position = cumstart) %>% mutate(type = "from"),
+        linearised$milestone_network %>% select(milestone_id = to, position = cumend) %>% mutate(type = "to")
       ) %>%
       mutate(
         start = milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
@@ -68,34 +68,34 @@ plot_onedim <- dynutils::inherit_default_params(
       )
 
     plot <- ggplot() +
-      geom_segment(aes(cumstart, 0, xend=cumend, yend=0), data=linearised$milestone_network, color="black") +
+      geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
       theme_graph() +
-      theme(legend.position="bottom")
+      theme(legend.position = "bottom")
 
     if (any(milestones$start & milestones$type == "from"))
-      plot <- plot + geom_segment(aes(position, 0, xend=position+1e-10, yend=0), data=milestones %>% filter(start, type == "from"), color="black", arrow=arrow(type="closed"))
+      plot <- plot + geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = arrow(type = "closed"))
 
     if (any(milestones$end & milestones$type == "to"))
-      geom_point(aes(position, 0), data=milestones %>% filter(end, type == "to"), shape="|", color="black", size=10)
+      geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
 
     # add connections
     if(nrow(linearised$connections)) {
-      plot <- plot + geom_segment(aes(x_from, level, xend=x_to, yend=level), data=linearised$connections, linetype="longdash", color="#666666") +
-        geom_segment(aes(x_from, 0, xend=x_from, yend=level), data=linearised$connections, linetype="longdash", color="#666666") +
-        geom_segment(aes(x_to, 0, xend=x_to, yend=level), data=linearised$connections, linetype="longdash", color="#666666")
+      plot <- plot + geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
+        geom_segment(aes(x_from, 0, xend = x_from, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
+        geom_segment(aes(x_to, 0, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666")
     }
 
     # add the cells
     if (plot_cells) {
       plot <- plot +
-        geom_point(aes(x, y), size=2.5, color="black", data=cell_positions) +
-        geom_point(aes(x, y, color=color), size=2, data=cell_positions) +
+        geom_point(aes(x, y), size = 2.5, color = "black", data = cell_positions) +
+        geom_point(aes(x, y, color = color), size = 2, data = cell_positions) +
         color_scale
     }
 
 
     # if (!is.null(cell_progressions)) {
-    #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label=cell_id, fill = color), data=cell_positions, direction="x", nudge_y=-orientation, min.segment.length=0) + scale_fill_identity()
+    #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label = cell_id, fill = color), data = cell_positions, direction = "x", nudge_y = -orientation, min.segment.length = 0) + scale_fill_identity()
     #   min_limit <- -1
     # } else {
     min_limit <- -0.2
@@ -114,8 +114,8 @@ plot_onedim <- dynutils::inherit_default_params(
         filter(dplyr::row_number() == 1)
 
       plot <- plot + ggrepel::geom_label_repel(
-        aes(position, 0, label=label),
-        data=milestones_to_label,
+        aes(position, 0, label = label),
+        data = milestones_to_label,
         direction = "x",
         force = 0.8,
         xlim = c(min(milestones$position), max(milestones$position)),
@@ -127,9 +127,9 @@ plot_onedim <- dynutils::inherit_default_params(
     }
 
     if(orientation == -1) {
-      plot <- plot + scale_y_reverse(expand=c(0.1, 0), limits=c(max_limit+0.5, min_limit))
+      plot <- plot + scale_y_reverse(expand = c(0.1, 0), limits = c(max_limit+0.5, min_limit))
     } else {
-      plot <- plot + scale_y_continuous(expand=c(0.1, 0), limits=c(min_limit, max_limit+0.5))
+      plot <- plot + scale_y_continuous(expand = c(0.1, 0), limits = c(min_limit, max_limit+0.5))
     }
 
     plot
@@ -139,8 +139,8 @@ plot_onedim <- dynutils::inherit_default_params(
 
 make_connection_plotdata <- function(linearised) {
   connections <- crossing(
-    linearised$milestone_network %>% select(from, x_from=cumstart),
-    linearised$milestone_network %>% select(to, x_to=cumend)
+    linearised$milestone_network %>% select(from, x_from = cumstart),
+    linearised$milestone_network %>% select(to, x_to = cumend)
   ) %>% filter(
     from == to,
     x_from != x_to
@@ -172,5 +172,5 @@ make_connection_plotdata <- function(linearised) {
     }
   }
 
-  list_modify(linearised, connections=connections)
+  list_modify(linearised, connections = connections)
 }

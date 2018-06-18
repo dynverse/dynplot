@@ -57,7 +57,7 @@ dimred_trajectory <- function(
 
   # project dimensionality to samples
   mix_dimred <- function(milid, milpct) {
-    apply(layout[milid,,drop=FALSE], 2, function(x) sum(x * milpct)) %>% t %>% as_data_frame
+    apply(layout[milid,,drop = FALSE], 2, function(x) sum(x * milpct)) %>% t %>% as_data_frame
   }
 
   # create output for samples

@@ -1,5 +1,5 @@
 load_test_tasks <- function(name) {
-  read_rds(paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
+  readr::read_rds(paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
 }
 
 test_tasks <- function(tasks, func) {
