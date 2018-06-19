@@ -8,12 +8,10 @@ output: md_document
 knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, error=FALSE, echo = TRUE)
 ```
 
-# dynplot
-
-**dynplot** provides common functionality for plotting trajectories.
-
 [![Build Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
-[![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)
+[![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)  <img src="man/img/logo.png" align="right" />
+
+# Common visualisation tools for single-cell trajectories
 
 The package provides different ways to plot both the topology and cellular properties of a trajectory:
 
@@ -27,10 +25,10 @@ library(tidyverse)
 
 library(patchwork)
 
-traj <- toy_tasks %>% filter(id == "toy/consecutive_bifurcating_1") %>% extract_row_to_list(1)
+traj <- toy_tasks %>% filter(id == "toy/bifurcating_1") %>% extract_row_to_list(1)
 traj <- traj %>% add_root()
-grouping <- traj$prior_information$grouping_assignment
-groups <- tibble(group_id = unique(grouping)) %>% 
+grouping <- traj$prior_information$groups_id
+groups <- tibble(group_id = unique(grouping$group_id)) %>% 
   mutate(color=dynplot:::milestone_palette_list$auto(n()))
 features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
 feature_oi <- features_oi[[1]]
