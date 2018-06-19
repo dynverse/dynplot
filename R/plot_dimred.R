@@ -109,6 +109,9 @@ plot_dimred <- dynutils::inherit_default_params(
     trajectory_projection_sd,
     n_arrows
   ) {
+    # make sure a trajectory was provided
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame

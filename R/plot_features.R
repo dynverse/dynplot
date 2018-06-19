@@ -15,6 +15,9 @@ plot_features <- function(
   cell_feature_importances = NULL,
   scale = dynutils::scale_quantile
 ) {
+  # make sure a trajectory was provided
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+
   requireNamespace("cobs")
 
   # process expression

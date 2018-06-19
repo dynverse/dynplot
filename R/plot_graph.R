@@ -37,6 +37,8 @@ plot_graph <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
     plot_milestones = TRUE
   ) {
+    # make sure a trajectory was provided
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
 
     # TODO: 'milestones', in this function, is both used as the colouring of the cells (which could be from a different traj),
     # and plotting the milestones in the same dimred as the cells.
