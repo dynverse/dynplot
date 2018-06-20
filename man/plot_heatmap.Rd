@@ -38,7 +38,7 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 
 \item{scale}{Whether to rescale the expression, can be a function or boolean}
 
-\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
 Plot the traj as a heatmap
