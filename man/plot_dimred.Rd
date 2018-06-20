@@ -31,7 +31,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{plot_milestone_network}{Whether to plot the projected milestone network on the dimensionality reduction}
 
-\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
 \item{grouping}{The grouping of the cells}
 

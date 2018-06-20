@@ -1,12 +1,11 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-dynplot
-=======
-
-**dynplot** provides common functionality for plotting trajectories.
-
 [![Build
 Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
 [![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)
+<img src="man/img/logo.png" align="right" />
+
+Common visualisation tools for single-cell trajectories
+=======================================================
 
 The package provides different ways to plot both the topology and
 cellular properties of a trajectory:

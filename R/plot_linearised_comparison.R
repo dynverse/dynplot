@@ -11,6 +11,11 @@
 #' @importFrom patchwork wrap_plots
 #' @export
 plot_linearised_comparison <- function(traj1, traj2, reorder = TRUE, margin = 0.05, reorder_second_by = c("mapping", "optimisation")) {
+  # make sure a trajectory was provided
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj1))
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj2))
+
+
   reorder_second_by <- match.arg(reorder_second_by)
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here

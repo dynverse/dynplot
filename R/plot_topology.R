@@ -10,6 +10,9 @@ plot_topology <- dynutils::inherit_default_params(
   color_milestones,
   milestones
   ) {
+    # make sure a trajectory was provided
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+
     milestone_graph <- as_tbl_graph(traj$milestone_network)
     milestone_positions <- milestone_graph %>%
       create_layout("tree") %>%

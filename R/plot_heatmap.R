@@ -29,6 +29,9 @@ plot_heatmap <- function(
   scale = dynutils::scale_quantile,
   label_milestones = TRUE
 ) {
+  # make sure a trajectory was provided
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression

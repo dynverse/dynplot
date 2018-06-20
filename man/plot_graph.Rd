@@ -41,7 +41,7 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{arrow_length}{length of the arrow.}
 
-\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels as milestone_ids will be used), a named character vector, or FALSE}
+\item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
 \item{plot_milestones}{Whether to plot the milestones.}
 }

@@ -78,7 +78,7 @@ plot_onedim <- dynutils::inherit_default_params(
       plot <- plot + geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = arrow(type = "closed"))
 
     if (any(milestones$end & milestones$type == "to"))
-      geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
+      plot <- plot + geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
 
     # add connections
     if(nrow(linearised$connections)) {
@@ -104,8 +104,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # }
 
     # label milestones
-    label_milestones <- get_milestone_labelling(traj, label_milestones)
-    label_milestones <- label_milestones[!is.na(label_milestones)] # remove NA
+    label_milestones <- get_milestone_labelling(traj, label_milestones) %>% discard(is.na)
 
     if(length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position

@@ -18,6 +18,9 @@ plot_dendro <- dynutils::inherit_default_params(
     milestone_percentages,
     diag_offset = 0.05
   ) {
+    # make sure a trajectory was provided
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+
     # root if necessary
     if ("root_milestone_id" %in% names(traj)) {
       root <- traj$root_milestone_id
