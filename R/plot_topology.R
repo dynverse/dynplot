@@ -16,21 +16,23 @@ plot_topology <- dynutils::inherit_default_params(
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
 
     # determine optimal layout
-    gr <- model$milestone_network %>% igraph::graph_from_data_frame()
-    if (igraph::girth(gr)$girth > 0) {
-      # cyclic
-      layout <- "kk"
-    } else {
-      # tree
-      if(is.null(traj$root_milestone_id)) {
-        traj <- traj %>% add_root()
+    if (!is.null(layout)) {
+      gr <- model$milestone_network %>% igraph::graph_from_data_frame()
+      if (igraph::girth(gr)$girth > 0) {
+        # cyclic
+        layout <- "kk"
+      } else {
+        # tree
+        if(is.null(traj$root_milestone_id)) {
+          traj <- traj %>% add_root()
+        }
+        layout <- "tree"
       }
-      layout <- "tree"
     }
 
     milestone_graph <- as_tbl_graph(traj$milestone_network)
     milestone_positions <- milestone_graph %>%
-      create_layout("tree") %>%
+      create_layout(layout) %>%
       mutate(milestone_id = name)
 
     if(!is.null(milestones)) {
