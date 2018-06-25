@@ -219,9 +219,16 @@ plot_dimred <- dynutils::inherit_default_params(
           comp_2_mid = comp_2_from + (comp_2_to - comp_2_from) /2
         )
 
+      # add arrow if directed
+      arrow <- if(any(traj$milestone_network$directed)) {
+        arrow(type = "closed", length = (unit(0.1, "inches")))
+      } else {
+        NULL
+      }
+
       plot <- plot +
         ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network) +
-        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = arrow(type = "closed", length = unit(0.4, "cm")))
+        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = arrow)
 
       if(color_cells == "milestone") {
         plot <- plot +
@@ -245,6 +252,13 @@ plot_dimred <- dynutils::inherit_default_params(
       milestone_positions <- waypoint_projection$positions %>%
         filter(!is.na(milestone_id))
 
+      # add arrow if directed
+      arrow <- if(any(traj$milestone_network$directed)) {
+        arrow(type = "closed", length = (unit(0.1, "inches")))
+      } else {
+        NULL
+      }
+
       plot <- plot + geom_segment(
         aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
         data = waypoint_projection$edges
@@ -252,7 +266,7 @@ plot_dimred <- dynutils::inherit_default_params(
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
-          arrow = arrow(type = "closed", length = (unit(0.1, "inches")))
+          arrow = arrow
         )
     }
 
