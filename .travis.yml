@@ -20,6 +20,7 @@ addons:
       - imagemagick
       - libfftw3-dev
       - libudunits2-dev
+      - libssh-dev  # PRISM > ssh > libssh-dev
 before_install:
  - source <( curl --insecure https://raw.githubusercontent.com/dynverse/dynmethods/master/.travis_install_python.sh ) # use travis's own python
 install:

@@ -5,7 +5,7 @@
 \title{Plotting the topology of a trajectory}
 \usage{
 plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix", "Set3",
-  "rainbow"), milestones = NULL)
+  "rainbow"), milestones = NULL, layout = NULL)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -13,6 +13,8 @@ plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix", "Set3",
 \item{color_milestones}{How to color the cells}
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+
+\item{layout}{The type of layout to create.}
 }
 \description{
 Plotting the topology of a trajectory

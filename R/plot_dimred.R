@@ -124,6 +124,7 @@ plot_dimred <- dynutils::inherit_default_params(
       dimred = dimred,
       expression_source = expression_source
     )
+    if (any(is.na(dimred))) dimred[is.na(dimred)] <- mean(dimred, na.rm = TRUE) # replace missing cells with mean position
 
     # get cell positions
     cell_positions <- dimred %>% as.data.frame() %>% rownames_to_column("cell_id")
