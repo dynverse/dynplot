@@ -43,7 +43,7 @@ plot_graph(traj)
 ```
 
 ```{r}
-plot_topology(traj)
+plot_topology(traj, layout = "circle")
 ```
 
 ```{r}

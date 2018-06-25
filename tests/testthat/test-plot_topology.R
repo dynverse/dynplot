@@ -5,7 +5,7 @@ test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
     g <- plot_topology(task)
     expect_ggplot(g)
 
-    # g <- plot_topology(task, layout = "kk")
-    # expect_ggplot(g)
+    g <- plot_topology(task, layout = "kk")
+    expect_ggplot(g)
   })
 })

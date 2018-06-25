@@ -16,8 +16,8 @@ plot_topology <- dynutils::inherit_default_params(
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
 
     # determine optimal layout
-    if (!is.null(layout)) {
-      gr <- model$milestone_network %>% igraph::graph_from_data_frame()
+    if (is.null(layout)) {
+      gr <- traj$milestone_network %>% igraph::graph_from_data_frame()
       if (igraph::girth(gr)$girth > 0) {
         # cyclic
         layout <- "kk"
