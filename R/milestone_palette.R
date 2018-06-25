@@ -13,7 +13,8 @@ milestone_palette_list <- list(
     if (n <= 12) {
       milestone_palette_list$Set3(n)
     } else {
-      milestone_palette_list$cubeHelix(n)
+      # milestone_palette_list$cubeHelix(n)
+      sample(grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)], n)
     }
   }
 )
