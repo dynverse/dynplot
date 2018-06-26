@@ -12,9 +12,10 @@ Installation
 
     devtools::install_github("dynverse/dynplot")
 
-On linux, udunits2 has to be installed (debian/ubuntu:
-`sudo apt install libudunits2-dev`, rhel/fedora/centos:
-`sudo dnf install udunits2 udunits2-devel`)
+On linux, udunits2 has to be installed:
+
+-   Debian / Ubuntu / Linux mint: `sudo apt-get install libudunits2-dev`
+-   Fedora / CentOS: `sudo dnf install udunits2-devel`
 
 Usage
 -----
