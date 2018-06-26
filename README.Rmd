@@ -13,6 +13,16 @@ knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, e
 
 # Common visualisation tools for single-cell trajectories
 
+## Installation
+
+```r
+devtools::install_github("dynverse/dynplot")
+```
+
+On linux, udunits2 has to be installed (debian/ubuntu: `sudo apt install libudunits2-dev`, rhel/fedora/centos: `sudo dnf install udunits2 udunits2-devel`)
+
+## Usage
+
 The package provides different ways to plot both the topology and cellular properties of a trajectory:
 
 ```{r, echo=FALSE}
@@ -99,8 +109,4 @@ And to plot the expression and feature importances of many genes along the traje
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
 cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
 plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping = traj$prior_information$grouping_assignment)
-```
-
-```{r features, echo=FALSE, fig.width=10, fig.height=6, include=FALSE}
-plot_features(traj, features_oi = 5)
 ```

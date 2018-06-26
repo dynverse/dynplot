@@ -7,6 +7,18 @@ Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynve
 Common visualisation tools for single-cell trajectories
 =======================================================
 
+Installation
+------------
+
+    devtools::install_github("dynverse/dynplot")
+
+On linux, udunits2 has to be installed (debian/ubuntu:
+`sudo apt install libudunits2-dev`, rhel/fedora/centos:
+`sudo dnf install udunits2 udunits2-devel`)
+
+Usage
+-----
+
 The package provides different ways to plot both the topology and
 cellular properties of a trajectory:
 
