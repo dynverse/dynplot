@@ -43,3 +43,6 @@ toy_tasks_connected_undirected <- toy_tasks_connected_directed %>%
 toy_tasks_connected <- bind_rows(toy_tasks_connected_directed, toy_tasks_connected_undirected) %>%
   save_test("toy_tasks_connected")
 
+
+toy_tasks <- bind_rows(dyntoy::toy_tasks, toy_tasks_connected_undirected) %>%
+  save_test("toy_tasks")

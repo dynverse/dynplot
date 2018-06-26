@@ -143,6 +143,13 @@ plot_dendro <- dynutils::inherit_default_params(
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
+    # determine arrow
+    arrow <- if(any(traj$milestone_network$directed)) {
+      arrow(type = "closed")
+    } else {
+      NULL
+    }
+
     # generate layout
     layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)
 
@@ -151,7 +158,7 @@ plot_dendro <- dynutils::inherit_default_params(
       # the main edges
       ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = ifelse(node1.node_type == "milestone", 0, 1)), arrow = arrow(type = "closed"), colour = "grey") +
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = ifelse(node1.node_type == "milestone", 0, 1)), arrow = arrow, colour = "grey") +
       # the node labels
       # ggraph::geom_node_label(aes(label = node_id)) +
       # the cells
