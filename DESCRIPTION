@@ -18,7 +18,7 @@ Imports:
   dynwrap,
   GA,
   ggbeeswarm,
-  ggplot2 (>= 2.2.1.9000),
+  ggplot2 (>= 3.0),
   ggraph,
   ggrepel,
   igraph,
@@ -49,8 +49,7 @@ Remotes:
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  dynverse/patchwork,
-  tidyverse/ggplot2
+  dynverse/patchwork
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
