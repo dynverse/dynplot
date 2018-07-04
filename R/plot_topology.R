@@ -35,13 +35,14 @@ plot_topology <- dynutils::inherit_default_params(
       create_layout(layout) %>%
       mutate(milestone_id = name)
 
-    if(!is.null(milestones)) {
-      # check milestones, make sure it's a data_frame
-      milestones <- check_milestone_data_frame(milestones)
+    # check milestones, make sure it's a data_frame
+    milestones <- check_milestones(traj, milestones)
+    milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
 
-      milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
-    }
+    # keep ordering
+    milestone_positions <- milestone_positions %>% slice(match(milestones$milestone_id, milestone_id))
 
+    # add milestone coloring
     milestone_positions <- add_milestone_coloring(milestone_positions, color_milestones)
 
     milestone_graph <- igraph::graph_from_data_frame(traj$milestone_network, vertices = milestone_positions %>% select(-x, -y)) %>% as_tbl_graph()

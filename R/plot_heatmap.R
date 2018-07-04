@@ -44,7 +44,7 @@ plot_heatmap <- function(
   }
 
   # check milestones, make sure it's a data_frame
-  milestones <- check_milestone_data_frame(milestones)
+  milestones <- check_milestones(traj, milestones)
 
   # get features oi
   features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)

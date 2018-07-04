@@ -48,7 +48,7 @@ plot_graph <- dynutils::inherit_default_params(
     dimred_traj <- check_or_perform_dimred(traj)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestone_data_frame(milestones)
+    milestones <- check_milestones(traj, milestones)
 
     # add extra lines encompassing divergence regions
     if(nrow(traj$divergence_regions)) {

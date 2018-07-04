@@ -9,9 +9,6 @@ add_milestone_coloring <- function(
 ) {
   color_milestones <- match.arg(color_milestones)
 
-  # check milestones, make sure it's a data_frame
-  milestones <- check_milestone_data_frame(milestones)
-
   if(color_milestones == "given") {
     if(!"color" %in% names(milestones)) {
       stop("Milestone colors need to be given")

@@ -33,6 +33,10 @@ project_waypoints <- function(
     column_to_rownames("cell_id") %>%
     as.matrix()
 
+  # make sure weights and positions have the same cell_ids in the same order
+  testthat::expect_equal(colnames(weights), rownames(positions))
+
+  # calculate positions
   waypoint_positions <- (weights %*% positions) %>%
     as.data.frame() %>%
     rownames_to_column("waypoint_id") %>%
@@ -117,8 +121,9 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestone_data_frame(milestones)
+    milestones <- check_milestones(traj, milestones)
 
+    # get dimensionality reduction from trajectory
     dimred <- get_dimred(
       model = traj,
       dimred = dimred,
