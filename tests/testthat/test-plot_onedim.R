@@ -1,34 +1,34 @@
 context("Test plot_onedim")
 
-test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
-  test_that(paste0("plot_onedim on ", task$id), {
-    g <- plot_onedim(task)
+test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
+  test_that(paste0("plot_onedim on ", dataset$id), {
+    g <- plot_onedim(dataset)
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_onedim on ", task$id, " with pseudotime"), {
-    g <- plot_onedim(task, color_cells = "pseudotime")
+  test_that(paste0("plot_onedim on ", dataset$id, " with pseudotime"), {
+    g <- plot_onedim(dataset, color_cells = "pseudotime")
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_onedim on ", task$id, " with grouping"), {
-    g <- plot_onedim(task, grouping = task$grouping)
+  test_that(paste0("plot_onedim on ", dataset$id, " with grouping"), {
+    g <- plot_onedim(dataset, grouping = dataset$grouping)
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_onedim on ", task$id, " with milestone"), {
-    g <- plot_onedim(task, "milestone")
+  test_that(paste0("plot_onedim on ", dataset$id, " with milestone"), {
+    g <- plot_onedim(dataset, "milestone")
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_onedim on ", task$id, " with milestones from different trajectory"), {
-    pred <- dynwrap::infer_trajectory(task, method = "comp1")
+  test_that(paste0("plot_onedim on ", dataset$id, " with milestones from different trajectory"), {
+    pred <- dynwrap::infer_trajectory(dataset, method = "comp1")
 
     g <- plot_onedim(
       pred,
       color_cells = "milestone",
-      milestones = task$milestone_ids,
-      milestone_percentages = task$milestone_percentages
+      milestones = dataset$milestone_ids,
+      milestone_percentages = dataset$milestone_percentages
     )
     expect_ggplot(g)
   })

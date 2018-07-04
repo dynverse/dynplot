@@ -1,34 +1,34 @@
 context("Test plot_dendro")
 
-test_tasks(load_test_tasks("toy_tasks_tree"), function(task) {
-  test_that(paste0("plot_dendro on ", task$id), {
-    g <- plot_dendro(task)
+test_datasets(load_test_datasets("toy_datasets_tree"), function(dataset) {
+  test_that(paste0("plot_dendro on ", dataset$id), {
+    g <- plot_dendro(dataset)
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_dendro on ", task$id, " with pseudotime"), {
-    g <- plot_dendro(task, color_cells = "pseudotime")
+  test_that(paste0("plot_dendro on ", dataset$id, " with pseudotime"), {
+    g <- plot_dendro(dataset, color_cells = "pseudotime")
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_dendro on ", task$id, " with grouping"), {
-    g <- plot_dendro(task, grouping = task$grouping)
+  test_that(paste0("plot_dendro on ", dataset$id, " with grouping"), {
+    g <- plot_dendro(dataset, grouping = dataset$grouping)
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_dendro on ", task$id, " with milestone"), {
-    g <- plot_dendro(task, "milestone")
+  test_that(paste0("plot_dendro on ", dataset$id, " with milestone"), {
+    g <- plot_dendro(dataset, "milestone")
     expect_ggplot(g)
   })
 
-  test_that(paste0("plot_dendro on ", task$id, " with milestones from different trajectory"), {
-    pred <- dynwrap::infer_trajectory(task, method = "comp1")
+  test_that(paste0("plot_dendro on ", dataset$id, " with milestones from different trajectory"), {
+    pred <- dynwrap::infer_trajectory(dataset, method = "comp1")
 
     g <- plot_dendro(
       pred,
       color_cells = "milestone",
-      milestones = task$milestone_ids,
-      milestone_percentages = task$milestone_percentages
+      milestones = dataset$milestone_ids,
+      milestone_percentages = dataset$milestone_percentages
     )
     expect_ggplot(g)
   })

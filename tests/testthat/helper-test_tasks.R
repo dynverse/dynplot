@@ -1,12 +1,12 @@
-load_test_tasks <- function(name) {
+load_test_datasets <- function(name) {
   readr::read_rds(paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
 }
 
-test_tasks <- function(tasks, func) {
-  for (taski in seq_len(nrow(tasks))) {
-    task <- dynutils::extract_row_to_list(tasks, taski)
+test_datasets <- function(datasets, func) {
+  for (dataseti in seq_len(nrow(datasets))) {
+    dataset <- dynutils::extract_row_to_list(datasets, dataseti)
 
-    func(task)
+    func(dataset)
   }
 }
 
