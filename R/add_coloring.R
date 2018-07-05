@@ -191,8 +191,6 @@ add_density_coloring <- function(
 
   # calculate specific density
   if(color_density == "grouping") {
-    if(is.null(grouping)) {stop("Provide grouping")}
-
     grouping <- get_grouping(traj, grouping)
     groups <- check_groups(grouping, groups)
 
