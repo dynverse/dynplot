@@ -71,7 +71,6 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
     }
     if (color_cells == "grouping") {
-      if(is.null(grouping)) {stop("Provide grouping")}
       grouping <- get_grouping(traj, grouping)
     } else if (color_cells == "feature") {
       expression <- get_expression(traj, expression_source)
