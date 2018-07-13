@@ -43,7 +43,7 @@ dimred_trajectory <- function(
   gr <- igraph::graph_from_data_frame(structure %>% rename(weight = length), vertices = milestone_ids)
   layout <-
     if (length(igraph::V(gr)) > 2) {
-      igraph::layout_with_kk(gr, maxiter = 200)
+      igraph::layout_with_kk(gr, maxiter = 10000)
     } else {
       igraph::layout.auto(gr)
     }
