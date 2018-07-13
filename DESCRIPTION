@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Imports:
+  cowplot,
   dplyr,
   dynutils,
   dynfeature,
@@ -62,6 +63,7 @@ Collate:
     'plot_combined.R'
     'plot_dendro.R'
     'plot_dimred.R'
+    'plot_edge_flips.R'
     'plot_features.R'
     'plot_generic.R'
     'plot_graph.R'
