@@ -1,6 +1,6 @@
 #' Plot a dimensionality reduced trajectory as a 2D graph
 #'
-#' @inheritParams check_or_perform_dimred
+#' @inheritParams dynwrap::check_or_perform_dimred
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @inheritParams plot_dimred
