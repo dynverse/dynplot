@@ -160,6 +160,8 @@ add_density_coloring <- function(
 ) {
   color_density <- match.arg(color_density)
 
+  if (color_density == "none") return(list())
+
   if(any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
 
   xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
