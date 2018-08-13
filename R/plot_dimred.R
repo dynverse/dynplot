@@ -154,11 +154,7 @@ plot_dimred <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # calculate density
-    if (!is.null(color_density)) {
-      density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir = environment()))
-    } else {
-      density_plots <- list()
-    }
+    density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir = environment()))
 
     # base plot without cells
     plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
