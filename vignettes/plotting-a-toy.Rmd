@@ -21,7 +21,7 @@ library(dynwrap)
 
 Load in a toy dataset
 ```{r}
-traj <- dyntoy:::generate_toy_datasets("bifurcating", num_replicates=1) %>% extract_row_to_list(1) %>% add_root()
+traj <- dyntoy::generate_dataset("bifurcating") %>% add_root()
 ```
 
 ## Plotting the topology and cellular positions
