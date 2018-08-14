@@ -102,7 +102,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
       if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
+        milestones <- tibble(milestone_id = traj$milestone_ids) %>%
           add_milestone_coloring(color_milestones)
       }
 
