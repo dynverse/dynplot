@@ -6,9 +6,10 @@
 \usage{
 plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), grouping = NULL, groups = NULL,
-  feature_oi = NULL, expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
-  milestones = NULL, milestone_percentages = NULL, diag_offset = 0.05)
+  feature_oi = NULL, expression_source = "expression",
+  pseudotime = NULL, color_milestones = c("auto", "given", "cubeHelix",
+  "Set3", "rainbow"), milestones = NULL, milestone_percentages = NULL,
+  diag_offset = 0.05)
 }
 \arguments{
 \item{traj}{The trajectory}

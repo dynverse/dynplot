@@ -4,8 +4,8 @@
 \alias{plot_topology}
 \title{Plotting the topology of a trajectory}
 \usage{
-plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix", "Set3",
-  "rainbow"), milestones = NULL, layout = NULL)
+plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix",
+  "Set3", "rainbow"), milestones = NULL, layout = NULL)
 }
 \arguments{
 \item{traj}{The trajectory}
