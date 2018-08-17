@@ -61,7 +61,6 @@ Collate:
     'linearise_cells.R'
     'optimize_order.R'
     'package.R'
-    'plot_combined.R'
     'plot_dendro.R'
     'plot_dimred.R'
     'plot_edge_flips.R'
