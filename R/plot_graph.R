@@ -66,7 +66,7 @@ plot_graph <- dynutils::inherit_default_params(
         mutate(triag_id = row_number()) %>%
         select(-divergence_id) %>%
         gather(triangle_part, milestone_id, -triag_id) %>%
-        left_join(dimred_traj$space_milestones, "milestone_id")
+        left_join(dimred_traj$dimred_milestones, "milestone_id")
     } else {
       space_lines_divergence_regions <- tibble()
       space_regions <- tibble(triag_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
@@ -81,20 +81,20 @@ plot_graph <- dynutils::inherit_default_params(
       group_by(from, to) %>%
       filter(dplyr::row_number() == 1) %>%
       ungroup() %>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from" = "from.milestone_id"))%>%
-      left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to" = "to.milestone_id"))
+      left_join(dimred_traj$dimred_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from" = "from.milestone_id"))%>%
+      left_join(dimred_traj$dimred_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to" = "to.milestone_id"))
 
     # get information of cells
-    cell_positions <- dimred_traj$space_samples
+    cell_positions <- dimred_traj$dimred_cells
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
     # get information of milestones
     if (!is.null(milestones)) {
-      milestones <- left_join(dimred_traj$space_milestones, milestones, "milestone_id")
+      milestones <- left_join(dimred_traj$dimred_milestones, milestones, "milestone_id")
     } else {
-      milestones <- dimred_traj$space_milestones
+      milestones <- dimred_traj$dimred_milestones
     }
 
     milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
