@@ -51,17 +51,25 @@ plot_graph <- dynutils::inherit_default_params(
     milestones <- check_milestones(traj, milestones)
 
     # add extra lines encompassing divergence regions
-    if(nrow(traj$divergence_regions)) {
-      space_lines_divergence_regions <- traj$divergence_regions %>%
-        group_by(divergence_id) %>%
-        summarise(comb = list(combn(milestone_id, 2) %>% t() %>% as.data.frame() %>% mutate_if(is.factor, as.character))) %>%
-        unnest(comb) %>%
-        rename(from = V1, to = V2) %>%
-        select(from, to) %>%
-        mutate(line_type = "divergence") %>%
-        mutate(directed = FALSE)
+    if (nrow(traj$divergence_regions) > 0) {
+      # determine the divergence triangles
+      space_triags <- get_divergence_triangles(traj$divergence_regions)
+
+      space_lines_divergence_regions <-
+        space_triags %>%
+        select(from = node1, to = node2) %>%
+        mutate(line_type = "divergence", directed = FALSE)
+
+      # define polygon triangles
+      space_regions <-
+        space_triags %>%
+        mutate(triag_id = row_number()) %>%
+        select(-divergence_id) %>%
+        gather(triangle_part, milestone_id, -triag_id) %>%
+        left_join(dimred_traj$space_milestones, "milestone_id")
     } else {
       space_lines_divergence_regions <- tibble()
+      space_regions <- tibble(triag_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
     }
 
     space_lines <- bind_rows(
@@ -75,8 +83,6 @@ plot_graph <- dynutils::inherit_default_params(
       ungroup() %>%
       left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from" = "from.milestone_id"))%>%
       left_join(dimred_traj$space_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to" = "to.milestone_id"))
-
-    space_regions <- traj$divergence_regions %>% left_join(dimred_traj$space_milestones, "milestone_id")
 
     # get information of cells
     cell_positions <- dimred_traj$space_samples
@@ -97,38 +103,33 @@ plot_graph <- dynutils::inherit_default_params(
     plot <-
       ggplot() +
       theme(legend.position = "none") +
-      # geom_segment(
-      #   aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 2, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 2),
-      #   dimred_traj$space_lines %>% filter(directed),
-      #   size = transition_size, colour = "grey",
-      #   arrow = arrow(length = arrow_length, type = "closed")
-      # ) +
-      # geom_segment(
-      #   aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-      #   dimred_traj$space_lines,
-      #   size = transition_size, colour = "grey"
-      # ) +
-    #
-    geom_segment(
-      aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
-      space_lines %>% filter(directed),
-      size = 1, colour = "grey",
-      arrow = arrow(length = arrow_length, type = "closed")
-    ) +
-    geom_segment(
-      aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-      space_lines,
-      size = transition_size + 2, colour = "grey"
-    ) +
-    geom_segment(
-      aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-      space_lines,
-      size = transition_size, colour = "white"
-    ) +
       geom_polygon(
-        aes(x = comp_1, y = comp_2, group = divergence_id),
+        aes(x = comp_1, y = comp_2, group = triag_id),
         space_regions,
-        fill = "white"
+        fill = "#eeeeee"
+      ) +
+      geom_segment(
+        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
+        space_lines %>% filter(line_type == "divergence"),
+        colour = "darkgray",
+        linetype = "dashed"
+      ) +
+      geom_segment(
+        aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
+        space_lines %>% filter(directed),
+        size = 1, colour = "grey",
+        arrow = arrow(length = arrow_length, type = "closed")
+      ) +
+      geom_segment(
+        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
+        space_lines %>% filter(line_type != "divergence"),
+        size = transition_size + 2, colour = "grey"
+      ) +
+      geom_segment(
+        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
+        space_lines %>% filter(line_type != "divergence"),
+        size = transition_size,
+        colour = "white"
       ) +
       geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
       geom_point(aes(comp_1, comp_2, color = color), size = 2, data = cell_positions) +
@@ -148,7 +149,8 @@ plot_graph <- dynutils::inherit_default_params(
     }
 
     plot
-  })
+  }
+)
 
 #' @export
 plot_default <- plot_graph
