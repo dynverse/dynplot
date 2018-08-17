@@ -45,7 +45,7 @@ plot_graph <- dynutils::inherit_default_params(
     # it's so confusing
 
     # check whether object has already been graph-dimredded
-    dimred_traj <- check_or_perform_dimred(traj)
+    dimred_traj <- calculate_trajectory_dimred(traj)
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(traj, milestones)
