@@ -50,40 +50,6 @@ plot_graph <- dynutils::inherit_default_params(
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(traj, milestones)
 
-    # add extra lines encompassing divergence regions
-    if (nrow(traj$divergence_regions) > 0) {
-      # determine the divergence triangles
-      space_triags <- get_divergence_triangles(traj$divergence_regions)
-
-      space_lines_divergence_regions <-
-        space_triags %>%
-        select(from = node1, to = node2) %>%
-        mutate(line_type = "divergence", directed = FALSE)
-
-      # define polygon triangles
-      space_regions <-
-        space_triags %>%
-        mutate(triag_id = row_number()) %>%
-        select(-divergence_id) %>%
-        gather(triangle_part, milestone_id, -triag_id) %>%
-        left_join(dimred_traj$dimred_milestones, "milestone_id")
-    } else {
-      space_lines_divergence_regions <- tibble()
-      space_regions <- tibble(triag_id = character(0), comp_1 = numeric(0), comp_2 = numeric(0))
-    }
-
-    space_lines <- bind_rows(
-      traj$milestone_network %>%
-        select(-length) %>%
-        mutate(line_type = "forward"),
-      space_lines_divergence_regions
-    ) %>%
-      group_by(from, to) %>%
-      filter(dplyr::row_number() == 1) %>%
-      ungroup() %>%
-      left_join(dimred_traj$dimred_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("from.", .)), c("from" = "from.milestone_id"))%>%
-      left_join(dimred_traj$dimred_milestones %>% select(milestone_id, comp_1, comp_2) %>% rename_all(~paste0("to.", .)), c("to" = "to.milestone_id"))
-
     # get information of cells
     cell_positions <- dimred_traj$dimred_cells
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
@@ -99,35 +65,40 @@ plot_graph <- dynutils::inherit_default_params(
 
     milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
 
+    # get information of segments
+    dimred_segments <- dimred_traj$dimred_segments
+
     # make plot
     plot <-
       ggplot() +
       theme(legend.position = "none") +
       geom_polygon(
-        aes(x = comp_1, y = comp_2, group = triag_id),
-        space_regions,
+        aes(x = comp_1, y = comp_2, group = triangle_id),
+        dimred_traj$dimred_divergence_polys,
         fill = "#eeeeee"
       ) +
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-        space_lines %>% filter(line_type == "divergence"),
+        dimred_traj$dimred_divergence_segments,
         colour = "darkgray",
         linetype = "dashed"
       ) +
       geom_segment(
         aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
-        space_lines %>% filter(directed),
-        size = 1, colour = "grey",
+        dimred_segments %>% filter(directed),
+        size = 1,
+        colour = "grey",
         arrow = arrow(length = arrow_length, type = "closed")
       ) +
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-        space_lines %>% filter(line_type != "divergence"),
-        size = transition_size + 2, colour = "grey"
+        dimred_segments,
+        size = transition_size + 2,
+        colour = "grey"
       ) +
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-        space_lines %>% filter(line_type != "divergence"),
+        dimred_segments,
         size = transition_size,
         colour = "white"
       ) +
