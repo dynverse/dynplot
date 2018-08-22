@@ -7,8 +7,10 @@ output:
     fig_height: 4 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -17,11 +19,13 @@ library(dyntoy)
 library(dynplot)
 library(dynutils)
 library(dynwrap)
+
+set.seed(3)
 ```
 
 Load in a toy dataset
 ```{r}
-traj <- dyntoy::generate_dataset("bifurcating") %>% add_root()
+traj <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 300) %>% add_root()
 ```
 
 ## Plotting the topology and cellular positions
@@ -39,7 +43,6 @@ plot_dendro(traj)
 If the topology is more complex
 ```{r graph}
 plot_graph(traj)
-
 ```
 
 ```{r}
@@ -52,14 +55,14 @@ plot_dimred(traj)
 
 ## Plotting a grouping or clustering
 ```{r}
-grouping <- traj$prior_information$grouping_assignment
+grouping <- traj$prior_information$groups_id
 ```
 
 ```{r grouping}
-plot_onedim(traj, grouping=grouping)
-plot_dendro(traj, grouping=grouping)
-plot_graph(traj, grouping=grouping)
-plot_dimred(traj, grouping=grouping)
+plot_onedim(traj, grouping = grouping)
+plot_dendro(traj, grouping = grouping)
+plot_graph(traj, grouping = grouping)
+plot_dimred(traj, grouping = grouping)
 ```
 
 ## Plotting expression of one feature
@@ -80,10 +83,8 @@ plot_dimred(traj, feature_oi = feature_oi)
 plot_heatmap(traj)
 ```
 ```{r line}
-# plot_features(traj)
+plot_features(traj)
 ```
-
-
 
 ## Comparing trajectories
 ```{r}
