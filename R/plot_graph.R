@@ -52,7 +52,19 @@ plot_graph <- dynutils::inherit_default_params(
 
     # get information of cells
     cell_positions <- dimred_traj$dimred_cells
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
+    cell_coloring_output <- add_cell_coloring(
+      cell_positions = cell_positions,
+      color_cells = color_cells,
+      traj = traj,
+      grouping = grouping,
+      groups = groups,
+      feature_oi = feature_oi,
+      expression_source = expression_source,
+      pseudotime = pseudotime,
+      color_milestones = color_milestones,
+      milestones = milestones,
+      milestone_percentages = milestone_percentages
+    )
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
