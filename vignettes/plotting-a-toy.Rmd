@@ -61,7 +61,7 @@ grouping <- traj$prior_information$groups_id
 ```{r grouping}
 plot_onedim(traj, grouping = grouping)
 plot_dendro(traj, grouping = grouping)
-plot_graph(traj, grouping = grouping)
+# plot_graph(traj, grouping = grouping) # TODO: fix
 plot_dimred(traj, grouping = grouping)
 ```
 
