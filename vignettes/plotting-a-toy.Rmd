@@ -89,7 +89,8 @@ plot_features(traj)
 ## Comparing trajectories
 ```{r}
 pseudotime <- traj$counts %>% prcomp() %>% {.$x[, 1]}
-prediction <- dynwrap::wrap_data("dummy_prediction", traj$cell_ids) %>%
+prediction <- 
+  dynwrap::wrap_data(id = "dummy_prediction", cell_ids = traj$cell_ids) %>%
   dynwrap::add_linear_trajectory(pseudotime)
 
 plot_linearised_comparison(traj, prediction)
