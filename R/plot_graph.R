@@ -72,38 +72,62 @@ plot_graph <- dynutils::inherit_default_params(
     plot <-
       ggplot() +
       theme(legend.position = "none") +
+
+      # Divergence gray backgrounds
       geom_polygon(
         aes(x = comp_1, y = comp_2, group = triangle_id),
         dimred_traj$dimred_divergence_polys,
         fill = "#eeeeee"
       ) +
+
+      # Divergence dashed lines
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
         dimred_traj$dimred_divergence_segments,
         colour = "darkgray",
         linetype = "dashed"
       ) +
-      geom_segment(
-        aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
-        dimred_segments %>% filter(directed),
-        size = 1,
-        colour = "grey",
-        arrow = arrow(length = arrow_length, type = "closed")
-      ) +
+
+      # Milestone gray border
+      geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray") +
+
+      # Transition gray border
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
         dimred_segments,
         size = transition_size + 2,
         colour = "grey"
       ) +
+
+      # Transition halfway arrow
+      geom_segment(
+        aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
+        dimred_segments %>% filter(directed, length > 0),
+        size = 1,
+        colour = "grey",
+        arrow = arrow(length = arrow_length, type = "closed")
+      ) +
+
+      # Transition white tube
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
         dimred_segments,
         size = transition_size,
         colour = "white"
       ) +
+
+      # Milestone white bowl
+      geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
+
+      # Milestone fill
+      geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions, alpha = .5) +
+
+      # Cell borders
       geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
+
+      # Cell fills
       geom_point(aes(comp_1, comp_2, color = color), size = 2, data = cell_positions) +
+
       color_scale +
       theme_graph() +
       theme(legend.position = "bottom")
