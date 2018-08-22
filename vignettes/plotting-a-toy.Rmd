@@ -73,7 +73,7 @@ feature_oi <- first(colnames(traj$counts))
 ```{r expression}
 plot_onedim(traj, feature_oi = feature_oi)
 plot_dendro(traj, feature_oi = feature_oi)
-plot_graph(traj, feature_oi = feature_oi)
+# plot_graph(traj, feature_oi = feature_oi) # TODO: fix?!
 plot_dimred(traj, feature_oi = feature_oi)
 ```
 
