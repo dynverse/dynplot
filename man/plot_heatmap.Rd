@@ -6,10 +6,11 @@
 \usage{
 plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
-  milestones = NULL, milestone_percentages = traj$milestone_percentages,
-  grouping = NULL, groups = NULL, cell_feature_importances = NULL,
-  heatmap_type = c("tiled", "dotted"), scale = dynutils::scale_quantile,
-  label_milestones = TRUE)
+  milestones = NULL,
+  milestone_percentages = traj$milestone_percentages, grouping = NULL,
+  groups = NULL, cell_feature_importances = NULL,
+  heatmap_type = c("tiled", "dotted"),
+  scale = dynutils::scale_quantile, label_milestones = TRUE)
 }
 \arguments{
 \item{traj}{The trajectory}

@@ -9,9 +9,6 @@ add_milestone_coloring <- function(
 ) {
   color_milestones <- match.arg(color_milestones)
 
-  # check milestones, make sure it's a data_frame
-  milestones <- check_milestone_data_frame(milestones)
-
   if(color_milestones == "given") {
     if(!"color" %in% names(milestones)) {
       stop("Milestone colors need to be given")
@@ -74,7 +71,6 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
     }
     if (color_cells == "grouping") {
-      if(is.null(grouping)) {stop("Provide grouping")}
       grouping <- get_grouping(traj, grouping)
     } else if (color_cells == "feature") {
       expression <- get_expression(traj, expression_source)
@@ -106,7 +102,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
       if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
+        milestones <- tibble(milestone_id = traj$milestone_ids) %>%
           add_milestone_coloring(color_milestones)
       }
 
@@ -164,6 +160,8 @@ add_density_coloring <- function(
 ) {
   color_density <- match.arg(color_density)
 
+  if (color_density == "none") return(list())
+
   if(any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
 
   xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
@@ -194,8 +192,6 @@ add_density_coloring <- function(
 
   # calculate specific density
   if(color_density == "grouping") {
-    if(is.null(grouping)) {stop("Provide grouping")}
-
     grouping <- get_grouping(traj, grouping)
     groups <- check_groups(grouping, groups)
 

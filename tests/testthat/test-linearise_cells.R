@@ -1,16 +1,16 @@
 context("Test linearisation")
 
-test_tasks(load_test_tasks("toy_tasks_connected"), function(task) {
+test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
 
-  test_that(paste0("Linearise cells of ", task$id, " works."), {
-    linearisation <- linearise_cells(task$milestone_network, task$progressions)
+  test_that(paste0("Linearise cells of ", dataset$id, " works."), {
+    linearisation <- linearise_cells(dataset$milestone_network, dataset$progressions)
 
-    expect_true(all(task$cell_ids %in% linearisation$progressions$cell_id))
+    expect_true(all(dataset$cell_ids %in% linearisation$progressions$cell_id))
   })
 
-  test_that(paste0("Linearise cells of ", task$id, " on one edge works."), {
-    linearisation <- linearise_cells(task$milestone_network, task$progressions, one_edge = TRUE)
-    expect_true(all(task$cell_ids %in% linearisation$progressions$cell_id))
+  test_that(paste0("Linearise cells of ", dataset$id, " on one edge works."), {
+    linearisation <- linearise_cells(dataset$milestone_network, dataset$progressions, one_edge = TRUE)
+    expect_true(all(dataset$cell_ids %in% linearisation$progressions$cell_id))
     expect_true(all(table(linearisation$progressions$cell_id) == 1))
   })
 })

@@ -48,15 +48,20 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 
 
 check_groups <- function(grouping, groups) {
-  if (is.null(groups) | !("color" %in% names(groups))) {
-    groups <- tibble(group_id = unique(grouping)) %>% mutate(color = milestone_palette("auto", n()))
+  if (is.null(groups) || !("color" %in% names(groups))) {
+    groups <- tibble(
+      group_id = unique(grouping),
+      color = milestone_palette("auto", length(group_id))
+    )
   }
   groups
 }
 
-check_milestone_data_frame <- function(milestones) {
-  if (!is.data.frame(milestones) && is.character(milestones)) {
-    data_frame(milestone_id = milestones)
+check_milestones <- function(traj, milestones) {
+  if (is.null(milestones)) {
+    tibble(milestone_id = traj$milestone_ids)
+  } else if (!is.data.frame(milestones) && is.character(milestones)) {
+    tibble(milestone_id = milestones)
   } else {
     milestones
   }

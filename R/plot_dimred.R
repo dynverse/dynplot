@@ -33,6 +33,10 @@ project_waypoints <- function(
     column_to_rownames("cell_id") %>%
     as.matrix()
 
+  # make sure weights and positions have the same cell_ids in the same order
+  testthat::expect_equal(colnames(weights), rownames(positions))
+
+  # calculate positions
   waypoint_positions <- (weights %*% positions) %>%
     as.data.frame() %>%
     rownames_to_column("waypoint_id") %>%
@@ -117,8 +121,9 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestone_data_frame(milestones)
+    milestones <- check_milestones(traj, milestones)
 
+    # get dimensionality reduction from trajectory
     dimred <- get_dimred(
       model = traj,
       dimred = dimred,
@@ -149,11 +154,7 @@ plot_dimred <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # calculate density
-    if (!is.null(color_density)) {
-      density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir = environment()))
-    } else {
-      density_plots <- list()
-    }
+    density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir = environment()))
 
     # base plot without cells
     plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +

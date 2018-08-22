@@ -30,7 +30,7 @@ plot_dendro <- dynutils::inherit_default_params(
     }
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestone_data_frame(milestones)
+    milestones <- check_milestones(traj, milestones)
 
     # make sure every cell is on only one edge
     traj$progressions <- progressions_one_edge(traj$progressions)

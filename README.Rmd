@@ -38,7 +38,7 @@ library(tidyverse)
 
 library(patchwork)
 
-traj <- toy_tasks %>% filter(id == "toy/bifurcating_1") %>% extract_row_to_list(1)
+traj <- toy_datasets %>% filter(id == "toy/bifurcating_1") %>% extract_row_to_list(1)
 traj <- traj %>% add_root()
 grouping <- traj$prior_information$groups_id
 groups <- tibble(group_id = unique(grouping$group_id)) %>% 
