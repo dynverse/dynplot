@@ -13,4 +13,4 @@ install:
  - R -e 'devtools::install_cran("covr")'
  - R -e 'setRepositories(ind = 1:2); devtools::install(dependencies = T, upgrade = T)'
 after_success:
- - R -e 'covr::codecov()'
+ - echo codecov is failing? # R -e 'covr::codecov()'
