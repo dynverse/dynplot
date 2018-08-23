@@ -13,7 +13,7 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   milestone_percentages = NULL, transition_size = 3,
   milestone_size = 5, arrow_length = grid::unit(1, "cm"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  plot_milestones = TRUE, adjust_weights = FALSE)
+  plot_milestones = FALSE, adjust_weights = FALSE)
 }
 \arguments{
 \item{traj}{The trajectory}
