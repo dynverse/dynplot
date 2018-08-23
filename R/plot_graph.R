@@ -103,12 +103,15 @@ plot_graph <- dynutils::inherit_default_params(
         dimred_traj$dimred_divergence_segments,
         colour = "darkgray",
         linetype = "dashed"
-      ) +
+      )
 
-      # Milestone gray border
-      geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray") +
+    if (plot_milestones) {
+      plot <- plot +
+        geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray")
+    }
 
       # Transition gray border
+    plot <- plot +
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
         dimred_segments,
