@@ -35,7 +35,8 @@ plot_graph <- dynutils::inherit_default_params(
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    plot_milestones = TRUE
+    plot_milestones = TRUE,
+    adjust_weights = FALSE
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
@@ -45,7 +46,7 @@ plot_graph <- dynutils::inherit_default_params(
     # it's so confusing
 
     # check whether object has already been graph-dimredded
-    dimred_traj <- calculate_trajectory_dimred(traj)
+    dimred_traj <- calculate_trajectory_dimred(traj, adjust_weights = adjust_weights)
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(traj, milestones)
