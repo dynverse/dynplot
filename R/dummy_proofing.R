@@ -48,8 +48,11 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
 
 
 check_groups <- function(grouping, groups) {
-  if (is.null(groups) | !("color" %in% names(groups))) {
-    groups <- tibble(group_id = unique(grouping)) %>% mutate(color = milestone_palette("auto", n()))
+  if (is.null(groups) || !("color" %in% names(groups))) {
+    groups <- tibble(
+      group_id = unique(grouping),
+      color = milestone_palette("auto", length(group_id))
+    )
   }
   groups
 }
