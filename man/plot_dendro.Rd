@@ -9,7 +9,7 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
   feature_oi = NULL, expression_source = "expression",
   pseudotime = NULL, color_milestones = c("auto", "given", "cubeHelix",
   "Set3", "rainbow"), milestones = NULL, milestone_percentages = NULL,
-  diag_offset = 0.05)
+  diag_offset = 0.05, y_offset = 0.2)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -33,6 +33,8 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{milestone_percentages}{The milestone percentages}
 
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
+
+\item{y_offset}{The size of the quasirandom cell spreading in the y-axis}
 }
 \description{
 Plot a tree trajectory as a dendrogram
