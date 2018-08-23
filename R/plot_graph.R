@@ -49,7 +49,10 @@ plot_graph <- dynutils::inherit_default_params(
     dimred_traj <- calculate_trajectory_dimred(traj, adjust_weights = adjust_weights)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(traj, milestones, milestone_percentages = milestone_percentages)
+
+    # add coloring of milestones if not present
+    milestones <- add_milestone_coloring(milestones, color_milestones)
 
     # get information of cells
     cell_positions <- dimred_traj$dimred_cells
@@ -66,17 +69,18 @@ plot_graph <- dynutils::inherit_default_params(
       milestones = milestones,
       milestone_percentages = milestone_percentages
     )
+
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
-    # get information of milestones
-    if (!is.null(milestones)) {
-      milestones <- left_join(dimred_traj$dimred_milestones, milestones, "milestone_id")
+    # get trajectory dimred
+    # add coloring of milestones only if milestone percentages are not given
+    milestone_positions <- dimred_traj$dimred_milestones
+    if (cell_coloring_output$color_cells == "milestone") {
+      milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     } else {
-      milestones <- dimred_traj$dimred_milestones
+      milestone_positions$color <- NA
     }
-
-    milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
 
     # get information of segments
     dimred_segments <- dimred_traj$dimred_segments
@@ -133,7 +137,7 @@ plot_graph <- dynutils::inherit_default_params(
       geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
 
       # Milestone fill
-      geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions, alpha = .5) +
+      geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5) +
 
       # Cell borders
       geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
