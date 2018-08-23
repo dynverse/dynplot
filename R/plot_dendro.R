@@ -158,7 +158,7 @@ plot_dendro <- dynutils::inherit_default_params(
       # the main edges
       ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = ifelse(node1.node_type == "milestone", 0, 1)), arrow = arrow, colour = "grey") +
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone")) +
       # the node labels
       # ggraph::geom_node_label(aes(label = node_id)) +
       # the cells
@@ -167,7 +167,6 @@ plot_dendro <- dynutils::inherit_default_params(
       color_scale +
       # theme graph
       theme_graph() +
-      ggraph::scale_edge_alpha_identity() +
       ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
       ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
 
