@@ -35,7 +35,7 @@ plot_graph <- dynutils::inherit_default_params(
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    plot_milestones = TRUE,
+    plot_milestones = FALSE,
     adjust_weights = FALSE
   ) {
     # make sure a trajectory was provided
