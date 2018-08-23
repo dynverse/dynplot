@@ -85,7 +85,7 @@ plot_graph <- dynutils::inherit_default_params(
     # get information of segments
     dimred_segments <- dimred_traj$dimred_segments
 
-    # make plot
+    # plot the topology
     plot <-
       ggplot() +
       theme(legend.position = "none") +
@@ -131,14 +131,20 @@ plot_graph <- dynutils::inherit_default_params(
         dimred_segments,
         size = transition_size,
         colour = "white"
-      ) +
+      )
 
-      # Milestone white bowl
-      geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
+    if (plot_milestones) {
+      plot <- plot +
+        # Milestone white bowl
+        geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
 
-      # Milestone fill
-      geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5) +
+        # Milestone fill
+        geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5)
+    }
 
+    # plot the cells
+
+    plot <- plot +
       # Cell borders
       geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
 
