@@ -156,7 +156,7 @@ plot_graph <- dynutils::inherit_default_params(
 
       color_scale +
       theme_graph() +
-      theme(legend.position = "bottom")
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # label milestones
     label_milestones <- get_milestone_labelling(traj, label_milestones)
