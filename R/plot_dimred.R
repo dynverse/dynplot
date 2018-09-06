@@ -159,7 +159,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # base plot without cells
     plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
       theme_graph() +
-      theme(legend.position = "bottom")
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # add density polygon
     if (!is.null(density_plots$polygon))

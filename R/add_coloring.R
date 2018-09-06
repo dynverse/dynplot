@@ -130,7 +130,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       color_scale <- scale_color_identity()
     }
 
-    lst(cell_positions, color_scale)
+    lst(cell_positions, color_scale, color_cells)
   }
 )
 

@@ -1,6 +1,7 @@
 #' Plot a tree trajectory as a dendrogram
 #'
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
+#' @param y_offset The size of the quasirandom cell spreading in the y-axis
 #' @inheritParams add_cell_coloring
 #' @export
 plot_dendro <- dynutils::inherit_default_params(
@@ -16,7 +17,8 @@ plot_dendro <- dynutils::inherit_default_params(
     color_milestones,
     milestones,
     milestone_percentages,
-    diag_offset = 0.05
+    diag_offset = 0.05,
+    y_offset = 0.2
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
@@ -136,7 +138,7 @@ plot_dendro <- dynutils::inherit_default_params(
         x = x_from + (x_to - x_from) * percentage,
         y = y_from
       ) %>%
-      mutate(y = y + vipor::offsetX(x, edge_id, method = "quasirandom", width = 0.2))
+      mutate(y = y + vipor::offsetX(x, edge_id, method = "quasirandom", width = y_offset))
 
     # add cell coloring
     cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
@@ -158,7 +160,7 @@ plot_dendro <- dynutils::inherit_default_params(
       # the main edges
       ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = ifelse(node1.node_type == "milestone", 0, 1)), arrow = arrow, colour = "grey") +
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone")) +
       # the node labels
       # ggraph::geom_node_label(aes(label = node_id)) +
       # the cells
@@ -167,11 +169,10 @@ plot_dendro <- dynutils::inherit_default_params(
       color_scale +
       # theme graph
       theme_graph() +
-      ggraph::scale_edge_alpha_identity() +
       ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
       ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
 
-      theme(legend.position = "bottom")
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     dendro
   }

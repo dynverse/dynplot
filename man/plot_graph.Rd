@@ -13,7 +13,7 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   milestone_percentages = NULL, transition_size = 3,
   milestone_size = 5, arrow_length = grid::unit(1, "cm"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  plot_milestones = TRUE)
+  plot_milestones = FALSE, adjust_weights = FALSE)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -45,6 +45,8 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
 \item{plot_milestones}{Whether to plot the milestones.}
+
+\item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
 Plot a dimensionality reduced trajectory as a 2D graph

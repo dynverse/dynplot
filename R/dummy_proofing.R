@@ -57,9 +57,14 @@ check_groups <- function(grouping, groups) {
   groups
 }
 
-check_milestones <- function(traj, milestones) {
+check_milestones <- function(traj, milestones, milestone_percentages = NULL) {
   if (is.null(milestones)) {
-    tibble(milestone_id = traj$milestone_ids)
+    # if the milestones is not defined yet -> create it either based on the trajectory or the milestone percentages
+    if (!is.null(milestone_percentages)) {
+      tibble(milestone_id = unique(milestone_percentages$milestone_id))
+    } else {
+      tibble(milestone_id = traj$milestone_ids)
+    }
   } else if (!is.data.frame(milestones) && is.character(milestones)) {
     tibble(milestone_id = milestones)
   } else {

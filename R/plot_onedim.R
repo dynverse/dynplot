@@ -72,7 +72,7 @@ plot_onedim <- dynutils::inherit_default_params(
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
       theme_graph() +
-      theme(legend.position = "bottom")
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     if (any(milestones$start & milestones$type == "from"))
       plot <- plot + geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = arrow(type = "closed"))

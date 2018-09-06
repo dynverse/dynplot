@@ -35,7 +35,8 @@ plot_graph <- dynutils::inherit_default_params(
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    plot_milestones = TRUE
+    plot_milestones = FALSE,
+    adjust_weights = FALSE
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
@@ -45,10 +46,13 @@ plot_graph <- dynutils::inherit_default_params(
     # it's so confusing
 
     # check whether object has already been graph-dimredded
-    dimred_traj <- calculate_trajectory_dimred(traj)
+    dimred_traj <- calculate_trajectory_dimred(traj, adjust_weights = adjust_weights)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(traj, milestones, milestone_percentages = milestone_percentages)
+
+    # add coloring of milestones if not present
+    milestones <- add_milestone_coloring(milestones, color_milestones)
 
     # get information of cells
     cell_positions <- dimred_traj$dimred_cells
@@ -65,22 +69,23 @@ plot_graph <- dynutils::inherit_default_params(
       milestones = milestones,
       milestone_percentages = milestone_percentages
     )
+
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
-    # get information of milestones
-    if (!is.null(milestones)) {
-      milestones <- left_join(dimred_traj$dimred_milestones, milestones, "milestone_id")
+    # get trajectory dimred
+    # add coloring of milestones only if milestone percentages are not given
+    milestone_positions <- dimred_traj$dimred_milestones
+    if (cell_coloring_output$color_cells == "milestone") {
+      milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     } else {
-      milestones <- dimred_traj$dimred_milestones
+      milestone_positions$color <- NA
     }
-
-    milestones <- milestone_positions <- add_milestone_coloring(milestones, color_milestones)
 
     # get information of segments
     dimred_segments <- dimred_traj$dimred_segments
 
-    # make plot
+    # plot the topology
     plot <-
       ggplot() +
       theme(legend.position = "none") +
@@ -98,12 +103,15 @@ plot_graph <- dynutils::inherit_default_params(
         dimred_traj$dimred_divergence_segments,
         colour = "darkgray",
         linetype = "dashed"
-      ) +
+      )
 
-      # Milestone gray border
-      geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray") +
+    if (plot_milestones) {
+      plot <- plot +
+        geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray")
+    }
 
       # Transition gray border
+    plot <- plot +
       geom_segment(
         aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
         dimred_segments,
@@ -126,14 +134,20 @@ plot_graph <- dynutils::inherit_default_params(
         dimred_segments,
         size = transition_size,
         colour = "white"
-      ) +
+      )
 
-      # Milestone white bowl
-      geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
+    if (plot_milestones) {
+      plot <- plot +
+        # Milestone white bowl
+        geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
 
-      # Milestone fill
-      geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions, alpha = .5) +
+        # Milestone fill
+        geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5)
+    }
 
+    # plot the cells
+
+    plot <- plot +
       # Cell borders
       geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
 
@@ -142,7 +156,7 @@ plot_graph <- dynutils::inherit_default_params(
 
       color_scale +
       theme_graph() +
-      theme(legend.position = "bottom")
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # label milestones
     label_milestones <- get_milestone_labelling(traj, label_milestones)
