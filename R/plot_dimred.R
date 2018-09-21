@@ -121,7 +121,7 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(traj, milestones, milestone_percentages)
 
     # get dimensionality reduction from trajectory
     dimred <- get_dimred(
