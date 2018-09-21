@@ -278,7 +278,7 @@ plot_dimred <- dynutils::inherit_default_params(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
           arrow = arrow,
-          size = 1.5
+          size = 2
         ) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
