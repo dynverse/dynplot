@@ -181,7 +181,8 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add cells
     plot <- plot +
-      geom_point(size = 2.5, color = "black", alpha = cells_alpha == 1) +
+      geom_point(size = 2.5, color = "black", alpha = cells_alpha) +
+      geom_point(size = 2, color = "white", alpha = 1) + # add this so the black does not shiny through the color if alpha < 1
       geom_point(aes(color = color), size = 2, alpha = cells_alpha) +
       color_scale
 
