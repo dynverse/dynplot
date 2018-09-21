@@ -40,10 +40,18 @@ project_waypoints <- function(
     rownames_to_column("waypoint_id") %>%
     left_join(waypoints$waypoints, "waypoint_id")
 
+  # add color of closest cell
+  if ("color" %in% colnames(cell_positions)) {
+    waypoint_positions <- waypoint_positions %>%
+      mutate(closest_cell_ix = (weights %>% apply(1, which.max))[waypoint_id]) %>%
+      mutate(closest_cell_id = colnames(weights)[closest_cell_ix]) %>%
+      mutate(color = (cell_positions %>% select(cell_id, color) %>% deframe())[closest_cell_id])
+  }
+
   # positions of different edges
   waypoint_edges <- waypoints$waypoint_network %>%
-    left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_from")), c("from" = "waypoint_id")) %>%
-    left_join(waypoint_positions %>% rename_if(is.numeric, ~paste0(., "_to")), c("to" = "waypoint_id")) %>%
+    left_join(waypoint_positions %>% rename_all(~paste0(., "_from")), c("from" = "waypoint_id_from")) %>%
+    left_join(waypoint_positions %>% rename_all(~paste0(., "_to")), c("to" = "waypoint_id_to")) %>%
     mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
 
   # add arrows to every milestone to milestone edge
@@ -268,23 +276,23 @@ plot_dimred <- dynutils::inherit_default_params(
         geom_point(color = "#333333", data = milestone_positions, size = 6, alpha = 1) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+          data = waypoint_projection$edges %>% filter(arrow),
+          arrow = arrow,
+          size = 1
+        ) +
+        geom_segment(
+          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges,
           size = trajectory_size + 1,
           color = "#333333"
         ) +
 
         geom_segment(
-          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
           data = waypoint_projection$edges,
-          size = trajectory_size,
-          color = "white"
+          size = trajectory_size
         ) +
-        geom_point(color = "white", data = milestone_positions, size = 4, alpha = 1)
-        # geom_segment(
-        #   aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
-        #   data = waypoint_projection$edges %>% filter(arrow),
-        #   arrow = arrow
-        # )
+        geom_point(aes(color = color), data = milestone_positions, size = 5, alpha = 1)
     }
 
     # add milestone labels
