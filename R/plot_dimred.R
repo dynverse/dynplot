@@ -181,7 +181,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add cells
     plot <- plot +
-      geom_point(size = 2.5, color = "black", alpha = cells_alpha) +
+      geom_point(size = 2.5, color = "black", alpha = cells_alpha == 1) +
       geom_point(aes(color = color), size = 2, alpha = cells_alpha) +
       color_scale
 
@@ -278,7 +278,7 @@ plot_dimred <- dynutils::inherit_default_params(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
           arrow = arrow,
-          size = 1
+          size = 1.5
         ) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
@@ -286,11 +286,16 @@ plot_dimred <- dynutils::inherit_default_params(
           size = trajectory_size + 1,
           color = "#333333"
         ) +
-
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
           data = waypoint_projection$edges,
           size = trajectory_size
+        ) +
+        geom_segment(
+          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
+          data = waypoint_projection$edges %>% filter(arrow),
+          arrow = arrow,
+          size = 1
         ) +
         geom_point(aes(color = color), data = milestone_positions, size = 5, alpha = 1)
     }
