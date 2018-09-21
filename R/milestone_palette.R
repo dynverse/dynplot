@@ -14,7 +14,9 @@ milestone_palette_list <- list(
       milestone_palette_list$Set3(n)
     } else {
       # milestone_palette_list$cubeHelix(n)
-      sample(grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)], n)
+      all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)]
+      all_colors <- all_colors[order(shades::hue(all_colors))][-c(1:2)] # sort and remove white/black
+      all_colors[seq(0, length(all_colors), length(all_colors)/(n+1)) %>% ceiling() %>% head(-1)]
     }
   }
 )
