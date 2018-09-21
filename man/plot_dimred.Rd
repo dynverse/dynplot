@@ -19,8 +19,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
   waypoints = dynwrap::select_waypoints(traj),
-  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  n_arrow_bins = 5)
+  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05)
 }
 \arguments{
 \item{traj}{The trajectory}
@@ -72,8 +71,6 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{trajectory_projection_sd}{The standard deviation of the gaussian kernel to be used for projecting the trajectory.
 This is in the order of maginature as the lengths of the milestone_network.
 The lower, the more closely the trajectory will follow the cells}
-
-\item{n_arrow_bins}{Number of bins to use for the arrows}
 }
 \description{
 Plot the trajectory on dimensionality reduction
