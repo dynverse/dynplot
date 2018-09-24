@@ -56,9 +56,13 @@ project_waypoints <- function(
     mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
 
   # add arrows to every milestone to milestone edge
+  # an arrow is placed at the waypoint which is in the middle from the start and end
   waypoint_edges <- waypoint_edges %>%
     group_by(from_milestone_id, to_milestone_id) %>%
-    mutate(arrow = row_number() == ceiling(n()/2))
+    mutate(
+      distance_to_center = (comp_1_from - mean(c(max(comp_1_from), min(comp_1_from))))^2 + (comp_2_from - mean(c(max(comp_2_from), min(comp_2_from))))^2,
+      arrow = row_number() == which.min(distance_to_center)
+    )
 
   lst(
     positions = waypoint_positions,
