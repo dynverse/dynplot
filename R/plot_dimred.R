@@ -293,7 +293,9 @@ plot_dimred <- dynutils::inherit_default_params(
           data = waypoint_projection$edges %>% filter(arrow),
           color = "#333333",
           arrow = arrow,
-          size = 2
+          size = 2,
+          linejoin = "mitre",
+          lineend = "butt"
         ) +
         # geom_segment(
         #   aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
@@ -317,7 +319,9 @@ plot_dimred <- dynutils::inherit_default_params(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
           data = waypoint_projection$edges %>% filter(arrow),
           arrow = arrow,
-          size = 1
+          size = 1,
+          linejoin = "mitre",
+          lineend = "butt"
         ) +
         geom_point(aes(color = color), data = milestone_positions, size = 3, alpha = 1)
     }
