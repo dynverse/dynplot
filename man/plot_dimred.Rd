@@ -20,7 +20,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
   waypoints = dynwrap::select_waypoints(traj),
   trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  color_trajectory = "nearest")
+  color_trajectory = "none")
 }
 \arguments{
 \item{traj}{The trajectory}

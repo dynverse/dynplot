@@ -7,7 +7,7 @@
 project_waypoints(traj, cell_positions,
   waypoints = dynwrap::select_waypoints(traj),
   trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  color_trajectory = "nearest")
+  color_trajectory = "none")
 }
 \arguments{
 \item{traj}{The trajectory}

@@ -10,7 +10,7 @@ project_waypoints <- function(
   cell_positions,
   waypoints = dynwrap::select_waypoints(traj),
   trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  color_trajectory = "nearest"
+  color_trajectory = "none"
 ) {
   testthat::expect_setequal(cell_positions$cell_id, colnames(waypoints$geodesic_distances))
 
@@ -292,7 +292,7 @@ plot_dimred <- dynutils::inherit_default_params(
           data = waypoint_projection$edges %>% filter(arrow),
           color = "#333333",
           arrow = arrow,
-          size = 2,
+          size = 1,
           linejoin = "mitre",
           lineend = "butt"
         )
@@ -300,6 +300,15 @@ plot_dimred <- dynutils::inherit_default_params(
       # plot segment, depends on whether the trajectory should be colored
       if ("color_from" %in% colnames(waypoint_projection$edges)) {
         plot <- plot +
+          geom_segment(
+            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+            data = waypoint_projection$edges %>% filter(arrow),
+            color = "#333333",
+            arrow = arrow,
+            size = 2,
+            linejoin = "mitre",
+            lineend = "butt"
+          ) +
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
             data = waypoint_projection$edges,
