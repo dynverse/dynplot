@@ -19,8 +19,9 @@ project_waypoints <- function(
   # k <- 3
   # weight_cutoff <- 0.01
 
-  # weights <- waypoints$geodesic_distances %>% stats::dexp(rate = rate)
+  # weights <- waypoints$geodesic_distances %>% stats::dexp(rate = 5)
   weights <- waypoints$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
+  testthat::expect_true(all(!is.na(weights)))
   # weights <- waypoints$geodesic_distances < dist_cutoff
   # weights[weights < weight_cutoff] <- 0
 
@@ -76,8 +77,8 @@ project_waypoints <- function(
 #' @param trajectory_projection_sd The standard deviation of the gaussian kernel to be used for projecting the trajectory.
 #'   This is in the order of maginature as the lengths of the milestone_network.
 #'   The lower, the more closely the trajectory will follow the cells
-#' @param cells_alpha The alpha of the cells
-#' @param trajectory_size The size of the trajectory segments
+#' @param alpha_cells The alpha of the cells
+#' @param size_trajectory The size of the trajectory segments
 #'
 #'
 #' @inheritParams add_cell_coloring
@@ -102,8 +103,8 @@ plot_dimred <- dynutils::inherit_default_params(
     plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) && !plot_milestone_network,
     plot_milestone_network = FALSE,
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-    cells_alpha = 1,
-    trajectory_size = 1,
+    alpha_cells = 1,
+    size_trajectory = 1,
 
     # trajectory information
     grouping,
@@ -181,9 +182,9 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add cells
     plot <- plot +
-      geom_point(size = 2.5, color = "black", alpha = cells_alpha) +
+      geom_point(size = 2.5, color = "black", alpha = alpha_cells) +
       geom_point(size = 2, color = "white", alpha = 1) + # add this so the black does not shiny through the color if alpha < 1
-      geom_point(aes(color = color), size = 2, alpha = cells_alpha) +
+      geom_point(aes(color = color), size = 2, alpha = alpha_cells) +
       color_scale
 
     # add milestone network if requested
@@ -274,23 +275,31 @@ plot_dimred <- dynutils::inherit_default_params(
       }
 
       plot <- plot +
-        geom_point(color = "#333333", data = milestone_positions, size = 6, alpha = 1) +
+        geom_point(color = "#333333", data = milestone_positions, size = 4, alpha = 1) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
+          color = "#333333",
           arrow = arrow,
           size = 2
         ) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges,
-          size = trajectory_size + 1,
+          size = size_trajectory + 2,
+          color = "#333333",
+          alpha = 0.5
+        ) +
+        geom_segment(
+          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
+          data = waypoint_projection$edges,
+          size = size_trajectory + 1,
           color = "#333333"
         ) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
           data = waypoint_projection$edges,
-          size = trajectory_size
+          size = size_trajectory
         ) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
@@ -298,7 +307,7 @@ plot_dimred <- dynutils::inherit_default_params(
           arrow = arrow,
           size = 1
         ) +
-        geom_point(aes(color = color), data = milestone_positions, size = 5, alpha = 1)
+        geom_point(aes(color = color), data = milestone_positions, size = 3, alpha = 1)
     }
 
     # add milestone labels

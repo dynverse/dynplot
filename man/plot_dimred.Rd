@@ -11,7 +11,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) &&
   !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  cells_alpha = 1, trajectory_size = 1, grouping = NULL,
+  alpha_cells = 1, size_trajectory = 1, grouping = NULL,
   groups = NULL, feature_oi = NULL, color_milestones = c("auto",
   "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
   milestone_percentages = NULL, pseudotime = NULL,
@@ -34,9 +34,9 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
-\item{cells_alpha}{The alpha of the cells}
+\item{alpha_cells}{The alpha of the cells}
 
-\item{trajectory_size}{The size of the trajectory segments}
+\item{size_trajectory}{The size of the trajectory segments}
 
 \item{grouping}{The grouping of the cells}
 
