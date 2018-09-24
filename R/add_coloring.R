@@ -101,9 +101,12 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions$color <- "trajectories_are_awesome"
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
-      if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = traj$milestone_ids) %>%
-          add_milestone_coloring(color_milestones)
+      if(is.null(milestones)) {
+        testthat::expect_true(all(milestone_percentages$milestone_id %in% traj$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
+        milestones <- tibble(milestone_id = traj$milestone_ids)
+      }
+      if (!"color" %in% names(milestones)) {
+        milestones <- milestones %>% add_milestone_coloring(color_milestones)
       }
 
       milestone_colors <- set_names(milestones$color, milestones$milestone_id) %>% col2rgb %>% t
