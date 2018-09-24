@@ -18,7 +18,7 @@ project_waypoints(traj, cell_positions,
 
 \item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
 
-\item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or a color}
+\item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
 \description{
 Project the waypoints

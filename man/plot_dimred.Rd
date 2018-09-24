@@ -73,7 +73,7 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
 This is in the order of maginature as the lengths of the milestone_network.
 The lower, the more closely the trajectory will follow the cells}
 
-\item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or a color}
+\item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
 \description{
 Plot the trajectory on dimensionality reduction
