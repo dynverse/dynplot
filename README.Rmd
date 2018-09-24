@@ -1,5 +1,5 @@
 ---
-output: md_document
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -44,7 +44,7 @@ grouping <- traj$prior_information$groups_id
 groups <- tibble(group_id = unique(grouping$group_id)) %>% 
   mutate(color=dynplot:::milestone_palette_list$auto(n()))
 features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
-feature_oi <- features_oi[[1]]
+feature_oi <- features_oi[[10]]
 ```
 
 
