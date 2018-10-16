@@ -171,6 +171,7 @@ plot_dendro <- dynutils::inherit_default_params(
       theme_graph() +
       ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
       ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
+      ggraph::scale_edge_alpha_discrete(guide = "none") +
 
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
