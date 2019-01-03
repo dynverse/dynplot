@@ -84,7 +84,7 @@ plot_dendro <- dynutils::inherit_default_params(
       mutate(
         child_node_id = node_id,
         x = milestone_positions_to$x[match(parent_node_id, milestone_positions_to$node_id)] + diag_offset,
-        node_id = paste0(parent_node_id, "-", node_id),
+        node_id = paste0(parent_node_id, "-", node_id)
       )
 
     # combine positions
@@ -141,7 +141,19 @@ plot_dendro <- dynutils::inherit_default_params(
       mutate(y = y + vipor::offsetX(x, edge_id, method = "quasirandom", width = y_offset))
 
     # add cell coloring
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
+    cell_coloring_output <- add_cell_coloring(
+      cell_positions = cell_positions,
+      color_cells = color_cells,
+      traj = traj,
+      grouping = grouping,
+      groups = groups,
+      feature_oi = feature_oi,
+      expression_source = expression_source,
+      pseudotime = pseudotime,
+      color_milestones = color_milestones,
+      milestones = milestones,
+      milestone_percentages = milestone_percentages
+    )
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
