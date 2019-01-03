@@ -12,6 +12,9 @@ linearise_cells <- function(
   one_edge = FALSE,
   equal_cell_width = FALSE
 ) {
+  if (!is_rooted_milestone_network(traj)) {
+    traj <- traj %>% add_root()
+  }
 
   milestone_network <- traj$milestone_network
   progressions <- traj$progressions
@@ -71,4 +74,20 @@ progressions_one_edge <- function(progressions) {
     arrange(-percentage) %>%
     filter(dplyr::row_number() == 1) %>%
     ungroup()
+}
+
+# check whether the order of the edges of the milestone network
+# is such that you can easily linearise the edges
+is_rooted_milestone_network <- function(traj) {
+  # # does not work yet, e.g.:
+  # # tribble(from = c("a", "b", "d", "c"), to = c("b", "c", "b", "d"))
+  # tibble(
+  #   milestone_id = unique(c(milestone_network$from, milestone_network$to)),
+  #   from = match(milestone_id, milestone_network$from),
+  #   to = match(milestone_id, milestone_network$to),
+  #   ok = is.na(from) | is.na(to) | from >= to
+  # ) %>%
+  #   pull(ok) %>%
+  #   all()
+  "root_milestone_id" %in% names(traj)
 }
