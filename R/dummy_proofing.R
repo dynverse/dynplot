@@ -11,8 +11,7 @@ check_pseudotime <- function(traj, pseudotime) {
 }
 
 check_feature <- function(expression, feature_oi) {
-  if (is.null(feature_oi)) {stop("Provide feature_oi")}
-  if (!feature_oi %in% colnames(expression)) {stop("feature not found in expression")}
+  assert_that(!is.null(feature_oi), feature_oi %all_in% colnames(expression))
   feature_oi
 }
 
