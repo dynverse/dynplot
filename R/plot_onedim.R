@@ -19,8 +19,6 @@ plot_onedim <- dynutils::inherit_default_params(
   function(
     traj,
     color_cells,
-    milestone_network = traj$milestone_network,
-    progressions = traj$progressions,
     grouping,
     groups,
     feature_oi,
@@ -31,11 +29,14 @@ plot_onedim <- dynutils::inherit_default_params(
     milestone_percentages,
     orientation = 1,
     margin = 0.05,
-    linearised = linearise_cells(milestone_network, progressions, margin, one_edge = TRUE),
+    linearised = linearise_cells(traj$milestone_network, traj$progressions, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj)
   ) {
+    milestone_network <- traj$milestone_network
+    progressions <- traj$progressions
+
     root <- traj$milestone_network$from[[1]]
 
     linearised <- make_connection_plotdata(linearised)

@@ -5,24 +5,19 @@
 \title{Plot onedim}
 \usage{
 plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"), milestone_network = traj$milestone_network,
-  progressions = traj$progressions, grouping = NULL, groups = NULL,
+  "milestone", "pseudotime"), grouping = NULL, groups = NULL,
   feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", color_milestones = c("auto",
   "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
   milestone_percentages = NULL, orientation = 1, margin = 0.05,
-  linearised = linearise_cells(milestone_network, progressions, margin,
-  one_edge = TRUE), quasirandom_width = 0.2, plot_cells = TRUE,
+  linearised = linearise_cells(traj$milestone_network, traj$progressions,
+  margin, one_edge = TRUE), quasirandom_width = 0.2, plot_cells = TRUE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj))
 }
 \arguments{
 \item{traj}{The trajectory}
 
 \item{color_cells}{How to color the cells}
-
-\item{milestone_network}{Optional, the milestone network}
-
-\item{progressions}{The progressions used to put the cells on the graph}
 
 \item{grouping}{The grouping of the cells}
 
@@ -51,6 +46,10 @@ plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{plot_cells}{Whether to plot the cells}
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
+
+\item{milestone_network}{Optional, the milestone network}
+
+\item{progressions}{The progressions used to put the cells on the graph}
 }
 \description{
 Plot onedim
