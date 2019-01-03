@@ -58,8 +58,7 @@ plot_heatmap <- function(
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
-    traj$milestone_network,
-    traj$progressions,
+    traj = traj,
     equal_cell_width = TRUE,
     margin = margin
   )
