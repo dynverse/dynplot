@@ -269,17 +269,18 @@ plot_dimred <- dynutils::inherit_default_params(
         )
 
       # add arrow if directed
-      arrow <- if(any(traj$milestone_network$directed)) {
-        arrow(type = "closed", length = (unit(0.1, "inches")))
-      } else {
-        NULL
-      }
+      arrow <-
+        if (any(traj$milestone_network$directed)) {
+          arrow(type = "closed", length = (unit(0.1, "inches")))
+        } else {
+          NULL
+        }
 
       plot <- plot +
         ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network) +
         ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = arrow)
 
-      if(color_cells == "milestone") {
+      if (color_cells == "milestone") {
         plot <- plot +
           geom_point(color = "black", data = milestone_positions, size = 6) +
           geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = 4)
@@ -303,11 +304,12 @@ plot_dimred <- dynutils::inherit_default_params(
         filter(!is.na(milestone_id))
 
       # add arrow if directed
-      arrow <- if(any(traj$milestone_network$directed)) {
-        arrow(type = "closed", length = (unit(0.1, "inches")))
-      } else {
-        NULL
-      }
+      arrow <-
+        if (any(traj$milestone_network$directed)) {
+          arrow(type = "closed", length = (unit(0.1, "inches")))
+        } else {
+          NULL
+        }
 
       # plot milestones and arrows
       plot <- plot +

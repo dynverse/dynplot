@@ -12,15 +12,15 @@
 #'     expression_source = "expression"
 #'   ) {
 #'     order_cells <- match.arg(order_cells)
-#'     if(order_cells == "auto") {
-#'       if(!is.null(feature_oi)) {
+#'     if (order_cells == "auto") {
+#'       if (!is.null(feature_oi)) {
 #'         order_cells <- "feature"
 #'       } else {
 #'         order_cells <- "pseudotime"
 #'       }
 #'     }
 #'
-#'     if(order_cells == "pseudotime") {
+#'     if (order_cells == "pseudotime") {
 #'       traj <- check_pseudotime(traj, pseudotime)
 #'       cell_positions <- tibble(cell_id = names(traj$pseudotime), y = traj$pseudotime)
 #'       y_scale <- scale_y_continuous("pseudotime")

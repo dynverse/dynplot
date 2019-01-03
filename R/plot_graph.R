@@ -161,7 +161,7 @@ plot_graph <- dynutils::inherit_default_params(
     # label milestones
     label_milestones <- get_milestone_labelling(traj, label_milestones)
 
-    if(length(label_milestones)) {
+    if (length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
         mutate(label = label_milestones[milestone_id]) %>%
         filter(!is.na(label))

@@ -1,6 +1,6 @@
 check_pseudotime <- function(traj, pseudotime) {
-  if(is.null(pseudotime)) {
-    if(!"pseudotime" %in% names(traj)) {
+  if (is.null(pseudotime)) {
+    if (!"pseudotime" %in% names(traj)) {
       message("Pseudotime not provided, will calculate pseudotime from root milestone")
       traj$pseudotime <- dynwrap::calculate_pseudotime(traj)
     }
@@ -11,15 +11,15 @@ check_pseudotime <- function(traj, pseudotime) {
 }
 
 check_feature <- function(expression, feature_oi) {
-  if(is.null(feature_oi)) {stop("Provide feature_oi")}
-  if(!feature_oi %in% colnames(expression)) {stop("feature not found in expression")}
+  if (is.null(feature_oi)) {stop("Provide feature_oi")}
+  if (!feature_oi %in% colnames(expression)) {stop("feature not found in expression")}
   feature_oi
 }
 
 check_features_oi <- function(traj, expression, features_oi, cell_feature_importances = NULL) {
   if (length(features_oi) == 1 & is.numeric(features_oi) & features_oi[1] > 0) {
     # make sure features_oi is not larger than the number of features
-    if(ncol(expression) < features_oi) {features_oi <- ncol(expression)}
+    if (ncol(expression) < features_oi) {features_oi <- ncol(expression)}
 
     message("No features of interest provided, selecting the top ", features_oi, " features automatically")
 

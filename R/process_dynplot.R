@@ -37,7 +37,7 @@ process_dynplot <- function(g, id = NULL, expand = TRUE) {
       legend.key = element_blank()
     )
 
-  if(!is.null(id)) {
+  if (!is.null(id)) {
     g <- g + ggtitle(id)
   }
 

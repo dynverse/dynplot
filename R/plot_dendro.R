@@ -158,11 +158,12 @@ plot_dendro <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # determine arrow
-    arrow <- if(any(traj$milestone_network$directed)) {
-      arrow(type = "closed")
-    } else {
-      NULL
-    }
+    arrow <-
+      if (any(traj$milestone_network$directed)) {
+        arrow(type = "closed")
+      } else {
+        NULL
+      }
 
     # generate layout
     layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)

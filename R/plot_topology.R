@@ -23,7 +23,7 @@ plot_topology <- dynutils::inherit_default_params(
         layout <- "kk"
       } else {
         # tree
-        if(is.null(traj$root_milestone_id)) {
+        if (is.null(traj$root_milestone_id)) {
           traj <- traj %>% add_root()
         }
         layout <- "tree"
@@ -41,11 +41,12 @@ plot_topology <- dynutils::inherit_default_params(
 
     milestone_graph <- igraph::graph_from_data_frame(traj$milestone_network, vertices = milestone_positions %>% select(-x, -y)) %>% as_tbl_graph()
 
-    arrow <- if(any(traj$milestone_network$directed)) {
-      arrow(type = "closed", length = unit(0.4, "cm"))
-    } else {
-      NULL
-    }
+    arrow <-
+      if (any(traj$milestone_network$directed)) {
+        arrow(type = "closed", length = unit(0.4, "cm"))
+      } else {
+        NULL
+      }
 
     ggraph(milestone_graph, "manual", node.positions = milestone_positions) +
       geom_edge_fan() +

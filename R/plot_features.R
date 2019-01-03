@@ -23,7 +23,7 @@ plot_features <- function(
   # process expression
   expression <- get_expression(traj, expression_source)
 
-  if(is.function(scale)) {
+  if (is.function(scale)) {
     expression <- scale(expression)
     y_scale <- scale_y_continuous("expression", breaks = c(0, 1), labels = c("Low", "High"))
   } else if (scale) {

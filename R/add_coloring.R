@@ -9,8 +9,8 @@ add_milestone_coloring <- function(
 ) {
   color_milestones <- match.arg(color_milestones)
 
-  if(color_milestones == "given") {
-    if(!"color" %in% names(milestones)) {
+  if (color_milestones == "given") {
+    if (!"color" %in% names(milestones)) {
       stop("Milestone colors need to be given")
     }
   } else if (color_milestones %in% get_milestone_palette_names()) {
@@ -53,8 +53,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
   ) {
     # check cell coloration
     color_cells <- match.arg(color_cells)
-    if(color_cells == "auto") {
-      if(!is.null(grouping)) {
+    if (color_cells == "auto") {
+      if (!is.null(grouping)) {
         message("Coloring by grouping")
         color_cells <- "grouping"
       } else if (!is.null(feature_oi)) {
@@ -76,7 +76,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       expression <- get_expression(traj, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
-      if(is.null(milestone_percentages)) {
+      if (is.null(milestone_percentages)) {
         message("Using milestone_percentages from traj")
         milestone_percentages <- traj$milestone_percentages
       }
@@ -101,7 +101,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions$color <- "trajectories_are_awesome"
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
-      if(is.null(milestones)) {
+      if (is.null(milestones)) {
         testthat::expect_true(all(milestone_percentages$milestone_id %in% traj$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
         milestones <- tibble(milestone_id = traj$milestone_ids)
       }
@@ -165,7 +165,7 @@ add_density_coloring <- function(
 
   if (color_density == "none") return(list())
 
-  if(any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
+  if (any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
 
   xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
   ylims <- c(min(cell_positions$comp_2), max(cell_positions$comp_2))
@@ -194,7 +194,7 @@ add_density_coloring <- function(
   density_plots <- list()
 
   # calculate specific density
-  if(color_density == "grouping") {
+  if (color_density == "grouping") {
     grouping <- get_grouping(traj, grouping)
     groups <- check_groups(grouping, groups)
 

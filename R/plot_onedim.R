@@ -67,7 +67,7 @@ plot_onedim <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # get x limit
-    max_limit <- if(nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
+    max_limit <- if (nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
 
     # create begin and end milestones
     milestones <-
@@ -92,7 +92,7 @@ plot_onedim <- dynutils::inherit_default_params(
       plot <- plot + geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
 
     # add connections
-    if(nrow(linearised$connections)) {
+    if (nrow(linearised$connections)) {
       plot <- plot + geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_from, 0, xend = x_from, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_to, 0, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666")
@@ -117,7 +117,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # label milestones
     label_milestones <- get_milestone_labelling(traj, label_milestones) %>% discard(is.na)
 
-    if(length(label_milestones)) {
+    if (length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
       milestones_to_label <- milestones %>%
         mutate(label = as.character(label_milestones[milestone_id])) %>%
@@ -139,7 +139,7 @@ plot_onedim <- dynutils::inherit_default_params(
       max_limit <- max_limit + 1
     }
 
-    if(orientation == -1) {
+    if (orientation == -1) {
       plot <- plot + scale_y_reverse(expand = c(0.1, 0), limits = c(max_limit+0.5, min_limit))
     } else {
       plot <- plot + scale_y_continuous(expand = c(0.1, 0), limits = c(min_limit, max_limit+0.5))

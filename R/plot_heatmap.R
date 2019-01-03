@@ -37,7 +37,7 @@ plot_heatmap <- function(
   # process expression
   expression <- get_expression(traj, expression_source)
 
-  if(is.function(scale)) {
+  if (is.function(scale)) {
     expression <- scale(expression)
   } else if (is.logical(scale) && scale) {
     expression <- dynutils::scale_quantile(expression)
@@ -51,7 +51,7 @@ plot_heatmap <- function(
   expression <- expression[, features_oi]
 
   # cluster features
-  if(is.character(clust)) {
+  if (is.character(clust)) {
     clust <- hclust(as.dist(correlation_distance(t(expression))), method = clust)
   }
   feature_order <- colnames(expression)[clust$order]
@@ -72,7 +72,7 @@ plot_heatmap <- function(
     left_join(linearised$progressions, "cell_id")
 
   # check importances
-  if(!is.null(cell_feature_importances)) {
+  if (!is.null(cell_feature_importances)) {
     molten <- left_join(
       molten,
       cell_feature_importances,
