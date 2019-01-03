@@ -35,13 +35,15 @@ plot_features <- function(
 
   # get features oi
   features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)
-  expression <- expression[, features_oi]
+  expression <- expression[, features_oi, drop = FALSE]
 
   # linearise
-  linearised <- linearise_cells(traj, one_edge = TRUE, margin = margin)
+  linearised <- linearise_cells(traj = traj, one_edge = TRUE, margin = margin)
 
   # melt
-  molten <- expression %>% as.data.frame() %>%
+  molten <-
+    expression %>%
+    as.data.frame() %>%
     rownames_to_column("cell_id") %>%
     gather(feature_id, expression, -cell_id)
 
