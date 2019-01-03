@@ -165,8 +165,8 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add milestone colors if necessary
     if ((plot_milestone_network || plot_trajectory) && color_cells == "milestone") {
-      if(is.null(milestones)) {
-        milestones <- add_milestone_coloring(tibble(milestone_id = traj$milestone_ids), color_milestones)
+      if (is.null(milestones)) {
+        milestones <- add_milestone_coloring(tibble(milestone_id = traj$milestone_ids), color_milestones = color_milestones)
       }
     }
 
@@ -188,7 +188,20 @@ plot_dimred <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # calculate density
-    density_plots <- do.call(add_density_coloring, map(names(formals(add_density_coloring)), get, envir = environment()))
+    density_plots <- add_density_coloring(
+      cell_positions = cell_positions,
+      color_density = color_density,
+      traj = traj,
+      grouping = grouping,
+      groups = groups,
+      feature_oi = feature_oi,
+      expression_source = expression_source,
+      padding = padding,
+      nbins = nbins,
+      bw = bw,
+      density_cutoff = density_cutoff,
+      density_cutoff_label = density_cutoff_label
+    )
 
     # base plot without cells
     plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
@@ -355,7 +368,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # add milestone labels
     # the positions of the milestones are calculated in the previous sections
     label_milestones <- get_milestone_labelling(traj, label_milestones)
-    if((plot_trajectory || plot_milestone_network) && length(label_milestones)) {
+    if ((plot_trajectory || plot_milestone_network) && length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
         mutate(label = label_milestones[milestone_id]) %>%
         filter(!is.na(label))
