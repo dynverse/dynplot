@@ -1,20 +1,22 @@
 #' Linearise a trajectory
 #'
-#' @param milestone_network The milestone network
-#' @param progressions The progressions
+#' @param traj The trajectory
 #' @param margin The margin to add
 #' @param no_margin_between_linear Whether to add a margin only when
 #' @param one_edge If TRUE, assigns each cell to one edge only
 #' @param equal_cell_width if TRUE, will give each cell equal width
 linearise_cells <- function(
-  milestone_network,
-  progressions,
+  traj,
   margin = 0.05,
   no_margin_between_linear = TRUE,
   one_edge = FALSE,
   equal_cell_width = FALSE
 ) {
-  if(one_edge | equal_cell_width) {
+
+  milestone_network <- traj$milestone_network
+  progressions <- traj$progressions
+
+  if (one_edge | equal_cell_width) {
     progressions <- progressions_one_edge(progressions)
   }
 

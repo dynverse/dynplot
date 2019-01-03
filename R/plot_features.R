@@ -38,7 +38,7 @@ plot_features <- function(
   expression <- expression[, features_oi]
 
   # linearise
-  linearised <- linearise_cells(traj$milestone_network, traj$progressions, one_edge = TRUE, margin = margin)
+  linearised <- linearise_cells(traj, one_edge = TRUE, margin = margin)
 
   # melt
   molten <- expression %>% as.data.frame() %>%
