@@ -143,7 +143,11 @@ plot_dimred <- dynutils::inherit_default_params(
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones, milestone_percentages)
+    milestones <- check_milestones(
+      traj = traj,
+      milestones = milestones,
+      milestone_percentages = milestone_percentages
+    )
 
     # get dimensionality reduction from trajectory
     dimred <- get_dimred(
@@ -165,8 +169,8 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add milestone colors if necessary
     if ((plot_milestone_network || plot_trajectory) && color_cells == "milestone") {
-      if (is.null(milestones)) {
-        milestones <- add_milestone_coloring(tibble(milestone_id = traj$milestone_ids), color_milestones = color_milestones)
+      if (!"color" %in% milestones) {
+        milestones <- add_milestone_coloring(milestones, color_milestones = color_milestones)
       }
     }
 
