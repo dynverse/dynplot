@@ -12,6 +12,7 @@ LazyData: true
 RoxygenNote: 6.1.0
 SystemRequirements: libudunits2-dev (deb) or udunits2-devel (rpm)
 Imports:
+  assertthat,
   cowplot,
   dplyr,
   dynutils,

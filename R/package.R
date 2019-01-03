@@ -10,6 +10,7 @@
 #' @import dynwrap
 #' @import dyndimred
 #' @import purrr
+#' @import assertthat
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #'
 #' @docType package
