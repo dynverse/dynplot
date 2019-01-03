@@ -37,7 +37,7 @@ plot_onedim <- dynutils::inherit_default_params(
     milestone_network <- traj$milestone_network
     progressions <- traj$progressions
 
-    root <- traj$milestone_network$from[[1]]
+    root <- linearised$milestone_network$from[[1]]
 
     linearised <- make_connection_plotdata(linearised)
 
