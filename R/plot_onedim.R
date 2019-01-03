@@ -68,8 +68,6 @@ plot_onedim <- dynutils::inherit_default_params(
         end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
       )
 
-
-
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
       theme_graph() +
