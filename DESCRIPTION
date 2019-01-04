@@ -65,7 +65,6 @@ Collate:
     'plot_dendro.R'
     'plot_dimred.R'
     'plot_edge_flips.R'
-    'plot_features.R'
     'plot_generic.R'
     'plot_graph.R'
     'plot_grouped.R'
