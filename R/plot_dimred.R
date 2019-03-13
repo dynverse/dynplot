@@ -297,8 +297,8 @@ plot_dimred <- dynutils::inherit_default_params(
     # add trajectory if requested
     if (plot_trajectory) {
       waypoint_projection <- project_waypoints(
-        traj,
-        cell_positions,
+        traj = traj,
+        cell_positions = cell_positions,
         waypoints = waypoints,
         trajectory_projection_sd = trajectory_projection_sd,
         color_trajectory = color_trajectory

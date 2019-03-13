@@ -152,18 +152,23 @@ plot_heatmap <- function(
   # plot cell information
   # TODO: Allow multiple cell info here, even "external" which does not fit into grouping,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
   if (!is.null(grouping)) {
-    cell_annotation_positions <- linearised$progressions %>%
+    cell_annotation_positions <-
+      linearised$progressions %>%
       add_cell_coloring(
-        "grouping",
+        color_cells = "grouping",
         grouping = grouping,
-        traj = traj
+        traj = traj,
+        groups = mil,
+        milestones = milestones
       )
   } else if (!is.null(milestone_percentages)) {
-    cell_annotation_positions <- linearised$progressions %>%
+    cell_annotation_positions <-
+      linearised$progressions %>%
       add_cell_coloring(
-        "milestone",
+        color_cells = "milestone",
         milestone_percentages = milestone_percentages,
-        traj = traj
+        traj = traj,
+        milestones = milestones
       )
   }
 
