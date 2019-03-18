@@ -174,7 +174,7 @@ plot_heatmap <- function(
         color_cells = "grouping",
         grouping = grouping,
         traj = traj,
-        groups = mil,
+        groups = groups,
         milestones = milestones
       )
   } else if (!is.null(milestone_percentages)) {
