@@ -1,7 +1,5 @@
 #' Plot onedim
 #'
-#' @param milestone_network Optional, the milestone network
-#' @param progressions The progressions used to put the cells on the graph
 #' @param linearised The linearised milestone network and progressions
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells

@@ -82,9 +82,6 @@ plot_dimred(traj, feature_oi = feature_oi)
 ```{r heatmap}
 plot_heatmap(traj)
 ```
-```{r line}
-plot_features(traj)
-```
 
 ## Comparing trajectories
 ```{r}
