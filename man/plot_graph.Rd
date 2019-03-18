@@ -51,4 +51,13 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot a dimensionality reduced trajectory as a 2D graph
 }
+\examples{
+dataset <- dyntoy::generate_trajectory(model = "disconnected")
+plot_graph(dataset)
+plot_graph(dataset, color_cells = "pseudotime")
+plot_graph(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+
+dataset <- dyntoy::generate_trajectory(model = "tree")
+plot_graph(dataset)
+}
 \keyword{plot_trajectory}

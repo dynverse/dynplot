@@ -79,7 +79,11 @@ The lower, the more closely the trajectory will follow the cells}
 Plot the trajectory on dimensionality reduction
 }
 \examples{
-plot_dimred(dynwrap::example_dataset)
+dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
+plot_dimred(dataset)
+plot_dimred(dataset, dimred = dyndimred::dimred_umap(as.matrix(dataset$expression)))
+plot_dimred(dataset, color_cells = "pseudotime")
+plot_dimred(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
 
 }
 \keyword{plot_trajectory}

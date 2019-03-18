@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Plot the traj as a heatmap}
+\title{Plot the expression across a trajectory in a heatmap}
 \usage{
 plot_heatmap(traj, expression_source = "expression", features_oi = 20,
   clust = "ward.D2", margin = 0.02, color_cells = NULL,
@@ -42,10 +42,14 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
-Plot the traj as a heatmap
+When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 }
 \examples{
-plot_heatmap(dynwrap::example_dataset, expression_source = as.matrix(dynwrap::example_dataset$expression))
+dataset <- dyntoy::generate_dataset(model = "linear")
+plot_heatmap(dataset)
+
+dataset <- dyntoy::generate_dataset(model = "bifurcating")
+plot_heatmap(dataset)
 
 }
 \keyword{plot_trajectory}

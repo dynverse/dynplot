@@ -39,4 +39,10 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot a tree trajectory as a dendrogram
 }
+\examples{
+dataset <- dyntoy::generate_trajectory(model = "tree")
+plot_dendro(dataset)
+plot_dendro(dataset, color_cells = "pseudotime")
+plot_dendro(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+}
 \keyword{plot_trajectory}

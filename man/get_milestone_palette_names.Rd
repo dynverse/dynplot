@@ -17,3 +17,4 @@ get_milestone_palette_names()
 \description{
 Get the names of valid color palettes
 }
+\keyword{plot_helpers}

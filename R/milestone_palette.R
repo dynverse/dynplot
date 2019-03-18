@@ -31,7 +31,7 @@ milestone_palette <- function(name, n) {
 
 #' Get the names of valid color palettes
 #'
-#' @kewords plot_helpers
+#' @keywords plot_helpers
 #'
 #' @export
 get_milestone_palette_names <- function() {

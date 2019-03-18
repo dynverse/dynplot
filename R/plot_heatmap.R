@@ -1,4 +1,6 @@
-#' Plot the traj as a heatmap
+#' Plot the expression across a trajectory in a heatmap
+#'
+#' When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 #'
 #' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
 #' @param clust The method to cluster the features, or a hclust object
@@ -15,7 +17,11 @@
 #' @importFrom patchwork wrap_plots
 #'
 #' @examples
-#' plot_heatmap(dynwrap::example_dataset, expression_source = as.matrix(dynwrap::example_dataset$expression))
+#' dataset <- dyntoy::generate_dataset(model = "linear")
+#' plot_heatmap(dataset)
+#'
+#' dataset <- dyntoy::generate_dataset(model = "bifurcating")
+#' plot_heatmap(dataset)
 #'
 #' @export
 plot_heatmap <- function(
@@ -41,6 +47,11 @@ plot_heatmap <- function(
 
   # process expression
   expression <- get_expression(traj, expression_source)
+
+  # convert to regular matrix if sparse
+  if (dynutils::is_sparse(expression)) {
+    expression <- as.matrix(expression)
+  }
 
   if (is.function(scale)) {
     expression <- scale(expression)
