@@ -14,7 +14,6 @@ cache:
 install:
  - use_dynverse_devel
  - install_cran devtools covr
- - install_cran covr
  - install_withdeps
 after_success:
  - R -e 'covr::codecov()'

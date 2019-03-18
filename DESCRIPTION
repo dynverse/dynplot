@@ -43,16 +43,19 @@ Imports:
   viridis
 Suggests:
   cobs,
+  destiny,
   dyntoy,
   knitr,
-  rmarkdown
+  rmarkdown,
+  uwot
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  dynverse/patchwork
+  dynverse/patchwork,
+  jlmelville/uwot
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'

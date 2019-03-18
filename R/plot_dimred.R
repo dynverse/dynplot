@@ -101,7 +101,7 @@ project_waypoints <- function(
 #' @examples
 #' dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
 #' plot_dimred(dataset)
-#' plot_dimred(dataset, dimred = dyndimred::dimred_mds)
+#' plot_dimred(dataset, dimred = dyndimred::dimred_umap)
 #'
 #' dimred <- dyndimred::dimred_dm_destiny(dataset$expression)
 #' plot_dimred(dataset, dimred = dimred)
