@@ -16,7 +16,7 @@ install:
  - install_cran devtools covr
  - install_withdeps
 after_success:
- - - echo codecov is failing? # R -e 'covr::codecov()'
+ - R -e 'covr::codecov()'
 
 jobs:
   include:
