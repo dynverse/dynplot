@@ -102,6 +102,10 @@ project_waypoints <- function(
 #' dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
 #' plot_dimred(dataset)
 #' plot_dimred(dataset, dimred = dyndimred::dimred_umap)
+#'
+#' dimred <- dyndimred::dimred_dm_destiny(dataset$expression)
+#' plot_dimred(dataset, dimred = dimred)
+#'
 #' plot_dimred(dataset, color_cells = "pseudotime")
 #' plot_dimred(dataset, color_density = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
 #'
