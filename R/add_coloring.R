@@ -204,7 +204,7 @@ add_density_coloring <- function(
       select(comp_1, comp_2, group_id) %>%
       nest(comp_1, comp_2, .key = "positions") %>%
       mutate(contour = map2(positions, group_id, function(positions, group_id) {
-        density <- MASS::kde2d(positions[,1], positions[,2], h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
+        density <- MASS::kde2d(positions$comp_1, positions$comp_2, h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
         level <- max(density$z) * density_cutoff
         contour <- with(density, contourLines(x, y, z, levels = level))
         map2_df(contour, seq_along(contour), function(contour, contour_i) {
