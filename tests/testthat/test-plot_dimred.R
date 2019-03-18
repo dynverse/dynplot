@@ -54,16 +54,16 @@ test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
     g <- plot_dimred(dataset, "milestone", dimred = space, plot_trajectory = TRUE)
     expect_ggplot(g)
   })
-#
-#   test_that(paste0("plot_dimred on ", dataset$id, " with milestones from different trajectory"), {
-#     pred <- dynwrap::infer_trajectory(dataset, method = ti_comp1())
-#
-#     g <- plot_dimred(
-#       pred,
-#       color_cells = "milestone",
-#       milestones = dataset$milestone_ids,
-#       milestone_percentages = dataset$milestone_percentages
-#     )
-#     expect_ggplot(g)
-#   })
+
+  test_that(paste0("plot_dimred on ", dataset$id, " with milestones from different trajectory"), {
+    pred <- dynwrap::infer_trajectory(dataset, method = ti_comp1())
+
+    g <- plot_dimred(
+      pred,
+      color_cells = "milestone",
+      milestones = dataset$milestone_ids,
+      milestone_percentages = dataset$milestone_percentages
+    )
+    expect_ggplot(g)
+  })
 })
