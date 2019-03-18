@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_dimred.R
 \name{plot_dimred}
 \alias{plot_dimred}
-\title{Plot the trajectory on dimensionality reduction}
+\title{Plot a trajectory on dimensionality reduction}
 \usage{
 plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"),
@@ -76,7 +76,7 @@ The lower, the more closely the trajectory will follow the cells}
 \item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
 \description{
-Plot the trajectory on dimensionality reduction
+Plot a trajectory on dimensionality reduction
 }
 \examples{
 dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
