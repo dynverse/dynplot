@@ -30,3 +30,16 @@ And to plot the expression and feature importances of many genes along
 the trajectory
 
 ![](.readme_files/heatmap-1.png)<!-- -->
+
+## Latest changes
+
+Check out `news(package = "dynplot")` or [NEWS.md](inst/NEWS.md) for a
+full list of
+changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+### Recent changes in dynplot 1.0.0 (unreleased)
+
+  - Initial release of dynplot
+  - Plotting of trajectories & visual comparisons between trajectories

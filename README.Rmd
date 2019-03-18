@@ -112,3 +112,14 @@ And to plot the expression and feature importances of many genes along the traje
 cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
 plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping = traj$prior_information$grouping_assignment)
 ```
+
+## Latest changes
+
+Check out `news(package = "dynplot")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+```{r news, echo=FALSE, results="asis"}
+dynutils::update_news("dynplot")
+cat(dynutils::recent_news("dynplot"))
+```
