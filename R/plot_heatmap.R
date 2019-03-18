@@ -185,8 +185,8 @@ plot_heatmap <- function(
         milestone_percentages = milestone_percentages,
         traj = traj,
         milestones = milestones
-      )
-  }
+        )
+    }
 
   cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
     geom_point(aes(cumpercentage, 1, color = color)) +

@@ -1,6 +1,8 @@
 context("Test plot_dimred")
 
 test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
+  skip_on_travis()
+
   test_that(paste0("plot_dimred on ", dataset$id), {
     g <- plot_dimred(dataset)
     expect_ggplot(g)
