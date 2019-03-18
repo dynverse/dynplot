@@ -50,4 +50,12 @@ plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot onedim
 }
+\examples{
+dataset <- dyntoy::generate_trajectory(model = "linear")
+plot_onedim(dataset)
+plot_onedim(dataset, label_milestones = TRUE)
+
+dataset <- dyntoy::generate_trajectory(model = "tree")
+plot_onedim(dataset)
+}
 \keyword{plot_trajectory}

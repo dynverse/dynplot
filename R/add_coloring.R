@@ -35,6 +35,7 @@ formals(add_milestone_coloring)$color_milestones <- unique(c("auto", "given", ge
 #' @param expression_source Source of the feature expression, defaults to `expression`
 #' @param pseudotime The pseudotime
 #' @param milestone_percentages The milestone percentages
+#'
 #' @inheritParams add_milestone_coloring
 add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,

@@ -1,4 +1,4 @@
-#' Plot a tree trajectory as a dendrogram
+#' Plot a trajectory as a dendrogram
 #'
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @param y_offset The size of the quasirandom cell spreading in the y-axis

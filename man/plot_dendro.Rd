@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_dendro.R
 \name{plot_dendro}
 \alias{plot_dendro}
-\title{Plot a tree trajectory as a dendrogram}
+\title{Plot a trajectory as a dendrogram}
 \usage{
 plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), grouping = NULL, groups = NULL,
@@ -37,7 +37,7 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{y_offset}{The size of the quasirandom cell spreading in the y-axis}
 }
 \description{
-Plot a tree trajectory as a dendrogram
+Plot a trajectory as a dendrogram
 }
 \examples{
 dataset <- dyntoy::generate_trajectory(model = "tree")

@@ -14,6 +14,14 @@
 #' @export
 #'
 #' @importFrom ggrepel geom_label_repel
+#'
+#' @examples
+#' dataset <- dyntoy::generate_trajectory(model = "linear")
+#' plot_onedim(dataset)
+#' plot_onedim(dataset, label_milestones = TRUE)
+#'
+#' dataset <- dyntoy::generate_trajectory(model = "tree")
+#' plot_onedim(dataset)
 plot_onedim <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(

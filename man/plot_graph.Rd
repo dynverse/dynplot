@@ -3,7 +3,7 @@
 \name{plot_graph}
 \alias{plot_graph}
 \alias{plot_default}
-\title{Plot a dimensionality reduced trajectory as a 2D graph}
+\title{Plot a trajectory and cellular positions as a graph}
 \usage{
 plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
   "milestone", "pseudotime"), color_milestones = c("auto", "given",
@@ -49,7 +49,7 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
-Plot a dimensionality reduced trajectory as a 2D graph
+Plot a trajectory and cellular positions as a graph
 }
 \examples{
 dataset <- dyntoy::generate_trajectory(model = "disconnected")

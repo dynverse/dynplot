@@ -1,4 +1,4 @@
-#' Plot a dimensionality reduced trajectory as a 2D graph
+#' Plot a trajectory and cellular positions as a graph
 #'
 #' @inheritParams dynwrap::calculate_trajectory_dimred
 #' @inheritParams add_cell_coloring

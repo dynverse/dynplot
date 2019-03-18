@@ -1,4 +1,4 @@
-#' Plotting the topology of a trajectory
+#' Plot the topology of a trajectory
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
@@ -7,6 +7,13 @@
 #' @keywords plot_trajectory
 #'
 #' @export
+#'
+#' @examples
+#' dataset <- dyntoy::generate_trajectory(model = "disconnected")
+#' plot_topology(dataset)
+#'
+#' dataset <- dyntoy::generate_trajectory(model = "tree")
+#' plot_topology(dataset)
 plot_topology <- dynutils::inherit_default_params(
   list(add_milestone_coloring),
   function(

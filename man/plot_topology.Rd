@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_topology.R
 \name{plot_topology}
 \alias{plot_topology}
-\title{Plotting the topology of a trajectory}
+\title{Plot the topology of a trajectory}
 \usage{
 plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix",
   "Set3", "rainbow"), milestones = NULL, layout = NULL)
@@ -17,6 +17,13 @@ plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix",
 \item{layout}{The type of layout to create.}
 }
 \description{
-Plotting the topology of a trajectory
+Plot the topology of a trajectory
+}
+\examples{
+dataset <- dyntoy::generate_trajectory(model = "disconnected")
+plot_topology(dataset)
+
+dataset <- dyntoy::generate_trajectory(model = "tree")
+plot_topology(dataset)
 }
 \keyword{plot_trajectory}

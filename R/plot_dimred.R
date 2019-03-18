@@ -104,6 +104,7 @@ project_waypoints <- function(
 #' plot_dimred(dataset, dimred = dyndimred::dimred_umap(as.matrix(dataset$expression)))
 #' plot_dimred(dataset, color_cells = "pseudotime")
 #' plot_dimred(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+#' plot_dimred(dataset, color_density = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
 #'
 #' @export
 plot_dimred <- dynutils::inherit_default_params(
