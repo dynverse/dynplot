@@ -210,6 +210,7 @@ plot_dimred <- dynutils::inherit_default_params(
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
+
     # calculate density
     density_plots <- add_density_coloring(
       cell_positions = cell_positions,

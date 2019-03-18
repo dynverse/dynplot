@@ -250,10 +250,11 @@ add_density_coloring <- function(
     # plot +
     #   geom_label(aes(comp_1, comp_2, label = group_id, fill = group_id), group_label_positions)
 
-    density_plots$labels <-      ggrepel::geom_label_repel(
+    density_plots$labels <- ggrepel::geom_label_repel(
       aes(comp_1, comp_2, label = group_id, fill = group_id),
       group_label_positions,
-      min.segment.length = Inf
+      min.segment.length = Inf,
+      show.legend = FALSE
     )
 
   } else if (color_density == "feature") {
