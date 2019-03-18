@@ -3,6 +3,9 @@
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @inheritParams ggraph::ggraph
+#'
+#' @keywords plot_trajectory
+#'
 #' @export
 plot_topology <- dynutils::inherit_default_params(
   list(add_milestone_coloring),

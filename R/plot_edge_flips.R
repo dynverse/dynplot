@@ -5,7 +5,11 @@
 #' @param oldadj Old adjacency matrix
 #' @param newadj New adjancency matrix
 #'
+#' @keywords compare_trajectory
+#'
 #' @importFrom cowplot theme_nothing
+#'
+#' @export
 plot_edge_flips <- function(oldadj, newadj) {
   # names are used for generating the network, make sure they are present and unique
   names <- seq_len(nrow(oldadj))

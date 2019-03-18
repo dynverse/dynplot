@@ -39,3 +39,4 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot a tree trajectory as a dendrogram
 }
+\keyword{plot_trajectory}

@@ -7,6 +7,8 @@
 #'
 #' @inheritParams linearise_cells
 #'
+#' @keywords compare_trajectory
+#'
 #' @export
 #' @importFrom patchwork wrap_plots
 #' @export

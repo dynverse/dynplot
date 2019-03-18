@@ -16,3 +16,4 @@ process_dynplot(g, id = NULL, expand = TRUE)
 \description{
 Default theme for TI plots
 }
+\keyword{plot_helpers}

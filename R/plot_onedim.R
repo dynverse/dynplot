@@ -11,6 +11,8 @@
 #' @inheritParams linearise_cells
 #' @inheritParams dynwrap::get_milestone_labelling
 #'
+#' @keywords plot_trajectory
+#'
 #' @export
 #'
 #' @importFrom ggrepel geom_label_repel

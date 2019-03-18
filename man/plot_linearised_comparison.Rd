@@ -21,3 +21,4 @@ plot_linearised_comparison(traj1, traj2, reorder = TRUE, margin = 0.05,
 \description{
 Plot strip onedim
 }
+\keyword{compare_trajectory}

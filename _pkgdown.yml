@@ -1,0 +1,10 @@
+reference:
+  - id: "plot_trajectory"
+    title: "Plot a trajectory"
+    desc: "Plotting a trajectory model"
+  - id: "compare_trajectory"
+    title: "Visually comparing trajectories"
+    desc: "Plots that help you compare two or more trajectories"
+  - id: "plot_helpers"
+    title: "Plotting helper functions"
+    desc: "Plotting helper functions"

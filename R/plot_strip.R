@@ -4,6 +4,8 @@
 #' @param traj2 The second traj
 #' @param reorder Whether to reorder
 #'
+#' @keywords compare_trajectory
+#'
 #' @inheritParams linearise_cells
 #'
 #' @export

@@ -54,3 +54,4 @@ plot_onedim(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot onedim
 }
+\keyword{plot_trajectory}

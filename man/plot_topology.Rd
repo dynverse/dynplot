@@ -19,3 +19,4 @@ plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix",
 \description{
 Plotting the topology of a trajectory
 }
+\keyword{plot_trajectory}

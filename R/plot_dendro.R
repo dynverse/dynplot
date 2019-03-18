@@ -2,7 +2,11 @@
 #'
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @param y_offset The size of the quasirandom cell spreading in the y-axis
+#'
 #' @inheritParams add_cell_coloring
+#'
+#' @keywords plot_trajectory
+#'
 #' @export
 plot_dendro <- dynutils::inherit_default_params(
   add_cell_coloring,

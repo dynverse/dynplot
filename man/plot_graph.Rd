@@ -51,3 +51,4 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 \description{
 Plot a dimensionality reduced trajectory as a 2D graph
 }
+\keyword{plot_trajectory}

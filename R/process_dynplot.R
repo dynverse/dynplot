@@ -4,6 +4,8 @@
 #' @param id The title
 #' @param expand Whether or not to leave space at the borders
 #'
+#' @keywords plot_helpers
+#'
 #' @export
 process_dynplot <- function(g, id = NULL, expand = TRUE) {
   gbl <- ggplot_build(g)$layout

@@ -78,3 +78,8 @@ The lower, the more closely the trajectory will follow the cells}
 \description{
 Plot the trajectory on dimensionality reduction
 }
+\examples{
+plot_dimred(dynwrap::example_dataset)
+
+}
+\keyword{plot_trajectory}

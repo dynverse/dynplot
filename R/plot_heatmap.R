@@ -8,9 +8,14 @@
 #'
 #' @inheritParams plot_onedim
 #'
+#' @keywords plot_trajectory
+#'
 #' @import tidygraph
 #' @import ggraph
 #' @importFrom patchwork wrap_plots
+#'
+#' @examples
+#' plot_heatmap(dynwrap::example_dataset, expression_source = as.matrix(dynwrap::example_dataset$expression))
 #'
 #' @export
 plot_heatmap <- function(

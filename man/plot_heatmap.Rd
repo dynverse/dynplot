@@ -44,3 +44,8 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 \description{
 Plot the traj as a heatmap
 }
+\examples{
+plot_heatmap(dynwrap::example_dataset, expression_source = as.matrix(dynwrap::example_dataset$expression))
+
+}
+\keyword{plot_trajectory}

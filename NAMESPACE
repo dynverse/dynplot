@@ -2,10 +2,12 @@
 
 S3method(plot,"dynwrap::with_expression")
 S3method(plot,"dynwrap::with_trajectory")
+export(empty_plot)
 export(get_milestone_palette_names)
 export(plot_default)
 export(plot_dendro)
 export(plot_dimred)
+export(plot_edge_flips)
 export(plot_graph)
 export(plot_heatmap)
 export(plot_linearised_comparison)

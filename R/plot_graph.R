@@ -15,9 +15,14 @@
 #'
 #' @aliases plot_default
 #'
+#' @keywords plot_trajectory
+#'
 #' @include add_coloring.R
 #'
 #' @export
+#'
+#' @example
+#' plot_graph(dynwrap::example_dataset)
 plot_graph <- dynutils::inherit_default_params(
   list(add_cell_coloring, add_milestone_coloring),
   function(

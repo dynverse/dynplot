@@ -1,5 +1,7 @@
 #' We like our plots clean
 #'
+#' @keywords plot_helpers
+#'
 #' @export
 theme_clean <- function() {
   theme_bw() +
@@ -11,6 +13,8 @@ theme_clean <- function() {
 
 #' We like our plots clean
 #'
+#' @keywords plot_helpers
+#'
 #' @export
 theme_graph <- function() {
   theme_void()
@@ -18,6 +22,10 @@ theme_graph <- function() {
 
 
 #' Create an empty plot for spacing
+#'
+#' @keywords plot_helpers
+#'
+#' @export
 empty_plot <- function() {
   ggplot(tibble(x = character())) + geom_point(aes(x, x)) + theme_graph()
 }

@@ -96,6 +96,11 @@ project_waypoints <- function(
 #' @inheritParams dynwrap::get_dimred
 #' @inheritParams project_waypoints
 #'
+#' @keywords plot_trajectory
+#'
+#' @examples
+#' plot_dimred(dynwrap::example_dataset)
+#'
 #' @export
 plot_dimred <- dynutils::inherit_default_params(
   list(
