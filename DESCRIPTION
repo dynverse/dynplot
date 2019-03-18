@@ -46,16 +46,14 @@ Suggests:
   destiny,
   dyntoy,
   knitr,
-  rmarkdown,
-  uwot
+  rmarkdown
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
   dynverse/dyntoy,
   dynverse/dynfeature,
-  dynverse/patchwork,
-  jlmelville/uwot
+  dynverse/patchwork
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'

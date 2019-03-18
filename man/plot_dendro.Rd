@@ -43,6 +43,10 @@ Plot a trajectory as a dendrogram
 dataset <- dyntoy::generate_trajectory(model = "tree")
 plot_dendro(dataset)
 plot_dendro(dataset, color_cells = "pseudotime")
-plot_dendro(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+plot_dendro(
+  dataset,
+  color_cells = "grouping",
+  grouping = dynwrap::group_onto_nearest_milestones(dataset)
+)
 }
 \keyword{plot_trajectory}

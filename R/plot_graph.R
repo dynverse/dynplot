@@ -25,7 +25,11 @@
 #' dataset <- dyntoy::generate_trajectory(model = "disconnected")
 #' plot_graph(dataset)
 #' plot_graph(dataset, color_cells = "pseudotime")
-#' plot_graph(dataset, color_cells = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+#' plot_graph(
+#'   dataset,
+#'   color_cells = "grouping",
+#'   grouping = dynwrap::group_onto_nearest_milestones(dataset)
+#' )
 #'
 #' dataset <- dyntoy::generate_trajectory(model = "tree")
 #' plot_graph(dataset)

@@ -99,6 +99,7 @@ project_waypoints <- function(
 #' @keywords plot_trajectory
 #'
 #' @examples
+#' \donttest{
 #' dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
 #' plot_dimred(dataset)
 #' plot_dimred(dataset, dimred = dyndimred::dimred_umap)
@@ -107,7 +108,12 @@ project_waypoints <- function(
 #' plot_dimred(dataset, dimred = dimred)
 #'
 #' plot_dimred(dataset, color_cells = "pseudotime")
-#' plot_dimred(dataset, color_density = "grouping", grouping = dynwrap::group_onto_nearest_milestones(dataset))
+#' plot_dimred(
+#'   dataset,
+#'   color_density = "grouping",
+#'   grouping = dynwrap::group_onto_nearest_milestones(dataset)
+#' )
+#' }
 #'
 #' @export
 plot_dimred <- dynutils::inherit_default_params(
