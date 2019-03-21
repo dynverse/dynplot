@@ -42,9 +42,9 @@ traj <- example_bifurcating
 
 traj <- traj %>% add_root()
 grouping <- traj$prior_information$groups_id
-groups <- tibble(group_id = unique(grouping$group_id)) %>% 
+groups <- tibble(dynwrap::group_onto_nearest_milestones(traj)) %>% 
   mutate(color=dynplot:::milestone_palette_list$auto(n()))
-features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
+features_oi <- apply(as.matrix(traj$counts), 2, sd) %>% sort() %>% names() %>% tail(10)
 feature_oi <- features_oi[[10]]
 ```
 
@@ -111,7 +111,7 @@ And to plot the expression and feature importances of many genes along the traje
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
 cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
-plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping = traj$prior_information$grouping_assignment)
+plot_heatmap(traj, grouping = traj$prior_information$grouping_assignment)
 ```
 
 ## Latest changes
@@ -121,6 +121,6 @@ Check out `news(package = "dynplot")` or [NEWS.md](inst/NEWS.md) for a full list
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news("dynplot")
-cat(dynutils::recent_news("dynplot"))
+dynutils::update_news()
+cat(dynutils::recent_news())
 ```
