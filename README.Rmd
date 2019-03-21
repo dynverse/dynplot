@@ -121,6 +121,6 @@ Check out `news(package = "dynplot")` or [NEWS.md](inst/NEWS.md) for a full list
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news()
+if (file.exists("DESCRIPTION")) dynutils::update_news()
 cat(dynutils::recent_news())
 ```
