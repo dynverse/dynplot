@@ -9,11 +9,11 @@
 #' @export
 #'
 #' @examples
-#' dataset <- dyntoy::generate_trajectory(model = "disconnected")
-#' plot_topology(dataset)
+#' data(example_disconnected)
+#' plot_topology(example_disconnected)
 #'
-#' dataset <- dyntoy::generate_trajectory(model = "tree")
-#' plot_topology(dataset)
+#' data(example_tree)
+#' plot_topology(example_tree)
 plot_topology <- dynutils::inherit_default_params(
   list(add_milestone_coloring),
   function(

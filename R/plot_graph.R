@@ -22,17 +22,17 @@
 #' @export
 #'
 #' @examples
-#' dataset <- dyntoy::generate_trajectory(model = "disconnected")
-#' plot_graph(dataset)
-#' plot_graph(dataset, color_cells = "pseudotime")
+#' data(example_disconnected)
+#' plot_graph(example_disconnected)
+#' plot_graph(example_disconnected, color_cells = "pseudotime")
 #' plot_graph(
-#'   dataset,
+#'   example_disconnected,
 #'   color_cells = "grouping",
-#'   grouping = dynwrap::group_onto_nearest_milestones(dataset)
+#'   grouping = dynwrap::group_onto_nearest_milestones(example_disconnected)
 #' )
 #'
-#' dataset <- dyntoy::generate_trajectory(model = "tree")
-#' plot_graph(dataset)
+#' data(example_tree)
+#' plot_graph(example_tree)
 plot_graph <- dynutils::inherit_default_params(
   list(add_cell_coloring, add_milestone_coloring),
   function(

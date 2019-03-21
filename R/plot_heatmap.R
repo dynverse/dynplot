@@ -17,11 +17,11 @@
 #' @importFrom patchwork wrap_plots
 #'
 #' @examples
-#' dataset <- dyntoy::generate_dataset(model = "linear")
-#' plot_heatmap(dataset)
+#' data(example_linear)
+#' plot_heatmap(example_linear)
 #'
-#' dataset <- dyntoy::generate_dataset(model = "bifurcating")
-#' plot_heatmap(dataset)
+#' data(example_bifurcating)
+#' plot_heatmap(example_bifurcating)
 #'
 #' @export
 plot_heatmap <- function(

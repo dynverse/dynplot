@@ -15,7 +15,6 @@ editor_options:
 
 ```{r setup, include = FALSE}
 library(dplyr)
-library(dyntoy)
 library(dynplot)
 library(dynutils)
 library(dynwrap)
@@ -25,7 +24,8 @@ set.seed(3)
 
 Load in a toy dataset
 ```{r}
-traj <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 300) %>% add_root()
+data(example_bifurcating)
+traj <- example_bifurcating
 ```
 
 ## Plotting the topology and cellular positions

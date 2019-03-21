@@ -44,14 +44,12 @@ Imports:
 Suggests:
   cobs,
   destiny,
-  dyntoy,
   knitr,
   rmarkdown
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
-  dynverse/dyntoy,
   dynverse/dynfeature,
   dynverse/patchwork
 VignetteBuilder: knitr

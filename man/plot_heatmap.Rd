@@ -45,11 +45,11 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 }
 \examples{
-dataset <- dyntoy::generate_dataset(model = "linear")
-plot_heatmap(dataset)
+data(example_linear)
+plot_heatmap(example_linear)
 
-dataset <- dyntoy::generate_dataset(model = "bifurcating")
-plot_heatmap(dataset)
+data(example_bifurcating)
+plot_heatmap(example_bifurcating)
 
 }
 \keyword{plot_trajectory}

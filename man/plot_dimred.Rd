@@ -80,18 +80,18 @@ Plot a trajectory on dimensionality reduction
 }
 \examples{
 \donttest{
-dataset <- dyntoy::generate_dataset(model = "bifurcating", num_cells = 500)
-plot_dimred(dataset)
-plot_dimred(dataset, dimred = dyndimred::dimred_umap)
+data(example_bifurcating)
+plot_dimred(example_bifurcating)
+plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
 
-dimred <- dyndimred::dimred_dm_destiny(dataset$expression)
-plot_dimred(dataset, dimred = dimred)
+dimred <- dyndimred::dimred_dm_destiny(example_bifurcating$expression)
+plot_dimred(example_bifurcating, dimred = dimred)
 
-plot_dimred(dataset, color_cells = "pseudotime")
+plot_dimred(example_bifurcating, color_cells = "pseudotime")
 plot_dimred(
-  dataset,
+  example_bifurcating,
   color_density = "grouping",
-  grouping = dynwrap::group_onto_nearest_milestones(dataset)
+  grouping = dynwrap::group_onto_nearest_milestones(example_bifurcating)
 )
 }
 

@@ -15,12 +15,7 @@ save_test <- function(x, name) {
   x
 }
 
-one_of_each_directed <-
-  dyntoy::toy_datasets %>%
-  group_by(trajectory_type) %>%
-  slice(1) %>%
-  ungroup() %>%
-  mutate(id = paste0(trajectory_type, "_directed"))
+one_of_each_directed <- dynutils::list_as_tibble(list(dynplot::example_bifurcating, dynplot::example_linear, dynplot::example_tree, dynplot::example_disconnected))
 
 one_of_each_undirected <-
   one_of_each_directed %>%

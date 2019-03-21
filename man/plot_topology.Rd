@@ -20,10 +20,10 @@ plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix",
 Plot the topology of a trajectory
 }
 \examples{
-dataset <- dyntoy::generate_trajectory(model = "disconnected")
-plot_topology(dataset)
+data(example_disconnected)
+plot_topology(example_disconnected)
 
-dataset <- dyntoy::generate_trajectory(model = "tree")
-plot_topology(dataset)
+data(example_tree)
+plot_topology(example_tree)
 }
 \keyword{plot_trajectory}
