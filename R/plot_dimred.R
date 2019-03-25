@@ -163,14 +163,14 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(
-      traj = traj,
+      traj,
       milestones = milestones,
       milestone_percentages = milestone_percentages
     )
 
     # get dimensionality reduction from trajectory
     dimred <- get_dimred(
-      model = traj,
+      traj,
       dimred = dimred,
       expression_source = expression_source
     )
