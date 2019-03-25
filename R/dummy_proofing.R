@@ -1,10 +1,10 @@
-check_pseudotime <- function(traj, pseudotime) {
+check_pseudotime <- function(trajectory, pseudotime) {
   if (is.null(pseudotime)) {
-    if (!"pseudotime" %in% names(traj)) {
+    if (!"pseudotime" %in% names(trajectory)) {
       message("Pseudotime not provided, will calculate pseudotime from root milestone")
-      traj$pseudotime <- dynwrap::calculate_pseudotime(traj)
+      trajectory$pseudotime <- dynwrap::calculate_pseudotime(trajectory)
     }
-    traj$pseudotime
+    trajectory$pseudotime
   } else {
     pseudotime
   }
@@ -15,7 +15,7 @@ check_feature <- function(expression, feature_oi) {
   feature_oi
 }
 
-check_features_oi <- function(traj, expression, features_oi, cell_feature_importances = NULL) {
+check_features_oi <- function(trajectory, expression, features_oi, cell_feature_importances = NULL) {
   if (length(features_oi) == 1 && is.numeric(features_oi) && features_oi > 0) {
     # make sure features_oi is not larger than the number of features
     if (ncol(expression) < features_oi) {
@@ -39,7 +39,7 @@ check_features_oi <- function(traj, expression, features_oi, cell_feature_import
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
-      dynfeature::calculate_overall_feature_importance(traj, expression = expression) %>%
+      dynfeature::calculate_overall_feature_importance(trajectory, expression = expression) %>%
         top_n(features_oi, importance) %>%
         pull(feature_id) %>%
         as.character()
@@ -62,13 +62,13 @@ check_groups <- function(grouping, groups) {
   groups
 }
 
-check_milestones <- function(traj, milestones, milestone_percentages = NULL) {
+check_milestones <- function(trajectory, milestones, milestone_percentages = NULL) {
   if (is.null(milestones)) {
     # if the milestones is not defined yet -> create it either based on the trajectory or the milestone percentages
     if (!is.null(milestone_percentages)) {
       tibble(milestone_id = unique(milestone_percentages$milestone_id))
     } else {
-      tibble(milestone_id = traj$milestone_ids)
+      tibble(milestone_id = trajectory$milestone_ids)
     }
   } else if (!is.data.frame(milestones) && is.character(milestones)) {
     tibble(milestone_id = milestones)

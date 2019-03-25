@@ -28,7 +28,7 @@ formals(add_milestone_coloring)$color_milestones <- unique(c("auto", "given", ge
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
-#' @param traj The trajectory
+#' @param trajectory The trajectory
 #' @param grouping The grouping of the cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression
@@ -42,7 +42,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
   function(
     cell_positions,
     color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
-    traj,
+    trajectory,
     grouping = NULL,
     groups = NULL,
     feature_oi = NULL,
@@ -72,18 +72,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
     }
     if (color_cells == "grouping") {
-      grouping <- get_grouping(traj, grouping)
+      grouping <- get_grouping(trajectory, grouping)
     } else if (color_cells == "feature") {
-      expression <- get_expression(traj, expression_source)
+      expression <- get_expression(trajectory, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
       if (is.null(milestone_percentages)) {
-        message("Using milestone_percentages from traj")
-        milestone_percentages <- traj$milestone_percentages
+        message("Using milestone_percentages from trajectory")
+        milestone_percentages <- trajectory$milestone_percentages
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
-      pseudotime <- check_pseudotime(traj, pseudotime)
+      pseudotime <- check_pseudotime(trajectory, pseudotime)
       cell_positions$pseudotime <- pseudotime[cell_positions$cell_id]
     }
 
@@ -103,8 +103,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
       if (is.null(milestones)) {
-        testthat::expect_true(all(milestone_percentages$milestone_id %in% traj$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
-        milestones <- tibble(milestone_id = traj$milestone_ids)
+        testthat::expect_true(all(milestone_percentages$milestone_id %in% trajectory$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
+        milestones <- tibble(milestone_id = trajectory$milestone_ids)
       }
       if (!"color" %in% names(milestones)) {
         milestones <- milestones %>% add_milestone_coloring(color_milestones)
@@ -151,7 +151,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
 add_density_coloring <- function(
   cell_positions,
   color_density = c("none", "grouping", "feature"),
-  traj,
+  trajectory,
   grouping = NULL,
   groups = NULL,
   feature_oi = NULL,
@@ -196,7 +196,7 @@ add_density_coloring <- function(
 
   # calculate specific density
   if (color_density == "grouping") {
-    grouping <- get_grouping(traj, grouping)
+    grouping <- get_grouping(trajectory, grouping)
     groups <- check_groups(grouping, groups)
 
     # plot density
@@ -259,7 +259,7 @@ add_density_coloring <- function(
 
   } else if (color_density == "feature") {
     # get expression
-    expression <- get_expression(traj, expression_source)
+    expression <- get_expression(trajectory, expression_source)
     check_feature(expression, feature_oi)
     expression_oi <- expression[, feature_oi]
 

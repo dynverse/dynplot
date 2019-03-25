@@ -6,17 +6,17 @@
 #'
 #' @importFrom stats dnorm
 project_waypoints <- function(
-  traj,
+  trajectory,
   cell_positions,
-  waypoints = dynwrap::select_waypoints(traj),
-  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
+  waypoints = dynwrap::select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
   color_trajectory = "none"
 ) {
   testthat::expect_setequal(cell_positions$cell_id, colnames(waypoints$geodesic_distances))
 
   # project waypoints to dimensionality reduction using kernel and geodesic distances
   # rate <- 5
-  # trajectory_projection_sd <- sum(traj$milestone_network$length) * 0.05
+  # trajectory_projection_sd <- sum(trajectory$milestone_network$length) * 0.05
   # dist_cutoff <- sum(milestone_network$length) * 0.05
   # k <- 3
   # weight_cutoff <- 0.01
@@ -124,12 +124,12 @@ plot_dimred <- dynutils::inherit_default_params(
     project_waypoints
   ),
   function(
-    traj,
+    trajectory,
     color_cells,
-    dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA, ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
-    plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) && !plot_milestone_network,
+    dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
+    plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) && !plot_milestone_network,
     plot_milestone_network = FALSE,
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     alpha_cells = 1,
     size_trajectory = 1,
 
@@ -157,20 +157,20 @@ plot_dimred <- dynutils::inherit_default_params(
     color_trajectory
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     color_cells <- match.arg(color_cells)
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(
-      traj,
+      trajectory,
       milestones = milestones,
       milestone_percentages = milestone_percentages
     )
 
     # get dimensionality reduction from trajectory
     dimred <- get_dimred(
-      traj,
+      trajectory,
       dimred = dimred,
       expression_source = expression_source
     )
@@ -182,7 +182,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # assign cells to closest milestone
     cell_positions <- left_join(
       cell_positions,
-      traj$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(cell_id, milestone_id),
+      trajectory$milestone_percentages %>% group_by(cell_id) %>% arrange(desc(percentage)) %>% filter(dplyr::row_number() == 1) %>% select(cell_id, milestone_id),
       "cell_id"
     )
 
@@ -196,7 +196,7 @@ plot_dimred <- dynutils::inherit_default_params(
     cell_coloring_output <- add_cell_coloring(
       cell_positions = cell_positions,
       color_cells = color_cells,
-      traj = traj,
+      trajectory = trajectory,
       grouping = grouping,
       groups = groups,
       feature_oi = feature_oi,
@@ -215,7 +215,7 @@ plot_dimred <- dynutils::inherit_default_params(
     density_plots <- add_density_coloring(
       cell_positions = cell_positions,
       color_density = color_density,
-      traj = traj,
+      trajectory = trajectory,
       grouping = grouping,
       groups = groups,
       feature_oi = feature_oi,
@@ -255,14 +255,14 @@ plot_dimred <- dynutils::inherit_default_params(
       # add missing groups (if no cells were added)
       milestone_positions <- bind_rows(
         map_df(
-          setdiff(traj$milestone_ids, milestone_positions$milestone_id),
+          setdiff(trajectory$milestone_ids, milestone_positions$milestone_id),
           function(milestone_id) {
             close_milestone_ids <-
               c(
-                traj$milestone_network %>%
+                trajectory$milestone_network %>%
                   filter(from == milestone_id) %>%
                   pull(to),
-                traj$milestone_network %>%
+                trajectory$milestone_network %>%
                   filter(to == milestone_id) %>%
                   pull(from) %>%
                   rep(3)
@@ -278,7 +278,7 @@ plot_dimred <- dynutils::inherit_default_params(
       )
 
       # get milestone network
-      milestone_network <- traj$milestone_network %>%
+      milestone_network <- trajectory$milestone_network %>%
         left_join(
           milestone_positions %>% rename_all(~paste0(., "_from")),
           by = c("from" = "milestone_id_from")
@@ -294,7 +294,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       # add arrow if directed
       arrow <-
-        if (any(traj$milestone_network$directed)) {
+        if (any(trajectory$milestone_network$directed)) {
           arrow(type = "closed", length = (unit(0.1, "inches")))
         } else {
           NULL
@@ -317,7 +317,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # add trajectory if requested
     if (plot_trajectory) {
       waypoint_projection <- project_waypoints(
-        traj = traj,
+        trajectory = trajectory,
         cell_positions = cell_positions,
         waypoints = waypoints,
         trajectory_projection_sd = trajectory_projection_sd,
@@ -329,7 +329,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       # add arrow if directed
       arrow <-
-        if (any(traj$milestone_network$directed)) {
+        if (any(trajectory$milestone_network$directed)) {
           arrow(type = "closed", length = (unit(0.1, "inches")))
         } else {
           NULL
@@ -393,7 +393,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add milestone labels
     # the positions of the milestones are calculated in the previous sections
-    label_milestones <- get_milestone_labelling(traj, label_milestones)
+    label_milestones <- get_milestone_labelling(trajectory, label_milestones)
     if ((plot_trajectory || plot_milestone_network) && length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
         mutate(label = label_milestones[milestone_id]) %>%

@@ -1,23 +1,23 @@
 #' Linearise a trajectory
 #'
-#' @param traj The trajectory
+#' @param trajectory The trajectory
 #' @param margin The margin to add
 #' @param no_margin_between_linear Whether to add a margin only when
 #' @param one_edge If TRUE, assigns each cell to one edge only
 #' @param equal_cell_width if TRUE, will give each cell equal width
 linearise_cells <- function(
-  traj,
+  trajectory,
   margin = 0.05,
   no_margin_between_linear = TRUE,
   one_edge = FALSE,
   equal_cell_width = FALSE
 ) {
-  if (!is_rooted_milestone_network(traj)) {
-    traj <- traj %>% add_root()
+  if (!is_rooted_milestone_network(trajectory)) {
+    trajectory <- trajectory %>% add_root()
   }
 
-  milestone_network <- traj$milestone_network
-  progressions <- traj$progressions
+  milestone_network <- trajectory$milestone_network
+  progressions <- trajectory$progressions
 
   if (one_edge | equal_cell_width) {
     progressions <- progressions_one_edge(progressions)
@@ -78,7 +78,7 @@ progressions_one_edge <- function(progressions) {
 
 # check whether the order of the edges of the milestone network
 # is such that you can easily linearise the edges
-is_rooted_milestone_network <- function(traj) {
+is_rooted_milestone_network <- function(trajectory) {
   # # does not work yet, e.g.:
   # # tribble(from = c("a", "b", "d", "c"), to = c("b", "c", "b", "d"))
   # tibble(
@@ -89,5 +89,5 @@ is_rooted_milestone_network <- function(traj) {
   # ) %>%
   #   pull(ok) %>%
   #   all()
-  "root_milestone_id" %in% names(traj)
+  "root_milestone_id" %in% names(trajectory)
 }

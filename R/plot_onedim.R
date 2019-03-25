@@ -25,7 +25,7 @@
 plot_onedim <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    traj,
+    trajectory,
     color_cells,
     grouping,
     groups,
@@ -37,13 +37,13 @@ plot_onedim <- dynutils::inherit_default_params(
     milestone_percentages,
     orientation = 1,
     margin = 0.05,
-    linearised = linearise_cells(traj, margin, one_edge = TRUE),
+    linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj)
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
   ) {
-    milestone_network <- traj$milestone_network
-    progressions <- traj$progressions
+    milestone_network <- trajectory$milestone_network
+    progressions <- trajectory$progressions
 
     root <- linearised$milestone_network$from[[1]]
 
@@ -55,13 +55,13 @@ plot_onedim <- dynutils::inherit_default_params(
       mutate(y = vipor::offsetX(x, edge_id, method = "quasirandom", width = quasirandom_width))
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(trajectory, milestones)
 
     # add cell coloring
     cell_coloring_output <- add_cell_coloring(
       cell_positions = cell_positions,
       color_cells = color_cells,
-      traj = traj,
+      trajectory = trajectory,
       grouping = grouping,
       groups = groups,
       feature_oi = feature_oi,
@@ -123,7 +123,7 @@ plot_onedim <- dynutils::inherit_default_params(
     # }
 
     # label milestones
-    label_milestones <- get_milestone_labelling(traj, label_milestones) %>% discard(is.na)
+    label_milestones <- get_milestone_labelling(trajectory, label_milestones) %>% discard(is.na)
 
     if (length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position

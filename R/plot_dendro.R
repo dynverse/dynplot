@@ -21,7 +21,7 @@
 plot_dendro <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    traj,
+    trajectory,
     color_cells,
     grouping,
     groups,
@@ -35,24 +35,24 @@ plot_dendro <- dynutils::inherit_default_params(
     y_offset = 0.2
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # root if necessary
-    if ("root_milestone_id" %in% names(traj)) {
-      root <- traj$root_milestone_id
+    if ("root_milestone_id" %in% names(trajectory)) {
+      root <- trajectory$root_milestone_id
     } else {
-      traj <- dynwrap::add_root(traj)
-      root <- traj$root_milestone_id
+      trajectory <- dynwrap::add_root(trajectory)
+      root <- trajectory$root_milestone_id
     }
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(trajectory, milestones)
 
     # make sure every cell is on only one edge
-    traj$progressions <- progressions_one_edge(traj$progressions)
+    trajectory$progressions <- progressions_one_edge(trajectory$progressions)
 
     # convert to graph
-    milestone_network <- traj$milestone_network %>% mutate(edge_id = seq_len(n()))
+    milestone_network <- trajectory$milestone_network %>% mutate(edge_id = seq_len(n()))
     milestone_graph <- milestone_network %>% tidygraph::as_tbl_graph()
 
     # determine leaves & position the leaves evenly
@@ -62,7 +62,7 @@ plot_dendro <- dynutils::inherit_default_params(
     leaves_y <- set_names(seq_along(leaves), leaves)
 
     # get leaves under each node (to get y positions later)
-    descendants <- map(traj$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode = "out", unreachable = F)$order))}) %>% set_names(traj$milestone_ids)
+    descendants <- map(trajectory$milestone_ids, function(milestone_id) {intersect(leaves, names(igraph::dfs(milestone_graph, milestone_id, neimode = "out", unreachable = F)$order))}) %>% set_names(trajectory$milestone_ids)
 
     # calculate diag offset based on largest distances between root and leaf
     max_x <- igraph::distances(milestone_graph, root, leaves, weights = igraph::E(milestone_graph)$length) %>% max
@@ -139,7 +139,7 @@ plot_dendro <- dynutils::inherit_default_params(
     )
 
     # put cells on tree
-    progressions <- traj$progressions %>%
+    progressions <- trajectory$progressions %>%
       group_by(cell_id) %>%
       arrange(percentage) %>%
       filter(dplyr::row_number() == 1) %>%
@@ -158,7 +158,7 @@ plot_dendro <- dynutils::inherit_default_params(
     cell_coloring_output <- add_cell_coloring(
       cell_positions = cell_positions,
       color_cells = color_cells,
-      traj = traj,
+      trajectory = trajectory,
       grouping = grouping,
       groups = groups,
       feature_oi = feature_oi,
@@ -173,7 +173,7 @@ plot_dendro <- dynutils::inherit_default_params(
 
     # determine arrow
     arrow <-
-      if (any(traj$milestone_network$directed)) {
+      if (any(trajectory$milestone_network$directed)) {
         arrow(type = "closed")
       } else {
         NULL

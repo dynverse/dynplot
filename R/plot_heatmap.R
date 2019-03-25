@@ -25,14 +25,14 @@
 #'
 #' @export
 plot_heatmap <- function(
-  traj,
+  trajectory,
   expression_source = "expression",
   features_oi = 20,
   clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
-  milestone_percentages = traj$milestone_percentages,
+  milestone_percentages = trajectory$milestone_percentages,
   grouping = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
@@ -41,12 +41,12 @@ plot_heatmap <- function(
   label_milestones = TRUE
 ) {
   # make sure a trajectory was provided
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
-  expression <- get_expression(traj, expression_source)
+  expression <- get_expression(trajectory, expression_source)
 
   # convert to regular matrix if sparse
   if (dynutils::is_sparse(expression)) {
@@ -60,10 +60,10 @@ plot_heatmap <- function(
   }
 
   # check milestones, make sure it's a data_frame
-  milestones <- check_milestones(traj, milestones)
+  milestones <- check_milestones(trajectory, milestones)
 
   # get features oi
-  features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)
+  features_oi <- check_features_oi(trajectory, expression, features_oi, cell_feature_importances)
   expression <- expression[, features_oi]
 
   # cluster features
@@ -74,7 +74,7 @@ plot_heatmap <- function(
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
-    traj = traj,
+    trajectory = trajectory,
     equal_cell_width = TRUE,
     margin = margin
   )
@@ -140,7 +140,7 @@ plot_heatmap <- function(
 
   # plot one dim
   onedim <- plot_onedim(
-    traj,
+    trajectory,
     linearised = linearised,
     orientation = -1,
     quasirandom_width = 0,
@@ -173,7 +173,7 @@ plot_heatmap <- function(
       add_cell_coloring(
         color_cells = "grouping",
         grouping = grouping,
-        traj = traj,
+        trajectory = trajectory,
         groups = groups,
         milestones = milestones
       )
@@ -183,7 +183,7 @@ plot_heatmap <- function(
       add_cell_coloring(
         color_cells = "milestone",
         milestone_percentages = milestone_percentages,
-        traj = traj,
+        trajectory = trajectory,
         milestones = milestones
         )
     }

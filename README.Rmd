@@ -38,13 +38,13 @@ library(tidyverse)
 library(patchwork)
 
 data(example_bifurcating)
-traj <- example_bifurcating
+trajectory <- example_bifurcating
 
-traj <- traj %>% add_root()
-grouping <- traj$prior_information$groups_id
-groups <- tibble(dynwrap::group_onto_nearest_milestones(traj)) %>% 
+trajectory <- trajectory %>% add_root()
+grouping <- trajectory$prior_information$groups_id
+groups <- tibble(dynwrap::group_onto_nearest_milestones(trajectory)) %>% 
   mutate(color=dynplot:::milestone_palette_list$auto(n()))
-features_oi <- apply(as.matrix(traj$counts), 2, sd) %>% sort() %>% names() %>% tail(10)
+features_oi <- apply(as.matrix(trajectory$counts), 2, sd) %>% sort() %>% names() %>% tail(10)
 feature_oi <- features_oi[[10]]
 ```
 
@@ -65,38 +65,38 @@ title <- list(
 
 dendro <- list(
   empty + geom_label(aes(0, 0, label="Dendrogram")),
-  # plot_dendro(traj),
-  plot_dendro(traj, "milestone"),
-  plot_dendro(traj, grouping=grouping, groups=groups),
-  plot_dendro(traj, feature_oi=feature_oi),
-  plot_dendro(traj, "pseudotime")
+  # plot_dendro(trajectory),
+  plot_dendro(trajectory, "milestone"),
+  plot_dendro(trajectory, grouping=grouping, groups=groups),
+  plot_dendro(trajectory, feature_oi=feature_oi),
+  plot_dendro(trajectory, "pseudotime")
 )
 
 onedim <- list(
     empty + geom_label(aes(0, 0, label="Onedim")),
-    # plot_onedim(traj),
-    plot_onedim(traj, "milestone"),
-    plot_onedim(traj, grouping=grouping, groups=groups),
-    plot_onedim(traj, feature_oi=feature_oi),
-    plot_onedim(traj, "pseudotime")
+    # plot_onedim(trajectory),
+    plot_onedim(trajectory, "milestone"),
+    plot_onedim(trajectory, grouping=grouping, groups=groups),
+    plot_onedim(trajectory, feature_oi=feature_oi),
+    plot_onedim(trajectory, "pseudotime")
   )
 
 graph <- list(
   empty + geom_label(aes(0, 0, label="Graph")),
-  # plot_graph(traj),
-  plot_graph(traj, "milestone"),
-  plot_graph(traj, grouping=grouping, groups=groups),
-  plot_graph(traj, feature_oi=feature_oi),
-  plot_graph(traj, "pseudotime")
+  # plot_graph(trajectory),
+  plot_graph(trajectory, "milestone"),
+  plot_graph(trajectory, grouping=grouping, groups=groups),
+  plot_graph(trajectory, feature_oi=feature_oi),
+  plot_graph(trajectory, "pseudotime")
 )
 
 dimred <- list(
   empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
-  # plot_dimred(traj),
-  plot_dimred(traj, "milestone"),
-  plot_dimred(traj, grouping=grouping, groups=groups),
-  plot_dimred(traj, feature_oi=feature_oi),
-  plot_dimred(traj, "pseudotime")
+  # plot_dimred(trajectory),
+  plot_dimred(trajectory, "milestone"),
+  plot_dimred(trajectory, grouping=grouping, groups=groups),
+  plot_dimred(trajectory, feature_oi=feature_oi),
+  plot_dimred(trajectory, "pseudotime")
 )
 
 wrap_plots(
@@ -110,8 +110,8 @@ wrap_plots(
 And to plot the expression and feature importances of many genes along the trajectory
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
-cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
-plot_heatmap(traj, grouping = traj$prior_information$grouping_assignment)
+cell_feature_importance <- dynfeature::calculate_cell_feature_importance(trajectory %>% dynwrap::add_waypoints())
+plot_heatmap(trajectory, grouping = trajectory$prior_information$grouping_assignment)
 ```
 
 ## Latest changes
