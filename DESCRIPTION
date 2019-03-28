@@ -19,9 +19,9 @@ Imports:
   assertthat,
   cowplot,
   dplyr,
-  dynutils,
+  dynutils (>= 1.0.2),
   dynfeature (>= 1.0.0),
-  dyndimred,
+  dyndimred (>= 1.0.0),
   dynwrap (>= 1.0.0),
   GA,
   ggbeeswarm,
@@ -54,8 +54,7 @@ Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
-  dynverse/dynfeature,
-  dynverse/patchwork
+  dynverse/dynfeature
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
