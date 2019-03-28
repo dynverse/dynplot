@@ -4,11 +4,12 @@
 \alias{linearise_cells}
 \title{Linearise a trajectory}
 \usage{
-linearise_cells(traj, margin = 0.05, no_margin_between_linear = TRUE,
-  one_edge = FALSE, equal_cell_width = FALSE)
+linearise_cells(trajectory, margin = 0.05,
+  no_margin_between_linear = TRUE, one_edge = FALSE,
+  equal_cell_width = FALSE)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{margin}{The margin to add}
 

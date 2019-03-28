@@ -5,7 +5,7 @@
 \title{Add coloring}
 \usage{
 add_cell_coloring(cell_positions, color_cells = c("auto", "none",
-  "grouping", "feature", "milestone", "pseudotime"), traj,
+  "grouping", "feature", "milestone", "pseudotime"), trajectory,
   grouping = NULL, groups = NULL, feature_oi = NULL,
   expression_source = "expression", pseudotime = NULL,
   color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
@@ -16,7 +16,7 @@ add_cell_coloring(cell_positions, color_cells = c("auto", "none",
 
 \item{color_cells}{How to color the cells}
 
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{grouping}{The grouping of the cells}
 

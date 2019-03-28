@@ -4,13 +4,13 @@
 \alias{plot_dimred}
 \title{Plot a trajectory on dimensionality reduction}
 \usage{
-plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"),
-  dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA,
-  ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
-  plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) &&
+plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
+  "feature", "milestone", "pseudotime"),
+  dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA,
+  ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
+  plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) &&
   !plot_milestone_network, plot_milestone_network = FALSE,
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   alpha_cells = 1, size_trajectory = 1, grouping = NULL,
   groups = NULL, feature_oi = NULL, color_milestones = c("auto",
   "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
@@ -18,12 +18,12 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   expression_source = "expression", color_density = c("none",
   "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
-  waypoints = dynwrap::select_waypoints(traj),
-  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  color_trajectory = "none")
+  waypoints = dynwrap::select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
+  0.05, color_trajectory = "none")
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 

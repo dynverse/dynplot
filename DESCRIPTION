@@ -1,11 +1,13 @@
 Package: dynplot
 Type: Package
 Title: Plotting functions for the dynverse
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "rcannood@gmail.com", role = c("aut")),
-  person("Wouter", "Saelens", email = "wouter.saelens@ugent.be", role = c("aut", "cre")))
-Description: Plot ALL the trajectories!
+  person("Wouter", "Saelens", email = "wouter.saelens@gmail.com", role = c("aut", "cre")))
+Description: Package that create ggplot2 plots of single-cell trajectories. This can be
+            the trajectory topology itself, projected onto a dimensionality reduction,
+            using a heatmap, or a comparison between two trajectories.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
