@@ -13,14 +13,16 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 SystemRequirements: libudunits2-dev (deb) or udunits2-devel (rpm)
+Depends:
+  R (>= 3.0.0)
 Imports:
   assertthat,
   cowplot,
   dplyr,
   dynutils,
-  dynfeature,
+  dynfeature (>= 1.0.0),
   dyndimred,
-  dynwrap,
+  dynwrap (>= 1.0.0),
   GA,
   ggbeeswarm,
   ggplot2 (>= 3.0),
@@ -58,6 +60,7 @@ VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
     'add_coloring.R'
+    'data.R'
     'dummy_proofing.R'
     'is_colour_vector.R'
     'linearise_cells.R'
