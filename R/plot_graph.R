@@ -1,4 +1,4 @@
-#' Plot a dimensionality reduced trajectory as a 2D graph
+#' Plot a trajectory and cellular positions as a graph
 #'
 #' @inheritParams dynwrap::calculate_trajectory_dimred
 #' @inheritParams add_cell_coloring
@@ -15,13 +15,28 @@
 #'
 #' @aliases plot_default
 #'
+#' @keywords plot_trajectory
+#'
 #' @include add_coloring.R
 #'
 #' @export
+#'
+#' @examples
+#' data(example_disconnected)
+#' plot_graph(example_disconnected)
+#' plot_graph(example_disconnected, color_cells = "pseudotime")
+#' plot_graph(
+#'   example_disconnected,
+#'   color_cells = "grouping",
+#'   grouping = dynwrap::group_onto_nearest_milestones(example_disconnected)
+#' )
+#'
+#' data(example_tree)
+#' plot_graph(example_tree)
 plot_graph <- dynutils::inherit_default_params(
   list(add_cell_coloring, add_milestone_coloring),
   function(
-    traj,
+    trajectory,
     color_cells,
     color_milestones,
     grouping,
@@ -34,22 +49,22 @@ plot_graph <- dynutils::inherit_default_params(
     transition_size = 3,
     milestone_size = 5,
     arrow_length = grid::unit(1, "cm"),
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     plot_milestones = FALSE,
     adjust_weights = FALSE
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
-    # TODO: 'milestones', in this function, is both used as the colouring of the cells (which could be from a different traj),
+    # TODO: 'milestones', in this function, is both used as the colouring of the cells (which could be from a different trajectory),
     # and plotting the milestones in the same dimred as the cells.
     # it's so confusing
 
     # check whether object has already been graph-dimredded
-    dimred_traj <- calculate_trajectory_dimred(traj, adjust_weights = adjust_weights)
+    dimred_traj <- calculate_trajectory_dimred(trajectory, adjust_weights = adjust_weights)
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones, milestone_percentages = milestone_percentages)
+    milestones <- check_milestones(trajectory, milestones, milestone_percentages = milestone_percentages)
 
     # add coloring of milestones if not present
     milestones <- add_milestone_coloring(milestones, color_milestones)
@@ -59,7 +74,7 @@ plot_graph <- dynutils::inherit_default_params(
     cell_coloring_output <- add_cell_coloring(
       cell_positions = cell_positions,
       color_cells = color_cells,
-      traj = traj,
+      trajectory = trajectory,
       grouping = grouping,
       groups = groups,
       feature_oi = feature_oi,
@@ -159,9 +174,9 @@ plot_graph <- dynutils::inherit_default_params(
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # label milestones
-    label_milestones <- get_milestone_labelling(traj, label_milestones)
+    label_milestones <- get_milestone_labelling(trajectory, label_milestones)
 
-    if(length(label_milestones)) {
+    if (length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
         mutate(label = label_milestones[milestone_id]) %>%
         filter(!is.na(label))

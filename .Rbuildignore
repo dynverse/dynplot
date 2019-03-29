@@ -8,5 +8,4 @@
 ^\.git$
 ^\.readme_files
 ^README
-fix_ggplot_imports.R
 ^tests

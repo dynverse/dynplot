@@ -14,3 +14,4 @@ plot_edge_flips(oldadj, newadj)
 \description{
 Utility plotting function for analysing the edge-flip metric from dyneval.
 }
+\keyword{compare_trajectory}

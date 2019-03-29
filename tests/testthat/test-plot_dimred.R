@@ -56,7 +56,7 @@ test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
   })
 
   test_that(paste0("plot_dimred on ", dataset$id, " with milestones from different trajectory"), {
-    pred <- dynwrap::infer_trajectory(dataset, method = "comp1")
+    pred <- dynwrap::infer_trajectory(dataset, method = ti_comp1())
 
     g <- plot_dimred(
       pred,

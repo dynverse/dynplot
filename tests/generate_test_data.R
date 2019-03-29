@@ -11,38 +11,49 @@ library(readr, warn.conflicts = FALSE)
 library(dyndimred, warn.conflicts = FALSE)
 
 save_test <- function(x, name) {
-  write_rds(x, paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
+  write_rds(x, paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"), compress = "xz")
   x
 }
 
-toy_datasets_tree_directed <- dyntoy::toy_datasets %>%
-  group_by(trajectory_type) %>%
-  filter(dplyr::row_number() == 1) %>%
-  ungroup() %>%
-  filter(trajectory_type %in% c("directed_linear", "bifurcation", "multifurcation", "rooted_tree", "rooted_binary_tree")) %>%
+one_of_each_directed <- dynutils::list_as_tibble(list(dynplot::example_bifurcating, dynplot::example_linear, dynplot::example_tree, dynplot::example_disconnected))
+
+one_of_each_undirected <-
+  one_of_each_directed %>%
+  mutate(milestone_network = map(milestone_network, function(x) x %>% mutate(directed = FALSE))) %>%
+  mutate(id = paste0(trajectory_type, "_undirected"))
+
+one_of_each <- bind_rows(one_of_each_undirected, one_of_each_directed)
+
+# save tree datasets
+trajtype_sel <- c("linear", "bifurcation", "convergence", "multifurcation", "tree")
+
+one_of_each_directed %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_tree_directed")
 
-toy_datasets_tree_undirected <- toy_datasets_tree_directed %>%
-  mutate(milestone_network = map(milestone_network, function(x) {x$directed <- FALSE;x})) %>%
+one_of_each_undirected %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_tree_undirected")
 
-toy_datasets_tree <- bind_rows(toy_datasets_tree_directed, toy_datasets_tree_undirected) %>%
+one_of_each %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_tree")
 
+# save connected datasets
+trajtype_sel <- c("linear", "bifurcation", "convergence", "multifurcation", "tree", "cycle", "acyclic_graph", "graph")
 
-toy_datasets_connected_directed <- dyntoy::toy_datasets %>%
-  group_by(trajectory_type) %>%
-  filter(dplyr::row_number() == 1) %>% ungroup() %>%
-  filter(trajectory_type != "disconnected_directed_graph") %>%
+one_of_each_directed %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_connected_directed")
 
-toy_datasets_connected_undirected <- toy_datasets_connected_directed %>%
-  mutate(milestone_network = map(milestone_network, function(x) {x$directed <- FALSE;x})) %>%
+one_of_each_undirected %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_connected_undirected")
 
-toy_datasets_connected <- bind_rows(toy_datasets_connected_directed, toy_datasets_connected_undirected) %>%
+one_of_each %>%
+  filter(trajectory_type %in% trajtype_sel) %>%
   save_test("toy_datasets_connected")
 
-
-toy_datasets <- bind_rows(dyntoy::toy_datasets, toy_datasets_connected_undirected) %>%
+# save all datasets
+one_of_each %>%
   save_test("toy_datasets")

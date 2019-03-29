@@ -21,15 +21,18 @@ milestone_palette_list <- list(
   }
 )
 
-#' Wrapper for various palettes
-#'
 #' @param name The name of the palette. Must be one of \code{"cubeHelix"}, \code{"Set3"}, or \code{"rainbow"}.
 #' @param n The number of colours to be in the palette.
+#'
+#' @rdname get_milestone_palette_names
 milestone_palette <- function(name, n) {
   milestone_palette_list[[name]](n)
 }
 
 #' Get the names of valid color palettes
+#'
+#' @keywords plot_helpers
+#'
 #' @export
 get_milestone_palette_names <- function() {
   names(milestone_palette_list)

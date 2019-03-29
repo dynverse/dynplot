@@ -7,6 +7,8 @@
 #'
 #' @inheritParams linearise_cells
 #'
+#' @keywords compare_trajectory
+#'
 #' @export
 #' @importFrom patchwork wrap_plots
 #' @export
@@ -20,14 +22,14 @@ plot_linearised_comparison <- function(traj1, traj2, reorder = TRUE, margin = 0.
   if (reorder) {
     # make sure the order of the milestone_networks stay the same between the connection plots and the strip plots, therefore we already sort them here
     traj1$milestone_network <- optimize_order(traj1$milestone_network)
-    if(reorder_second_by == "mapping") {
+    if (reorder_second_by == "mapping") {
       traj2$milestone_network <- map_order(traj2, traj1)
     } else if (reorder_second_by == "optimization") {
       traj2$milestone_network <- optimize_order(traj2$milestone_network)
     }
   }
 
-  empty_max <- function(x) {if(length(x) > 0) {max(x)} else {0}}
+  empty_max <- function(x) {if (length(x) > 0) {max(x)} else {0}}
 
   strip_plot <- plot_strip(traj1, traj2, reorder = FALSE, margin = margin)
 

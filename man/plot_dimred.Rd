@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot_dimred.R
 \name{plot_dimred}
 \alias{plot_dimred}
-\title{Plot the trajectory on dimensionality reduction}
+\title{Plot a trajectory on dimensionality reduction}
 \usage{
-plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"),
-  dimred = ifelse(dynwrap::is_wrapper_with_dimred(traj), NA,
-  ifelse(length(traj$cell_ids) > 500, dimred_pca, dimred_mds)),
-  plot_trajectory = dynwrap::is_wrapper_with_trajectory(traj) &&
+plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
+  "feature", "milestone", "pseudotime"),
+  dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA,
+  ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
+  plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) &&
   !plot_milestone_network, plot_milestone_network = FALSE,
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   alpha_cells = 1, size_trajectory = 1, grouping = NULL,
   groups = NULL, feature_oi = NULL, color_milestones = c("auto",
   "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
@@ -18,12 +18,12 @@ plot_dimred(traj, color_cells = c("auto", "none", "grouping", "feature",
   expression_source = "expression", color_density = c("none",
   "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
-  waypoints = dynwrap::select_waypoints(traj),
-  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  color_trajectory = "none")
+  waypoints = dynwrap::select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
+  0.05, color_trajectory = "none")
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 
@@ -76,5 +76,24 @@ The lower, the more closely the trajectory will follow the cells}
 \item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
 \description{
-Plot the trajectory on dimensionality reduction
+Plot a trajectory on dimensionality reduction
 }
+\examples{
+\donttest{
+data(example_bifurcating)
+plot_dimred(example_bifurcating)
+plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+
+dimred <- dyndimred::dimred_dm_destiny(example_bifurcating$expression)
+plot_dimred(example_bifurcating, dimred = dimred)
+
+plot_dimred(example_bifurcating, color_cells = "pseudotime")
+plot_dimred(
+  example_bifurcating,
+  color_density = "grouping",
+  grouping = dynwrap::group_onto_nearest_milestones(example_bifurcating)
+)
+}
+
+}
+\keyword{plot_trajectory}

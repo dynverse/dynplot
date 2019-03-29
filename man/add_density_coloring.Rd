@@ -5,7 +5,7 @@
 \title{Color cells using a background density}
 \usage{
 add_density_coloring(cell_positions, color_density = c("none",
-  "grouping", "feature"), traj, grouping = NULL, groups = NULL,
+  "grouping", "feature"), trajectory, grouping = NULL, groups = NULL,
   feature_oi = NULL, expression_source = "expression", padding = 0.1,
   nbins = 1000, bw = 0.2, density_cutoff = 0.3,
   density_cutoff_label = density_cutoff/10)
@@ -15,7 +15,7 @@ add_density_coloring(cell_positions, color_density = c("none",
 
 \item{color_density}{How to color density, can be "none", "grouping", or "feature"}
 
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{grouping}{The grouping of the cells}
 

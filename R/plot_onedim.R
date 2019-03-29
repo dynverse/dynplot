@@ -1,7 +1,5 @@
 #' Plot onedim
 #'
-#' @param milestone_network Optional, the milestone network
-#' @param progressions The progressions used to put the cells on the graph
 #' @param linearised The linearised milestone network and progressions
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
@@ -11,16 +9,24 @@
 #' @inheritParams linearise_cells
 #' @inheritParams dynwrap::get_milestone_labelling
 #'
+#' @keywords plot_trajectory
+#'
 #' @export
 #'
 #' @importFrom ggrepel geom_label_repel
+#'
+#' @examples
+#' data(example_linear)
+#' plot_onedim(example_linear)
+#' plot_onedim(example_linear, label_milestones = TRUE)
+#'
+#' data(example_tree)
+#' plot_onedim(example_tree)
 plot_onedim <- dynutils::inherit_default_params(
   add_cell_coloring,
   function(
-    traj,
+    trajectory,
     color_cells,
-    milestone_network = traj$milestone_network,
-    progressions = traj$progressions,
     grouping,
     groups,
     feature_oi,
@@ -31,12 +37,15 @@ plot_onedim <- dynutils::inherit_default_params(
     milestone_percentages,
     orientation = 1,
     margin = 0.05,
-    linearised = linearise_cells(milestone_network, progressions, margin, one_edge = TRUE),
+    linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj)
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
   ) {
-    root <- traj$milestone_network$from[[1]]
+    milestone_network <- trajectory$milestone_network
+    progressions <- trajectory$progressions
+
+    root <- linearised$milestone_network$from[[1]]
 
     linearised <- make_connection_plotdata(linearised)
 
@@ -46,15 +55,27 @@ plot_onedim <- dynutils::inherit_default_params(
       mutate(y = vipor::offsetX(x, edge_id, method = "quasirandom", width = quasirandom_width))
 
     # check milestones, make sure it's a data_frame
-    milestones <- check_milestones(traj, milestones)
+    milestones <- check_milestones(trajectory, milestones)
 
     # add cell coloring
-    cell_coloring_output <- do.call(add_cell_coloring, map(names(formals(add_cell_coloring)), get, envir = environment()))
+    cell_coloring_output <- add_cell_coloring(
+      cell_positions = cell_positions,
+      color_cells = color_cells,
+      trajectory = trajectory,
+      grouping = grouping,
+      groups = groups,
+      feature_oi = feature_oi,
+      expression_source = expression_source,
+      pseudotime = pseudotime,
+      color_milestones = color_milestones,
+      milestones = milestones,
+      milestone_percentages = milestone_percentages
+    )
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
     # get x limit
-    max_limit <- if(nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
+    max_limit <- if (nrow(linearised$connections)) {max(linearised$connections$level)} else {0}
 
     # create begin and end milestones
     milestones <-
@@ -66,8 +87,6 @@ plot_onedim <- dynutils::inherit_default_params(
         start = milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
         end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
       )
-
-
 
     plot <- ggplot() +
       geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
@@ -81,7 +100,7 @@ plot_onedim <- dynutils::inherit_default_params(
       plot <- plot + geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
 
     # add connections
-    if(nrow(linearised$connections)) {
+    if (nrow(linearised$connections)) {
       plot <- plot + geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_from, 0, xend = x_from, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_to, 0, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666")
@@ -104,9 +123,9 @@ plot_onedim <- dynutils::inherit_default_params(
     # }
 
     # label milestones
-    label_milestones <- get_milestone_labelling(traj, label_milestones) %>% discard(is.na)
+    label_milestones <- get_milestone_labelling(trajectory, label_milestones) %>% discard(is.na)
 
-    if(length(label_milestones)) {
+    if (length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
       milestones_to_label <- milestones %>%
         mutate(label = as.character(label_milestones[milestone_id])) %>%
@@ -128,7 +147,7 @@ plot_onedim <- dynutils::inherit_default_params(
       max_limit <- max_limit + 1
     }
 
-    if(orientation == -1) {
+    if (orientation == -1) {
       plot <- plot + scale_y_reverse(expand = c(0.1, 0), limits = c(max_limit+0.5, min_limit))
     } else {
       plot <- plot + scale_y_continuous(expand = c(0.1, 0), limits = c(min_limit, max_limit+0.5))

@@ -1,23 +1,28 @@
 Package: dynplot
 Type: Package
 Title: Plotting functions for the dynverse
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "rcannood@gmail.com", role = c("aut")),
-  person("Wouter", "Saelens", email = "wouter.saelens@ugent.be", role = c("aut", "cre")))
-Description: Plot ALL the trajectories!
+  person("Wouter", "Saelens", email = "wouter.saelens@gmail.com", role = c("aut", "cre")))
+Description: Package that create ggplot2 plots of single-cell trajectories. This can be
+            the trajectory topology itself, projected onto a dimensionality reduction,
+            using a heatmap, or a comparison between two trajectories.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 SystemRequirements: libudunits2-dev (deb) or udunits2-devel (rpm)
+Depends:
+  R (>= 3.0.0)
 Imports:
+  assertthat,
   cowplot,
   dplyr,
-  dynutils,
-  dynfeature,
-  dyndimred,
-  dynwrap,
+  dynutils (>= 1.0.2),
+  dynfeature (>= 1.0.0),
+  dyndimred (>= 1.0.0),
+  dynwrap (>= 1.0.0),
   GA,
   ggbeeswarm,
   ggplot2 (>= 3.0),
@@ -42,20 +47,20 @@ Imports:
   viridis
 Suggests:
   cobs,
-  dyntoy,
+  destiny,
   knitr,
   rmarkdown
 Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
-  dynverse/dyntoy,
   dynverse/dynfeature,
-  dynverse/patchwork
+  thomasp85/patchwork
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
     'add_coloring.R'
+    'data.R'
     'dummy_proofing.R'
     'is_colour_vector.R'
     'linearise_cells.R'
@@ -64,7 +69,6 @@ Collate:
     'plot_dendro.R'
     'plot_dimred.R'
     'plot_edge_flips.R'
-    'plot_features.R'
     'plot_generic.R'
     'plot_graph.R'
     'plot_grouped.R'
@@ -73,6 +77,5 @@ Collate:
     'plot_onedim.R'
     'plot_strip.R'
     'plot_topology.R'
-    'plot_trajectory_dimred.R'
     'process_dynplot.R'
     'theme_clean.R'
