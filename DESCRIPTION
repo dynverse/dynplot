@@ -54,7 +54,8 @@ Remotes:
   dynverse/dynutils,
   dynverse/dyndimred,
   dynverse/dynwrap,
-  dynverse/dynfeature
+  dynverse/dynfeature,
+  thomasp85/patchwork
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
