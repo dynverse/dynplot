@@ -406,6 +406,6 @@ plot_dimred <- dynutils::inherit_default_params(
     if (!is.null(density_plots$labels))
       plot <- plot + density_plots$labels
 
-    plot
+    plot + coord_equal()
   }
 )
