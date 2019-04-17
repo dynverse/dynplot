@@ -24,6 +24,9 @@ dynplot <- function(dataset) {
     bind_cols(
       tibble(milestone_id = dataset$milestone_ids),
       as.data.frame(dataset$dimred_milestones[dataset$milestone_ids, , drop = FALSE])
+    ) %>%
+    mutate(
+      label = milestone_id
     )
 
   edge_info <-
@@ -79,16 +82,21 @@ geom_cell_point <- function(mapping = NULL, data = NULL, position = "identity",
 #
 # }
 #
-# geom_milestone_text <- function() {
-#
-# }
-#
-geom_milestone_point <- function(mapping = NULL, data = get_milestone_info, position = "identity",
+geom_milestone_label <- function(mapping = NULL, data = get_milestone_info, position = "identity",
                                  show.legend = NA, ...) {
+  mapping <- aesIntersect(mapping, aes_(x=~comp_1, y=~comp_2, label=~label))
+  layer(data = data, mapping = mapping, stat = StatIdentity, geom = GeomLabel,
+        position = position, show.legend = show.legend, inherit.aes = FALSE,
+        params = list(na.rm = FALSE, ...)
+  )
+}
+
+geom_milestone_point <- function(mapping = NULL, data = get_milestone_info, position = "identity",
+                                 show.legend = NA, size = 10, ...) {
   mapping <- aesIntersect(mapping, aes_(x=~comp_1, y=~comp_2))
   layer(data = data, mapping = mapping, stat = StatIdentity, geom = GeomPoint,
         position = position, show.legend = show.legend, inherit.aes = FALSE,
-        params = list(na.rm = FALSE, ...)
+        params = list(na.rm = FALSE, size = size, ...)
   )
 }
 #
