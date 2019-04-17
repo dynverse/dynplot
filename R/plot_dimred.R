@@ -12,6 +12,8 @@ project_waypoints <- function(
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
   color_trajectory = "none"
 ) {
+  assert_that(color_trajectory %in% c("nearest", "none"))
+
   testthat::expect_setequal(cell_positions$cell_id, colnames(waypoints$geodesic_distances))
 
   # project waypoints to dimensionality reduction using kernel and geodesic distances
@@ -87,6 +89,7 @@ project_waypoints <- function(
 #'   The lower, the more closely the trajectory will follow the cells
 #' @param alpha_cells The alpha of the cells
 #' @param size_trajectory The size of the trajectory segments
+#' @param hex_cells When plotting a lot of cells,
 #'
 #'
 #' @inheritParams add_cell_coloring
@@ -132,6 +135,7 @@ plot_dimred <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     alpha_cells = 1,
     size_trajectory = 1,
+    hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, NULL),
 
     # trajectory information
     grouping,
@@ -208,7 +212,6 @@ plot_dimred <- dynutils::inherit_default_params(
     )
 
     cell_positions <- cell_coloring_output$cell_positions
-    color_scale <- cell_coloring_output$color_scale
 
 
     # calculate density
@@ -239,11 +242,29 @@ plot_dimred <- dynutils::inherit_default_params(
       plot <- plot + density_plots$scale
 
     # add cells
-    plot <- plot +
-      geom_point(size = 2.5, color = "black", alpha = alpha_cells) +
-      geom_point(size = 2, color = "white", alpha = 1) + # add this so the black does not shiny through the color if alpha < 1
-      geom_point(aes(color = color), size = 2, alpha = alpha_cells) +
-      color_scale
+    if (is.numeric(hex_cells)) {
+      hex_coordinates <- calculate_hex_coords(cell_positions, hex_cells)
+
+      plot +
+        geom_polygon(
+          aes(group = group, fill = color),
+          data = hex_coordinates,
+        ) +
+        cell_coloring_output$fill_scale
+
+      plot <- plot +
+        geom_polygon(
+          aes(group = group, fill = color),
+          data = hex_coordinates,
+        ) +
+        cell_coloring_output$fill_scale
+    } else {
+      plot <- plot +
+        geom_point(size = 2.5, color = "black", alpha = alpha_cells) +
+        geom_point(size = 2, color = "white", alpha = 1) + # add this so the black does not shine through the color if alpha < 1
+        geom_point(aes(color = color), size = 2, alpha = alpha_cells) +
+        cell_coloring_output$color_scale
+    }
 
     # add milestone network if requested
     if (plot_milestone_network) {
@@ -409,3 +430,55 @@ plot_dimred <- dynutils::inherit_default_params(
     plot + coord_equal()
   }
 )
+
+
+
+
+
+# hex_cells = number of hexes in x or y dimensions
+calculate_hex_coords <- function(cell_positions, hex_cells) {
+  xrange <- range(cell_positions$comp_1)
+  yrange <- range(cell_positions$comp_2)
+
+  # expand the smallest range so that both are equal
+  shape <- diff(xrange) / diff(yrange) * sqrt(3) / 2 * 1.15
+  if(shape > 1) {
+    yrange <- c(yrange[1], yrange[2] + diff(yrange) * (shape - 1))
+  } else {
+    xrange <- c(xrange[1], xrange[2] + diff(xrange) * (1/shape - 1))
+  }
+
+  hexbin <- hexbin::hexbin(
+    cell_positions$comp_1,
+    cell_positions$comp_2,
+    IDs = T,
+    xbins = hex_cells,
+    xbnds = xrange,
+    ybnds = yrange,
+    shape = 1
+  )
+  xy <- hexbin::hcell2xy(hexbin, check.erosion = FALSE)
+
+  cell_positions$bin <- hexbin@cID
+  bin_positions <- cell_positions %>%
+    group_by(bin) %>%
+    summarise(color = last(color)) %>%
+    mutate(
+      comp_1 = xy$x[match(bin, hexbin@cell)],
+      comp_2 = xy$y[match(bin, hexbin@cell)]
+    )
+
+  hexcoords <- hexbin::hexcoords(
+    diff(hexbin@xbnds)/hexbin@xbins / 2,
+    diff(hexbin@xbnds)/hexbin@xbins / sqrt(3) / 2
+  )
+
+  hex_coords <- tibble(
+    comp_1 = rep.int(hexcoords$x, nrow(bin_positions)) + rep(bin_positions$comp_1, each = 6),
+    comp_2 = rep.int(hexcoords$y, nrow(bin_positions)) + rep(bin_positions$comp_2, each = 6),
+    group = rep(seq_len(nrow(bin_positions)), each = 6),
+    color = bin_positions$color[group]
+  )
+
+  hex_coords
+}
