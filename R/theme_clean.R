@@ -29,3 +29,8 @@ theme_graph <- function() {
 empty_plot <- function() {
   ggplot(tibble(x = character())) + geom_point(aes(x, x)) + theme_graph()
 }
+
+
+new_scale <- function(new_aes) {
+  structure(ggplot2::standardise_aes_names(new_aes), class = "new_aes")
+}
