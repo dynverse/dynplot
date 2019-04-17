@@ -135,7 +135,7 @@ plot_dimred <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     alpha_cells = 1,
     size_trajectory = 1,
-    hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, NULL),
+    hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, FALSE),
 
     # trajectory information
     grouping,
