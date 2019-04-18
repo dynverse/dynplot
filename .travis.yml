@@ -19,12 +19,3 @@ install:
  - install_withdeps
 after_success:
  - echo Whyyyyyyy # R -e 'covr::codecov()'
-
-jobs:
-  include:
-    - stage: prepare cache
-      script:
-        - echo Skip
-      after_success:
-        - echo Skip
-    - stage: test
