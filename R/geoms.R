@@ -19,6 +19,10 @@ dynplot <- function(dataset) {
       dataset$cell_info %||% tibble(cell_id = dataset$cell_ids),
       as.data.frame(dataset$dimred[dataset$cell_ids, , drop = FALSE])
     )
+  cell_info_milestone_percentages <- dataset$milestone_percentages %>%
+    nest(-cell_id, .key = "milestone_percentages")
+
+  cell_info <- left_join(cell_info, cell_info_milestone_percentages, "cell_id")
 
   milestone_info <-
     bind_cols(
