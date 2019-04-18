@@ -8,6 +8,8 @@ addons:
     - libudunits2-dev                     # units > ggforce > ggraph > patchwork > dynplot
 before_install:
   - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
+  - install_hdf5
+  - install_dynverse
 cache:
   directories:
     - $HOME/R/Library
