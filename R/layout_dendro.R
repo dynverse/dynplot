@@ -1,3 +1,11 @@
+#' Dendrogram layout of a trajectory
+#'
+#' @inheritParams dynwrap::common_param
+#' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
+#'
+#' @keywords plot_trajectory
+#'
+#' @export
 layout_dendro <- function(trajectory, diag_offset = 0.05) {
   # root if necessary
   if ("root_milestone_id" %in% names(trajectory)) {

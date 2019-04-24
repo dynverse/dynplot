@@ -1,22 +1,33 @@
 GeomCellPoint <- ggproto(
   "GeomCellPoint",
   GeomPoint,
-  default_aes = aesIntersect(GeomPoint$default_aes, aes(color = "black"))
+  default_aes = aesIntersect(GeomPoint$default_aes, aes(color = "grey80"))
 )
+
+#' Plotting cells
+#'
+#' @param mapping Set of aesthetic mappings created by aes().
+#' @param data A function created by [construct_get_cell_info()].
+#' @param show.legend Whether to show a legend for this geom
+#'
+#' @rdname geom_cell
+#'
+#' @export
 geom_cell_point <- function(
     mapping = NULL,
-    data = get_cell_info_constructor(mapping),
-    position = "identity",
-    show.legend = NA,
-    ...
+    data = construct_get_cell_info(),
+    ...,
+    show.legend = NA
   ) {
+  assign("mapping", mapping, envir = environment(data)) # place the mapping in the data environment
+
   mapping <- aesIntersect(mapping, aes_(x=~x, y=~y))
   layer(
     data = data,
     mapping = mapping,
     stat = StatIdentity,
     geom = GeomCellPoint,
-    position = position,
+    position = "identity",
     show.legend = show.legend,
     inherit.aes = FALSE,
     params = list(
@@ -26,11 +37,13 @@ geom_cell_point <- function(
   )
 }
 
+#' @rdname geom_cell
+#' @export
 geom_cell_hex <- function() {
 
 }
 
-get_cell_info_constructor <- function(mapping) {
+construct_get_cell_info <- function() {
   # first parse the mapping to know what to put inside the cell info
   function(data) {
     walk(mapping, function(mapping_element) {

@@ -1,22 +1,31 @@
 GeomTrajectoryConnection <- ggproto(
   "GeomTrajectoryConnection",
   GeomSegment,
-  default_aes = aesIntersect(aes(fill = "grey90", color = "grey70", linetype = "dashed"), GeomPolygon$default_aes)
+  default_aes = aesIntersect(aes(fill = "grey90", color = "grey70", linetype = "dashed"), GeomSegment$default_aes)
 )
 
-
+#' Plotting connections between the same milestones in a trajectory
+#'
+#' @inheritParams ggplot2::geom_segment
+#' @param data A function to get the information on connections, typically [get_connection_info()].
+#'
+#' @export
 geom_trajectory_connection <- function(
   mapping = NULL,
+  ...,
   data = get_connection_info,
-  position = "identity",
-  show.legend = NA,
-  ...
+  show.legend = NA
 ) {
   mapping <- aesIntersect(mapping, aes_(x=~x_from, y=~y_from, xend=~x_to, yend=~y_to))
-  layer(data = data, mapping = mapping, stat = StatIdentity,
-        geom = GeomTrajectoryConnection, position = position, show.legend = show.legend,
-        inherit.aes = FALSE,
-        params = lst(...)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatIdentity,
+    geom = GeomTrajectoryConnection,
+    position = "identity",
+    show.legend = show.legend,
+    inherit.aes = FALSE,
+    params = lst(...)
   )
 }
 

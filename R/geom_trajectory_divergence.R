@@ -4,19 +4,28 @@ GeomTrajectoryDivergence <- ggproto(
   default_aes = aesIntersect(aes(fill = "grey90", color = "grey70", linetype = "dashed"), GeomPolygon$default_aes)
 )
 
-
+#' Plotting the divergence regions of a trajectory
+#'
+#' @inheritParams ggplot2::geom_polygon
+#' @param data A function to get the information on divergences, typically [get_divergence_info()].
+#'
+#' @export
 geom_trajectory_divergence <- function(
   mapping = NULL,
+  ...,
   data = get_divergence_info,
-  position = "identity",
-  show.legend = NA,
-  ...
+  show.legend = NA
 ) {
   mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, group=~triangle_id))
-  layer(data = data, mapping = mapping, stat = StatIdentity,
-        geom = GeomTrajectoryDivergence, position = position, show.legend = show.legend,
-        inherit.aes = FALSE,
-        params = lst(...)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatIdentity,
+    geom = GeomTrajectoryDivergence,
+    position = "identity",
+    show.legend = show.legend,
+    inherit.aes = FALSE,
+    params = lst(...)
   )
 }
 

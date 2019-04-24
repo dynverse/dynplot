@@ -1,7 +1,7 @@
 GeomTrajectorySegments <- ggproto(
   "GeomTrajectorySegments",
   GeomPath,
-  default_aes = aesIntersect(aes(linejoin = "mitre", lineend = "butt"), GeomPath$default_aes),
+  default_aes = aesIntersect(aes(linejoin = "mitre", lineend = "square"), GeomPath$default_aes),
   draw_panel = function(self, data, panel_params, coord, arrow = NULL, arrow_size = 1, shadow = dynplot::shadow(),  ...) {
     original_draw_panel <- GeomPath$draw_panel
 
@@ -53,23 +53,35 @@ GeomTrajectorySegments <- ggproto(
   required_aes = union(GeomPath$required_aes, c("draw_arrow"))
 )
 
-
+#' Plotting individual segments of the trajectory
+#'
+#' @inheritParams ggplot2::geom_segment
+#' @param position_arrow Where to place the arrows within the segments. Typically these are functions created by [position_trajectory_arrows_middle()] or [position_trajectory_arrows_boundaries()].
+#' @param arrow_size The size of the arrow relative to the line size.
+#' @param shadow Shadow specification as created by [shadow()]
+#' @param data A function created by [construct_get_segment_info()].
+#'
+#' @export
 geom_trajectory_segments <- function(
   mapping = NULL,
-  data = construct_get_segment_info(position_arrow),
-  position = "identity",
   position_arrow = position_trajectory_arrows_middle(),
   arrow = ggplot2::arrow(length = ggplot2::unit(0.5, "cm"), type = "closed"),
   arrow_size = 1,
   shadow = if("colour" %in% names(mapping)) {dynplot::shadow()} else {FALSE},
-  show.legend = NA,
-  ...
+  ...,
+  data = construct_get_segment_info(position_arrow),
+  show.legend = NA
   ) {
   mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, group=~edge_id, draw_arrow=~draw_arrow))
-  layer(data = data, mapping = mapping, stat = StatIdentity,
-        geom = GeomTrajectorySegments, position = position, show.legend = show.legend,
-        inherit.aes = FALSE,
-        params = lst(arrow, arrow_size, shadow = shadow, ...)
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = StatIdentity,
+    geom = GeomTrajectorySegments,
+    position = "identity",
+    show.legend = show.legend,
+    inherit.aes = FALSE,
+    params = lst(arrow, arrow_size, shadow = shadow, ...)
   )
 }
 

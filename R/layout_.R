@@ -80,6 +80,8 @@ layout_dimred <- function(dataset) {
       segment_progressions
     ))
   }
+
+  layout
 }
 
 

@@ -1,18 +1,30 @@
 GeomVelocityArrow <- ggproto(
   "GeomVelocityArrow",
   GeomSegment,
-  default_aes = aesIntersect(GeomSegment$default_aes, aes(color = "black"))
+  default_aes = aesIntersect(GeomSegment$default_aes, aes(color = "black")),
+  draw_panel = function(self, data, panel_params, coord, arrow = ggplot2::arrow(length = ggplot2::unit(0.2, "cm"))) {
+    original_draw_panel <- GeomSegment$draw_panel
+    original_draw_panel(data = data, panel_params = panel_params, coord = coord, arrow = arrow)
+  }
 )
 
+#' Plotting velocity
+#'
+#' @inheritParams ggplot2::geom_segment
+#' @param stat Where to place the arrows, such as for every cell ([stat_velocity_cells()]) or using a grid ([stat_velocity_grid()])
+#' @param data A function created by [construct_get_velocity_info()]
+#'
+#'
+#' @rdname geom_velocity
 geom_velocity_arrow <- function(
   mapping = NULL,
-  position = position_velocity_grid(),
-  data = construct_get_velocity_info(position),
-  show.legend = NA,
+  stat = stat_velocity_grid(),
   arrow = ggplot2::arrow(length = ggplot2::unit(0.2, "cm")),
-  ...
+  ...,
+  data = construct_get_velocity_info(stat),
+  show.legend = NA
 ) {
-  mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, xend=~x_projected, yend=~y_project))
+  mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, xend=~x_projected, yend=~y_projected))
   layer(
     data = data,
     mapping = mapping,
@@ -32,7 +44,7 @@ geom_velocity_arrow <- function(
 
 construct_get_velocity_info <- function(position) {
   get_velocity_info <- function(data) {
-    cell_positions <- attr(data, "data")$dataset
+    cell_positions <- attr(data, "data")$cell_info
     assert_that(
       all(c("x", "y", "x_projected", "y_projected") %in% colnames(cell_positions)),
       msg = "This layout does not contain information on velocity"
@@ -61,16 +73,18 @@ embed_arrows_grid <- function(
   cell_positions,
   grid_n = c(15, 15),
   grid_sd = NULL,
-  min_arrow_length = NULL,
   max_arrow_length = NULL,
-  min_cell_mass = 1
+  filter = rlang::quo(mass > max(mass) * 0.1)
 ) {
+  assert_that(is.data.frame(cell_positions))
+  assert_that(all(c("x", "y", "x_projected", "y_projected") %in% colnames(cell_positions)))
+
   grid_w <- grid_n[1]
   grid_h <- grid_n[2]
 
   # calculate grid points
-  range_x <- range(cell_positions[, c("x", "x_projected")])
-  range_y <- range(cell_positions[, c("y", "y_projected")])
+  range_x <- range(unlist(cell_positions[, c("x", "x_projected")]))
+  range_y <- range(unlist(cell_positions[, c("y", "y_projected")]))
   grid_x <- seq(range_x[1],range_x[2],length.out=grid_w)
   grid_y <- seq(range_y[1],range_y[2],length.out=grid_h)
 
@@ -80,22 +94,19 @@ embed_arrows_grid <- function(
   if(is.null(grid_sd)) {
     grid_sd <- sqrt((diff_x)^2 + (diff_y)^2)/3
   }
-  if(is.null(min_arrow_length)) {
-    min_arrow_length <- min(c(diff_x, diff_y)) * 0.05
-  }
   if(is.null(max_arrow_length)) {
     max_arrow_length <- min(c(diff_x, diff_y))
   }
 
   cell_positions_difference <- tibble(
-    x = cell_positions[,"x_projected"] - cell_positions[,"x"],
-    y = cell_positions[,"y_projected"] - cell_positions[,"y"]
+    x = cell_positions$x_projected - cell_positions$x,
+    y = cell_positions$y_projected - cell_positions$y
   )
 
   # calculate for each gaussian the smoothed arrow using a gaussian kernel
-  garrows <- map_dfr(grid_x,function(x) {
+  garrows <- map_dfr(grid_x, function(x) {
     # cell distances and weights to each grid point
-    cd <- sqrt(outer(cell_positions[, "y"],-grid_y,'+')^2 + (x-cell_positions[, "x"])^2)
+    cd <- sqrt(outer(cell_positions$y,-grid_y,'+')^2 + (x-cell_positions$x)^2)
     cw <- dnorm(cd,sd=grid_sd)
 
     # calculate the actual arrow
@@ -105,20 +116,21 @@ embed_arrows_grid <- function(
     gyd <- Matrix::colSums(cw*cell_positions_difference$y)/cws
 
     arrow_length <- sqrt(gxd^2+gyd^2)
-    vg <- gw >= min_cell_mass & arrow_length >= min_arrow_length
 
     tibble(
       x = x,
-      y = grid_y[vg],
-      x_difference = gxd[vg],
-      y_difference = gyd[vg],
-      length = arrow_length[vg],
-      angle = atan2(y_difference, x_difference)
+      y = grid_y,
+      x_difference = gxd,
+      y_difference = gyd,
+      length = arrow_length,
+      angle = atan2(y_difference, x_difference),
+      mass = gw
     )
   })
 
   # postprocess arrow lengths
-  garrows %>%
+  garrows <- garrows %>%
+    filter(rlang::eval_tidy(filter, data = .)) %>%
     mutate(
       norm = max_arrow_length / max(length),
       length = length * norm,
@@ -127,26 +139,29 @@ embed_arrows_grid <- function(
       x_projected = x + x_difference,
       y_projected = y + y_difference,
     )
+
+  arrows <<- garrows
+  garrows
 }
 
 
-position_velocity_cells <- dynutils::inherit_default_params(
+stat_velocity_cells <- dynutils::inherit_default_params(
   list(embed_arrows_cells),
   function(...) {
     list(
       data = function(data) {
-        embed_arrows_cells(attr(data, "data")$cell_positions, ...)
+        embed_arrows_cells(attr(data, "data")$cell_info, ...)
       }
     )
   }
 )
 
-position_velocity_grid <- dynutils::inherit_default_params(
+stat_velocity_grid <- dynutils::inherit_default_params(
   list(embed_arrows_grid),
   function(...) {
     list(
       data = function(data) {
-        embed_arrows_grid(attr(data, "data")$cell_positions, ...)
+        embed_arrows_grid(attr(data, "data")$cell_info, ...)
       }
     )
   }
