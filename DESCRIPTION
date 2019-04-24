@@ -57,3 +57,4 @@ Remotes:
   dynverse/dynfeature,
   thomasp85/patchwork
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
