@@ -1,10 +1,23 @@
 GeomVelocityArrow <- ggproto(
   "GeomVelocityArrow",
   GeomSegment,
-  default_aes = aesIntersect(GeomSegment$default_aes, aes(color = "black")),
+  default_aes = aesIntersect(GeomSegment$default_aes, aes(color = "black", linejoin = "mitre", lineend = "butt", length = 1)),
   draw_panel = function(self, data, panel_params, coord, arrow = ggplot2::arrow(length = ggplot2::unit(0.2, "cm"))) {
     original_draw_panel <- GeomSegment$draw_panel
-    original_draw_panel(data = data, panel_params = panel_params, coord = coord, arrow = arrow)
+#
+#     relative_arrow_size <- dynutils::scale_minmax(data$length)
+#     arrow <- arrow(
+#       length = unit(relative_arrow_size, "cm")
+#     )
+
+    original_draw_panel(
+      data = data,
+      panel_params = panel_params,
+      coord = coord,
+      arrow = arrow,
+      linejoin = data$linejoin[[1]],
+      lineend = data$lineend[[1]]
+    )
   }
 )
 
@@ -24,7 +37,7 @@ geom_velocity_arrow <- function(
   data = construct_get_velocity_info(stat),
   show.legend = NA
 ) {
-  mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, xend=~x_projected, yend=~y_projected))
+  mapping <- aesIntersect(mapping, aes_(x=~x, y=~y, xend=~x_projected, yend=~y_projected, length=~length))
   layer(
     data = data,
     mapping = mapping,
@@ -78,6 +91,12 @@ embed_arrows_grid <- function(
 ) {
   assert_that(is.data.frame(cell_positions))
   assert_that(all(c("x", "y", "x_projected", "y_projected") %in% colnames(cell_positions)))
+
+  if (length(grid_n) == 1) {
+    grid_n <- c(grid_n, grid_n)
+  }
+  assert_that(length(grid_n) == 2)
+  assert_that(all(grid_n > 2))
 
   grid_w <- grid_n[1]
   grid_h <- grid_n[2]
@@ -150,19 +169,43 @@ stat_velocity_cells <- dynutils::inherit_default_params(
   function(...) {
     list(
       data = function(data) {
-        embed_arrows_cells(attr(data, "data")$cell_info, ...)
+        embed_arrows_cells(attr(data, "data")$cell_info)
       }
     )
   }
 )
+formals(stat_velocity_cells) <- formals(embed_arrows_cells)[2:length(formals(embed_arrows_cells))]
 
 stat_velocity_grid <- dynutils::inherit_default_params(
   list(embed_arrows_grid),
   function(...) {
     list(
       data = function(data) {
-        embed_arrows_grid(attr(data, "data")$cell_info, ...)
+        embed_arrows_grid(
+          attr(data, "data")$cell_info,
+          grid_n = grid_n,
+          grid_sd = grid_sd,
+          max_arrow_length = max_arrow_length,
+          filter = filter
+        )
       }
     )
   }
 )
+formals(stat_velocity_grid) <- formals(embed_arrows_grid)[2:length(formals(embed_arrows_grid))]
+
+stat_velocity_random <- dynutils::inherit_default_params(
+  list(embed_arrows_cells),
+  function(sample_n = 100, ...) {
+    list(
+      data = function(data) {
+        embedding <- embed_arrows_cells(
+          attr(data, "data")$cell_info
+        )
+        embedding %>%
+          sample_n(min(nrow(embedding), !!sample_n))
+      }
+    )
+  }
+)
+formals(stat_velocity_random) <- formals(embed_arrows_cells)[2:length(formals(embed_arrows_cells))]

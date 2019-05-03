@@ -30,7 +30,8 @@ calculate_segments_from_edges <- function(edge_positions, n_segments_per_edge = 
 
 
 
-
+#' @export
+#' @keywords layout
 layout_dimred <- function(dataset) {
   layout <- list()
 
@@ -85,7 +86,8 @@ layout_dimred <- function(dataset) {
 }
 
 
-
+#' @export
+#' @keywords layout
 layout_graph <- function(dataset) {
   assert_that(dynwrap::is_wrapper_with_trajectory(dataset))
   trajectory_dimred <- dynwrap::calculate_trajectory_dimred(dataset)
@@ -108,8 +110,9 @@ layout_graph <- function(dataset) {
   layout
 }
 
-
-layout_onedim <- function(dataset, margin = 0.05, equal_cell_width = TRUE) {
+#' @export
+#' @keywords layout
+layout_onedim <- function(dataset, margin = 0.02, equal_cell_width = TRUE) {
   assert_that(dynwrap::is_wrapper_with_trajectory(dataset))
 
   # reorder

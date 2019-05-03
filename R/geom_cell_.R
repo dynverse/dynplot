@@ -44,8 +44,8 @@ geom_cell_hex <- function() {
 }
 
 construct_get_cell_info <- function() {
-  # first parse the mapping to know what to put inside the cell info
   function(data) {
+    # first parse the mapping to know what to put inside the cell info
     walk(mapping, function(mapping_element) {
       assign("data", data, envir = environment(mapping$colour))
     })

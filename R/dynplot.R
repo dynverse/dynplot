@@ -100,6 +100,13 @@ dynplot <- function(
     }
   }
 
+
+  # features ----------------------------------------------------------------
+  if ("feature_positions" %in% names(layout)) {
+    data$feature_info <- layout$feature_positions
+  }
+
+  # finalise ----------------------------------------------------------------
   data$cell_info <- cell_info
   attr(cell_info, "data") <- data
 
