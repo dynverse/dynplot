@@ -70,7 +70,7 @@ plot_graph <- dynutils::inherit_default_params(
     milestones <- add_milestone_coloring(milestones, color_milestones)
 
     # get information of cells
-    cell_positions <- dimred_traj$dimred_cells
+    cell_positions <- dimred_traj$cell_positions
     cell_coloring_output <- add_cell_coloring(
       cell_positions = cell_positions,
       color_cells = color_cells,
