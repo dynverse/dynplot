@@ -90,7 +90,7 @@ plot_graph <- dynutils::inherit_default_params(
 
     # get trajectory dimred
     # add coloring of milestones only if milestone percentages are not given
-    milestone_positions <- dimred_traj$dimred_milestones
+    milestone_positions <- dimred_traj$milestone_positions
     if (cell_coloring_output$color_cells == "milestone") {
       milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     } else {
@@ -98,7 +98,7 @@ plot_graph <- dynutils::inherit_default_params(
     }
 
     # get information of segments
-    dimred_segments <- dimred_traj$dimred_segments
+    dimred_segments <- dimred_traj$edge_positions
 
     # plot the topology
     plot <-
@@ -108,14 +108,14 @@ plot_graph <- dynutils::inherit_default_params(
       # Divergence gray backgrounds
       geom_polygon(
         aes(x = comp_1, y = comp_2, group = triangle_id),
-        dimred_traj$dimred_divergence_polys,
+        dimred_traj$divergence_polygon_positions,
         fill = "#eeeeee"
       ) +
 
       # Divergence dashed lines
       geom_segment(
-        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
-        dimred_traj$dimred_divergence_segments,
+        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
+        dimred_traj$divergence_edge_positions,
         colour = "darkgray",
         linetype = "dashed"
       )
@@ -128,7 +128,7 @@ plot_graph <- dynutils::inherit_default_params(
       # Transition gray border
     plot <- plot +
       geom_segment(
-        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
+        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
         dimred_segments,
         size = transition_size + 2,
         colour = "grey"
@@ -136,7 +136,7 @@ plot_graph <- dynutils::inherit_default_params(
 
       # Transition halfway arrow
       geom_segment(
-        aes(x = from.comp_1, xend = from.comp_1 + (to.comp_1 - from.comp_1) / 1.5, y = from.comp_2, yend = from.comp_2 + (to.comp_2 - from.comp_2) / 1.5),
+        aes(x = comp_1_from, xend = comp_1_from + (comp_1_to - comp_1_from) / 1.5, y = comp_2_from, yend = comp_2_from + (comp_2_to - comp_2_from) / 1.5),
         dimred_segments %>% filter(directed, length > 0),
         size = 1,
         colour = "grey",
@@ -145,7 +145,7 @@ plot_graph <- dynutils::inherit_default_params(
 
       # Transition white tube
       geom_segment(
-        aes(x = from.comp_1, xend = to.comp_1, y = from.comp_2, yend = to.comp_2),
+        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
         dimred_segments,
         size = transition_size,
         colour = "white"
