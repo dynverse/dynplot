@@ -11,10 +11,11 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
   plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) &&
   !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
-  alpha_cells = 1, size_trajectory = 1, grouping = NULL,
-  groups = NULL, feature_oi = NULL, color_milestones = c("auto",
-  "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
-  milestone_percentages = NULL, pseudotime = NULL,
+  alpha_cells = 1, size_trajectory = 1,
+  hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, FALSE),
+  grouping = NULL, groups = NULL, feature_oi = NULL,
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
   expression_source = "expression", color_density = c("none",
   "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
   density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
@@ -38,6 +39,8 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
 \item{alpha_cells}{The alpha of the cells}
 
 \item{size_trajectory}{The size of the trajectory segments}
+
+\item{hex_cells}{When plotting a lot of cells,}
 
 \item{grouping}{The grouping of the cells}
 

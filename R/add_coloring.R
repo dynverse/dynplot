@@ -94,13 +94,16 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions$color <- grouping[match(cell_positions$cell_id, names(grouping))]
 
       color_scale <- scale_color_manual(color_cells, values = set_names(groups$color, groups$group_id), guide = guide_legend(ncol = 5))
+      fill_scale <- scale_fill_manual(color_cells, values = set_names(groups$color, groups$group_id), guide = guide_legend(ncol = 5))
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
       color_scale <- scale_color_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
+      fill_scale <- scale_fill_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
+      fill_scale <- scale_fill_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
       if (is.null(milestones)) {
         testthat::expect_true(all(milestone_percentages$milestone_id %in% trajectory$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
@@ -126,15 +129,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions <- left_join(cell_positions, cell_colors, "cell_id")
 
       color_scale <- scale_color_identity(NULL, guide = "none")
+      fill_scale <- scale_fill_identity(NULL, guide = "none")
     } else if (color_cells == "pseudotime") {
       cell_positions$color <- cell_positions$pseudotime
       color_scale <- viridis::scale_color_viridis("pseudotime")
+      fill_scale <- viridis::scale_fill_viridis("pseudotime")
     } else if (color_cells == "none") {
       cell_positions$color <- "black"
       color_scale <- scale_color_identity()
+      fill_scale <- scale_fill_identity()
     }
 
-    lst(cell_positions, color_scale, color_cells)
+    lst(cell_positions, color_scale, fill_scale, color_cells)
   }
 )
 
