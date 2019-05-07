@@ -159,7 +159,6 @@ embed_arrows_grid <- function(
       y_projected = y + y_difference,
     )
 
-  arrows <<- garrows
   garrows
 }
 
