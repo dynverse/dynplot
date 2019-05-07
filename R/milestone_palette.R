@@ -1,12 +1,12 @@
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom grDevices rainbow
-#' @importFrom shades hue
+#' @importFrom grDevices rainbow rgb2hsv col2rgb
 #' @importFrom rje cubeHelix
 milestone_palette_list <- list(
   cubeHelix = function(n) rje::cubeHelix(n = n),
   Set3 = function(n) {
     cols <- RColorBrewer::brewer.pal(max(3, n), "Set3")[seq_len(n)]
-    cols[order(shades::hue(cols))]
+    hues <- grDevices::rgb2hsv(grDevices::col2rgb(cols))[1, ]
+    cols[order(hues)]
   },
   rainbow = function(n) grDevices::rainbow(n = n),
   auto = function(n) {
