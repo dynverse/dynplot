@@ -12,6 +12,12 @@ project_waypoints <- function(
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
   color_trajectory = "none"
 ) {
+  waypoints$waypoint_network <- waypoints$waypoint_network %>%
+    rename(
+      milestone_id_from = from_milestone_id,
+      milestone_id_to = to_milestone_id
+    )
+
   assert_that(color_trajectory %in% c("nearest", "none"))
 
   testthat::expect_setequal(cell_positions$cell_id, colnames(waypoints$geodesic_distances))
@@ -40,9 +46,9 @@ project_waypoints <- function(
   testthat::expect_equal(colnames(weights), rownames(positions))
 
   # calculate positions
+  matrix_to_tibble <- function(x, rownames_column) {y <- as_tibble(x);y[[rownames_column]] <- rownames(x);y}
   waypoint_positions <- (weights %*% positions) %>%
-    as.data.frame() %>%
-    rownames_to_column("waypoint_id") %>%
+    matrix_to_tibble("waypoint_id") %>%
     left_join(waypoints$waypoints, "waypoint_id")
 
   # add color of closest cell
@@ -57,16 +63,16 @@ project_waypoints <- function(
 
   # positions of different edges
   waypoint_edges <- waypoints$waypoint_network %>%
-    left_join(waypoint_positions %>% rename_all(~paste0(., "_from")), c("from" = "waypoint_id_from")) %>%
-    left_join(waypoint_positions %>% rename_all(~paste0(., "_to")), c("to" = "waypoint_id_to")) %>%
+    left_join(waypoint_positions %>% rename_all(~paste0(., "_from")) %>% select(-milestone_id_from), c("from" = "waypoint_id_from")) %>%
+    left_join(waypoint_positions %>% rename_all(~paste0(., "_to")) %>% select(-milestone_id_to), c("to" = "waypoint_id_to")) %>%
     mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
 
   # add arrows to every milestone to milestone edge
   # an arrow is placed at the waypoint which is in the middle from the start and end
   waypoint_edges <- waypoint_edges %>%
-    group_by(from_milestone_id, to_milestone_id) %>%
+    group_by(milestone_id_from, milestone_id_to) %>%
     mutate(
-      distance_to_center = (comp_1_from - mean(c(max(comp_1_from), min(comp_1_from))))^2 + (comp_2_from - mean(c(max(comp_2_from), min(comp_2_from))))^2,
+      distance_to_center = (comp_1_to - mean(c(max(comp_1_from), min(comp_1_from))))^2 + (comp_2_to - mean(c(max(comp_2_from), min(comp_2_from))))^2,
       arrow = row_number() == which.min(distance_to_center)
     )
 
