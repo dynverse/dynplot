@@ -26,6 +26,7 @@ Imports:
   GA,
   ggbeeswarm,
   ggplot2 (>= 3.0),
+  ggnewscale,
   ggraph,
   ggrepel,
   igraph,
