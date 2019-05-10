@@ -1,4 +1,6 @@
-#' Plot the traj as a heatmap
+#' Plot the expression across a trajectory in a heatmap
+#'
+#' When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 #'
 #' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
 #' @param clust The method to cluster the features, or a hclust object
@@ -8,20 +10,29 @@
 #'
 #' @inheritParams plot_onedim
 #'
+#' @keywords plot_trajectory
+#'
 #' @import tidygraph
 #' @import ggraph
 #' @importFrom patchwork wrap_plots
 #'
+#' @examples
+#' data(example_linear)
+#' plot_heatmap(example_linear)
+#'
+#' data(example_bifurcating)
+#' plot_heatmap(example_bifurcating)
+#'
 #' @export
 plot_heatmap <- function(
-  traj,
+  trajectory,
   expression_source = "expression",
   features_oi = 20,
   clust = "ward.D2",
   margin = 0.02,
   color_cells = NULL,
   milestones = NULL,
-  milestone_percentages = traj$milestone_percentages,
+  milestone_percentages = trajectory$milestone_percentages,
   grouping = NULL,
   groups = NULL,
   cell_feature_importances = NULL,
@@ -30,36 +41,40 @@ plot_heatmap <- function(
   label_milestones = TRUE
 ) {
   # make sure a trajectory was provided
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj))
+  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
   heatmap_type <- match.arg(heatmap_type)
 
   # process expression
-  expression <- get_expression(traj, expression_source)
+  expression <- get_expression(trajectory, expression_source)
 
-  if(is.function(scale)) {
+  # convert to regular matrix if sparse
+  if (dynutils::is_sparse(expression)) {
+    expression <- as.matrix(expression)
+  }
+
+  if (is.function(scale)) {
     expression <- scale(expression)
   } else if (is.logical(scale) && scale) {
     expression <- dynutils::scale_quantile(expression)
   }
 
   # check milestones, make sure it's a data_frame
-  milestones <- check_milestone_data_frame(milestones)
+  milestones <- check_milestones(trajectory, milestones)
 
   # get features oi
-  features_oi <- check_features_oi(traj, expression, features_oi, cell_feature_importances)
+  features_oi <- check_features_oi(trajectory, expression, features_oi, cell_feature_importances)
   expression <- expression[, features_oi]
 
   # cluster features
-  if(is.character(clust)) {
+  if (is.character(clust)) {
     clust <- hclust(as.dist(correlation_distance(t(expression))), method = clust)
   }
   feature_order <- colnames(expression)[clust$order]
 
   # put cells on one edge with equal width per cell
   linearised <- linearise_cells(
-    traj$milestone_network,
-    traj$progressions,
+    trajectory = trajectory,
     equal_cell_width = TRUE,
     margin = margin
   )
@@ -72,7 +87,7 @@ plot_heatmap <- function(
     left_join(linearised$progressions, "cell_id")
 
   # check importances
-  if(!is.null(cell_feature_importances)) {
+  if (!is.null(cell_feature_importances)) {
     molten <- left_join(
       molten,
       cell_feature_importances,
@@ -84,47 +99,48 @@ plot_heatmap <- function(
   x_limits <- c(min(linearised$milestone_network$cumstart) - 1, max(linearised$milestone_network$cumend) + 1)
   y_limits <- c(0.5, length(feature_order) + 0.5)
 
-  if (heatmap_type == "tiled") {
-    if (is.null(cell_feature_importances)) {
-      heatmap <- ggplot(molten) +
-        geom_tile(aes(cumpercentage, feature_position, fill = expression)) +
-        scale_fill_distiller(palette = "RdBu") +
-        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
-        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
-        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
-    } else {
-      heatmap <- ggplot(molten) +
-        # geom_tile(aes(cumpercentage, feature_position, alpha = importance), fill = "black") +
-        geom_rect(aes(xmin = cumpercentage-0.5, xmax = cumpercentage+0.5, ymin = feature_position+scale_minmax(importance)/10*5, ymax = feature_position-scale_minmax(importance)/10*5, fill = expression)) +
-        scale_fill_distiller(palette = "RdBu") +
-        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
-        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
-        scale_alpha_continuous(range = c(0, 1)) +
-        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
+  heatmap <-
+    if (heatmap_type == "tiled") {
+      if (is.null(cell_feature_importances)) {
+        ggplot(molten) +
+          geom_tile(aes(cumpercentage, feature_position, fill = expression)) +
+          scale_fill_distiller(palette = "RdBu") +
+          scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+          scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+          theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
+      } else {
+        ggplot(molten) +
+          # geom_tile(aes(cumpercentage, feature_position, alpha = importance), fill = "black") +
+          geom_rect(aes(xmin = cumpercentage-0.5, xmax = cumpercentage+0.5, ymin = feature_position+scale_minmax(importance)/10*5, ymax = feature_position-scale_minmax(importance)/10*5, fill = expression)) +
+          scale_fill_distiller(palette = "RdBu") +
+          scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+          scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+          scale_alpha_continuous(range = c(0, 1)) +
+          theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
+      }
+    } else if (heatmap_type == "dotted") {
+      if (is.null(cell_feature_importances)) {
+        ggplot(molten) +
+          geom_point(aes(cumpercentage, feature_position, color = expression, size = expression)) +
+          scale_color_distiller(palette = "RdBu") +
+          scale_size_continuous(range = c(0, 6)) +
+          scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+          scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+          theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
+      } else {
+        ggplot(molten) +
+          geom_point(aes(cumpercentage, feature_position, color = expression, size = importance**2)) +
+          scale_color_distiller(palette = "RdBu") +
+          scale_size_continuous(range = c(0, 6)) +
+          scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
+          scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
+          theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
+      }
     }
-  } else if (heatmap_type == "dotted") {
-    if (is.null(cell_feature_importances)) {
-      heatmap <- ggplot(molten) +
-        geom_point(aes(cumpercentage, feature_position, color = expression, size = expression)) +
-        scale_color_distiller(palette = "RdBu") +
-        scale_size_continuous(range = c(0, 6)) +
-        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
-        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
-        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
-    } else {
-      heatmap <- ggplot(molten) +
-        geom_point(aes(cumpercentage, feature_position, color = expression, size = importance**2)) +
-        scale_color_distiller(palette = "RdBu") +
-        scale_size_continuous(range = c(0, 6)) +
-        scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
-        scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
-        theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
-    }
-  }
 
   # plot one dim
   onedim <- plot_onedim(
-    traj,
+    trajectory,
     linearised = linearised,
     orientation = -1,
     quasirandom_width = 0,
@@ -152,20 +168,25 @@ plot_heatmap <- function(
   # plot cell information
   # TODO: Allow multiple cell info here, even "external" which does not fit into grouping,  milestone_percentages or pseudotime. The current solution is only temporary and ugly!
   if (!is.null(grouping)) {
-    cell_annotation_positions <- linearised$progressions %>%
+    cell_annotation_positions <-
+      linearised$progressions %>%
       add_cell_coloring(
-        "grouping",
+        color_cells = "grouping",
         grouping = grouping,
-        traj = traj
+        trajectory = trajectory,
+        groups = groups,
+        milestones = milestones
       )
   } else if (!is.null(milestone_percentages)) {
-    cell_annotation_positions <- linearised$progressions %>%
+    cell_annotation_positions <-
+      linearised$progressions %>%
       add_cell_coloring(
-        "milestone",
+        color_cells = "milestone",
         milestone_percentages = milestone_percentages,
-        traj = traj
-      )
-  }
+        trajectory = trajectory,
+        milestones = milestones
+        )
+    }
 
   cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
     geom_point(aes(cumpercentage, 1, color = color)) +

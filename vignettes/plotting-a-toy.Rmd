@@ -6,91 +6,90 @@ output:
     fig_width: 5
     fig_height: 4 
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{generate_file_from_container(x)}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
 library(dplyr)
-library(dyntoy)
 library(dynplot)
 library(dynutils)
 library(dynwrap)
+
+set.seed(3)
 ```
 
 Load in a toy dataset
 ```{r}
-traj <- dyntoy:::generate_toy_datasets("bifurcating", num_replicates=1) %>% extract_row_to_list(1) %>% add_root()
+data(example_bifurcating)
+trajectory <- example_bifurcating
 ```
 
 ## Plotting the topology and cellular positions
 
 If the topology is very simple (or should be represented in one dimension)
 ```{r onedim}
-plot_onedim(traj)
+plot_onedim(trajectory)
 ```
 
 If the topology is a tree
 ```{r dendro}
-plot_dendro(traj)
+plot_dendro(trajectory)
 ```
 
 If the topology is more complex
 ```{r graph}
-plot_graph(traj)
-
+plot_graph(trajectory)
 ```
 
 ```{r}
-plot_topology(traj, layout = "circle")
+plot_topology(trajectory, layout = "circle")
 ```
 
 ```{r}
-plot_dimred(traj)
+plot_dimred(trajectory)
 ```
 
 ## Plotting a grouping or clustering
 ```{r}
-grouping <- traj$prior_information$grouping_assignment
+grouping <- trajectory$prior_information$groups_id
 ```
 
 ```{r grouping}
-plot_onedim(traj, grouping=grouping)
-plot_dendro(traj, grouping=grouping)
-plot_graph(traj, grouping=grouping)
-plot_dimred(traj, grouping=grouping)
+plot_onedim(trajectory, grouping = grouping)
+plot_dendro(trajectory, grouping = grouping)
+plot_graph(trajectory, grouping = grouping)
+plot_dimred(trajectory, grouping = grouping)
 ```
 
 ## Plotting expression of one feature
 ```{r}
-feature_oi <- first(colnames(traj$counts))
+feature_oi <- first(colnames(trajectory$counts))
 ```
 
 ```{r expression}
-plot_onedim(traj, feature_oi = feature_oi)
-plot_dendro(traj, feature_oi = feature_oi)
-plot_graph(traj, feature_oi = feature_oi)
-plot_dimred(traj, feature_oi = feature_oi)
+plot_onedim(trajectory, feature_oi = feature_oi)
+plot_dendro(trajectory, feature_oi = feature_oi)
+plot_graph(trajectory, feature_oi = feature_oi)
+plot_dimred(trajectory, feature_oi = feature_oi)
 ```
 
 ## Plotting expression of a lot of features
 
 ```{r heatmap}
-plot_heatmap(traj)
+plot_heatmap(trajectory)
 ```
-```{r line}
-# plot_features(traj)
-```
-
-
 
 ## Comparing trajectories
 ```{r}
-pseudotime <- traj$counts %>% prcomp() %>% {.$x[, 1]}
-prediction <- dynwrap::wrap_data("dummy_prediction", traj$cell_ids) %>%
+pseudotime <- trajectory$counts %>% prcomp() %>% {.$x[, 1]}
+prediction <- 
+  dynwrap::wrap_data(id = "dummy_prediction", cell_ids = trajectory$cell_ids) %>%
   dynwrap::add_linear_trajectory(pseudotime)
 
-plot_linearised_comparison(traj, prediction)
+plot_linearised_comparison(trajectory, prediction)
 ```
 

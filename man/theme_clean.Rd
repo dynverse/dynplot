@@ -9,3 +9,4 @@ theme_clean()
 \description{
 We like our plots clean
 }
+\keyword{plot_helpers}

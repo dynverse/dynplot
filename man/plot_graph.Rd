@@ -3,19 +3,20 @@
 \name{plot_graph}
 \alias{plot_graph}
 \alias{plot_default}
-\title{Plot a dimensionality reduced trajectory as a 2D graph}
+\title{Plot a trajectory and cellular positions as a graph}
 \usage{
-plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"), color_milestones = c("auto", "given",
-  "cubeHelix", "Set3", "rainbow"), grouping = NULL, groups = NULL,
-  feature_oi = NULL, pseudotime = NULL, expression_source = "expression",
-  milestones = NULL, milestone_percentages = NULL, transition_size = 3,
+plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
+  "feature", "milestone", "pseudotime"), color_milestones = c("auto",
+  "given", "cubeHelix", "Set3", "rainbow"), grouping = NULL,
+  groups = NULL, feature_oi = NULL, pseudotime = NULL,
+  expression_source = "expression", milestones = NULL,
+  milestone_percentages = NULL, transition_size = 3,
   milestone_size = 5, arrow_length = grid::unit(1, "cm"),
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(traj),
-  plot_milestones = TRUE)
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
+  plot_milestones = FALSE, adjust_weights = FALSE)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
 
 \item{color_cells}{How to color the cells}
 
@@ -44,7 +45,23 @@ plot_graph(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
 \item{plot_milestones}{Whether to plot the milestones.}
+
+\item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
 \description{
-Plot a dimensionality reduced trajectory as a 2D graph
+Plot a trajectory and cellular positions as a graph
 }
+\examples{
+data(example_disconnected)
+plot_graph(example_disconnected)
+plot_graph(example_disconnected, color_cells = "pseudotime")
+plot_graph(
+  example_disconnected,
+  color_cells = "grouping",
+  grouping = dynwrap::group_onto_nearest_milestones(example_disconnected)
+)
+
+data(example_tree)
+plot_graph(example_tree)
+}
+\keyword{plot_trajectory}

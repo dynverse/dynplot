@@ -9,3 +9,4 @@ empty_plot()
 \description{
 Create an empty plot for spacing
 }
+\keyword{plot_helpers}

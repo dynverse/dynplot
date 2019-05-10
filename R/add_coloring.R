@@ -9,11 +9,8 @@ add_milestone_coloring <- function(
 ) {
   color_milestones <- match.arg(color_milestones)
 
-  # check milestones, make sure it's a data_frame
-  milestones <- check_milestone_data_frame(milestones)
-
-  if(color_milestones == "given") {
-    if(!"color" %in% names(milestones)) {
+  if (color_milestones == "given") {
+    if (!"color" %in% names(milestones)) {
       stop("Milestone colors need to be given")
     }
   } else if (color_milestones %in% get_milestone_palette_names()) {
@@ -31,20 +28,21 @@ formals(add_milestone_coloring)$color_milestones <- unique(c("auto", "given", ge
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
-#' @param traj The trajectory
+#' @param trajectory The trajectory
 #' @param grouping The grouping of the cells
 #' @param groups Tibble containing information of the cell groups
 #' @param feature_oi feature to plot expression
 #' @param expression_source Source of the feature expression, defaults to `expression`
 #' @param pseudotime The pseudotime
 #' @param milestone_percentages The milestone percentages
+#'
 #' @inheritParams add_milestone_coloring
 add_cell_coloring <- dynutils::inherit_default_params(
   add_milestone_coloring,
   function(
     cell_positions,
     color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
-    traj,
+    trajectory,
     grouping = NULL,
     groups = NULL,
     feature_oi = NULL,
@@ -56,8 +54,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
   ) {
     # check cell coloration
     color_cells <- match.arg(color_cells)
-    if(color_cells == "auto") {
-      if(!is.null(grouping)) {
+    if (color_cells == "auto") {
+      if (!is.null(grouping)) {
         message("Coloring by grouping")
         color_cells <- "grouping"
       } else if (!is.null(feature_oi)) {
@@ -74,19 +72,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
       }
     }
     if (color_cells == "grouping") {
-      if(is.null(grouping)) {stop("Provide grouping")}
-      grouping <- get_grouping(traj, grouping)
+      grouping <- get_grouping(trajectory, grouping)
     } else if (color_cells == "feature") {
-      expression <- get_expression(traj, expression_source)
+      expression <- get_expression(trajectory, expression_source)
       check_feature(expression, feature_oi)
     } else if (color_cells == "milestone") {
-      if(is.null(milestone_percentages)) {
-        message("Using milestone_percentages from traj")
-        milestone_percentages <- traj$milestone_percentages
+      if (is.null(milestone_percentages)) {
+        message("Using milestone_percentages from trajectory")
+        milestone_percentages <- trajectory$milestone_percentages
       }
       # TODO more checks
     } else if (color_cells == "pseudotime") {
-      pseudotime <- check_pseudotime(traj, pseudotime)
+      pseudotime <- check_pseudotime(trajectory, pseudotime)
       cell_positions$pseudotime <- pseudotime[cell_positions$cell_id]
     }
 
@@ -97,17 +94,23 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions$color <- grouping[match(cell_positions$cell_id, names(grouping))]
 
       color_scale <- scale_color_manual(color_cells, values = set_names(groups$color, groups$group_id), guide = guide_legend(ncol = 5))
+      fill_scale <- scale_fill_manual(color_cells, values = set_names(groups$color, groups$group_id), guide = guide_legend(ncol = 5))
 
     } else if (color_cells == "feature") {
       cell_positions$color <- expression[cell_positions$cell_id, feature_oi]
       color_scale <- scale_color_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
+      fill_scale <- scale_fill_distiller(paste0(feature_oi, " expression"), palette = "RdYlBu")
     } else if (is_colour_vector(color_cells)) {
       cell_positions$color <- "trajectories_are_awesome"
       color_scale <- scale_color_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
+      fill_scale <- scale_fill_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
-      if(is.null(milestones) | !"color" %in% names(milestones)) {
-        milestones <- tibble(milestone_id = unique(milestone_percentages$milestone_id)) %>%
-          add_milestone_coloring(color_milestones)
+      if (is.null(milestones)) {
+        testthat::expect_true(all(milestone_percentages$milestone_id %in% trajectory$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
+        milestones <- tibble(milestone_id = trajectory$milestone_ids)
+      }
+      if (!"color" %in% names(milestones)) {
+        milestones <- milestones %>% add_milestone_coloring(color_milestones)
       }
 
       milestone_colors <- set_names(milestones$color, milestones$milestone_id) %>% col2rgb %>% t
@@ -126,15 +129,18 @@ add_cell_coloring <- dynutils::inherit_default_params(
       cell_positions <- left_join(cell_positions, cell_colors, "cell_id")
 
       color_scale <- scale_color_identity(NULL, guide = "none")
+      fill_scale <- scale_fill_identity(NULL, guide = "none")
     } else if (color_cells == "pseudotime") {
       cell_positions$color <- cell_positions$pseudotime
       color_scale <- viridis::scale_color_viridis("pseudotime")
+      fill_scale <- viridis::scale_fill_viridis("pseudotime")
     } else if (color_cells == "none") {
       cell_positions$color <- "black"
       color_scale <- scale_color_identity()
+      fill_scale <- scale_fill_identity()
     }
 
-    lst(cell_positions, color_scale)
+    lst(cell_positions, color_scale, fill_scale, color_cells)
   }
 )
 
@@ -151,7 +157,7 @@ add_cell_coloring <- dynutils::inherit_default_params(
 add_density_coloring <- function(
   cell_positions,
   color_density = c("none", "grouping", "feature"),
-  traj,
+  trajectory,
   grouping = NULL,
   groups = NULL,
   feature_oi = NULL,
@@ -164,7 +170,9 @@ add_density_coloring <- function(
 ) {
   color_density <- match.arg(color_density)
 
-  if(any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
+  if (color_density == "none") return(list())
+
+  if (any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
 
   xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
   ylims <- c(min(cell_positions$comp_2), max(cell_positions$comp_2))
@@ -193,10 +201,8 @@ add_density_coloring <- function(
   density_plots <- list()
 
   # calculate specific density
-  if(color_density == "grouping") {
-    if(is.null(grouping)) {stop("Provide grouping")}
-
-    grouping <- get_grouping(traj, grouping)
+  if (color_density == "grouping") {
+    grouping <- get_grouping(trajectory, grouping)
     groups <- check_groups(grouping, groups)
 
     # plot density
@@ -205,7 +211,7 @@ add_density_coloring <- function(
       select(comp_1, comp_2, group_id) %>%
       nest(comp_1, comp_2, .key = "positions") %>%
       mutate(contour = map2(positions, group_id, function(positions, group_id) {
-        density <- MASS::kde2d(positions[,1], positions[,2], h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
+        density <- MASS::kde2d(positions$comp_1, positions$comp_2, h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
         level <- max(density$z) * density_cutoff
         contour <- with(density, contourLines(x, y, z, levels = level))
         map2_df(contour, seq_along(contour), function(contour, contour_i) {
@@ -250,15 +256,16 @@ add_density_coloring <- function(
     # plot +
     #   geom_label(aes(comp_1, comp_2, label = group_id, fill = group_id), group_label_positions)
 
-    density_plots$labels <-      ggrepel::geom_label_repel(
+    density_plots$labels <- ggrepel::geom_label_repel(
       aes(comp_1, comp_2, label = group_id, fill = group_id),
       group_label_positions,
-      min.segment.length = Inf
+      min.segment.length = Inf,
+      show.legend = FALSE
     )
 
   } else if (color_density == "feature") {
     # get expression
-    expression <- get_expression(traj, expression_source)
+    expression <- get_expression(trajectory, expression_source)
     check_feature(expression, feature_oi)
     expression_oi <- expression[, feature_oi]
 

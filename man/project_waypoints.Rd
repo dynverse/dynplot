@@ -4,13 +4,13 @@
 \alias{project_waypoints}
 \title{Project the waypoints}
 \usage{
-project_waypoints(traj, cell_positions,
-  waypoints = dynwrap::select_waypoints(traj),
-  trajectory_projection_sd = sum(traj$milestone_network$length) * 0.05,
-  n_arrows = 10)
+project_waypoints(trajectory, cell_positions,
+  waypoints = dynwrap::select_waypoints(trajectory),
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
+  0.05, color_trajectory = "none")
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{cell_positions}{The positions of the cells}
 
@@ -18,7 +18,7 @@ project_waypoints(traj, cell_positions,
 
 \item{trajectory_projection_sd}{The standard deviation of the gaussian kernel}
 
-\item{n_arrows}{Number of arrows to add to trajectory projection}
+\item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
 \description{
 Project the waypoints

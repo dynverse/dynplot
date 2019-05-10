@@ -2,16 +2,17 @@
 % Please edit documentation in R/plot_dendro.R
 \name{plot_dendro}
 \alias{plot_dendro}
-\title{Plot a tree trajectory as a dendrogram}
+\title{Plot a trajectory as a dendrogram}
 \usage{
-plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
-  "milestone", "pseudotime"), grouping = NULL, groups = NULL,
-  feature_oi = NULL, expression_source = "expression", pseudotime = NULL,
-  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
-  milestones = NULL, milestone_percentages = NULL, diag_offset = 0.05)
+plot_dendro(trajectory, color_cells = c("auto", "none", "grouping",
+  "feature", "milestone", "pseudotime"), grouping = NULL,
+  groups = NULL, feature_oi = NULL, expression_source = "expression",
+  pseudotime = NULL, color_milestones = c("auto", "given", "cubeHelix",
+  "Set3", "rainbow"), milestones = NULL, milestone_percentages = NULL,
+  diag_offset = 0.05, y_offset = 0.2)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{color_cells}{How to color the cells}
 
@@ -32,7 +33,20 @@ plot_dendro(traj, color_cells = c("auto", "none", "grouping", "feature",
 \item{milestone_percentages}{The milestone percentages}
 
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
+
+\item{y_offset}{The size of the quasirandom cell spreading in the y-axis}
 }
 \description{
-Plot a tree trajectory as a dendrogram
+Plot a trajectory as a dendrogram
 }
+\examples{
+data(example_tree)
+plot_dendro(example_tree)
+plot_dendro(example_tree, color_cells = "pseudotime")
+plot_dendro(
+  example_tree,
+  color_cells = "grouping",
+  grouping = dynwrap::group_onto_nearest_milestones(example_tree)
+)
+}
+\keyword{plot_trajectory}

@@ -16,8 +16,8 @@ optimize_order <- function(milestone_network) {
     result <- GA::ga(
       type = "permutation",
       score_order,
-      min = rep(1, n-1),
-      max = rep(n-1, n-1),
+      lower = 1,
+      upper = n - 1,
       maxiter = 30*nrow(milestone_network),
       popSize = 20,
       maxFitness = 0,
@@ -33,17 +33,17 @@ optimize_order <- function(milestone_network) {
 
 
 # will use the ordering of the first trajectory, to optimize the ordering of the second trajectory, maximizing the correlation between the two
-map_order <- function(traj, rel_task) {
+map_order <- function(traj, rel_dataset) {
 
   # first get the cell cumulative percentage of the relative traj
   margin <- 0
-  milestone_network <- rel_task$milestone_network %>%
+  milestone_network <- rel_dataset$milestone_network %>%
     mutate(
       cumstart = c(0, cumsum(length)[-length(length)]) + margin * (seq_len(n())-1),
       cumend = c(cumsum(length)) + margin * (seq_len(n())-1)
     )
 
-  prog <- rel_task$progression %>% left_join(milestone_network, by = c("from", "to")) %>% mutate(cumpercentage = percentage*length + cumstart)
+  prog <- rel_dataset$progression %>% left_join(milestone_network, by = c("from", "to")) %>% mutate(cumpercentage = percentage*length + cumstart)
 
   # use these cumulative percentages to find the optimal ordering of the traj of interest, by calculating the mean relative cumulative percentage, and then ordering the milestone_network along this measure
   milestone_network_ordered <- traj$progressions %>%

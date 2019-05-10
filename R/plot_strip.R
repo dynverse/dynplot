@@ -4,6 +4,8 @@
 #' @param traj2 The second traj
 #' @param reorder Whether to reorder
 #'
+#' @keywords compare_trajectory
+#'
 #' @inheritParams linearise_cells
 #'
 #' @export
@@ -13,11 +15,11 @@ plot_strip <- function(traj1, traj2, margin = 0.05, reorder = TRUE) {
     traj2$milestone_network <- map_order(traj2, traj1)
   }
 
-  linearised1 <- linearise_cells(traj1$milestone_network, traj1$progression, margin)
+  linearised1 <- linearise_cells(traj1, margin)
   milestone_network1 <- linearised1$milestone_network
   prog1 <- linearised1$progressions %>% rename_at(vars(-cell_id), ~paste0(., 1))
 
-  linearised2 <- linearise_cells(traj2$milestone_network, traj2$progression, margin)
+  linearised2 <- linearise_cells(traj2, margin)
   milestone_network2 <- linearised2$milestone_network
   prog2 <- linearised2$progressions %>% rename_at(vars(-cell_id), ~paste0(., 2))
 

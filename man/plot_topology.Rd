@@ -2,13 +2,13 @@
 % Please edit documentation in R/plot_topology.R
 \name{plot_topology}
 \alias{plot_topology}
-\title{Plotting the topology of a trajectory}
+\title{Plot the topology of a trajectory}
 \usage{
-plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix", "Set3",
-  "rainbow"), milestones = NULL, layout = NULL)
+plot_topology(trajectory, color_milestones = c("auto", "given",
+  "cubeHelix", "Set3", "rainbow"), milestones = NULL, layout = NULL)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{color_milestones}{How to color the cells}
 
@@ -17,5 +17,13 @@ plot_topology(traj, color_milestones = c("auto", "given", "cubeHelix", "Set3",
 \item{layout}{The type of layout to create.}
 }
 \description{
-Plotting the topology of a trajectory
+Plot the topology of a trajectory
 }
+\examples{
+data(example_disconnected)
+plot_topology(example_disconnected)
+
+data(example_tree)
+plot_topology(example_tree)
+}
+\keyword{plot_trajectory}

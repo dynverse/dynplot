@@ -1,5 +1,5 @@
 ---
-output: md_document
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -8,8 +8,7 @@ output: md_document
 knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, error=FALSE, echo = TRUE)
 ```
 
-[![Build Status](https://travis-ci.org/dynverse/dynplot.svg)](https://travis-ci.org/dynverse/dynplot)
-[![codecov](https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg)](https://codecov.io/gh/dynverse/dynplot)  <img src="man/img/logo.png" align="right" />
+<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a> <a href="https://codecov.io/gh/dynverse/dynplot"> <img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  [**ℹ️ Tutorials**](https://dynverse.org)  &nbsp;  &nbsp; [**ℹ️ Reference documentation**](https://dynverse.org/reference/dynplot) <br><img src="man/figures/logo.png" align="right" />
 
 # Common visualisation tools for single-cell trajectories
 
@@ -30,7 +29,6 @@ The package provides different ways to plot both the topology and cellular prope
 
 ```{r, echo=FALSE}
 library(dplyr)
-library(dyntoy)
 library(dynplot)
 library(dynutils)
 library(dynwrap)
@@ -38,13 +36,15 @@ library(tidyverse)
 
 library(patchwork)
 
-traj <- toy_tasks %>% filter(id == "toy/bifurcating_1") %>% extract_row_to_list(1)
-traj <- traj %>% add_root()
-grouping <- traj$prior_information$groups_id
-groups <- tibble(group_id = unique(grouping$group_id)) %>% 
+data(example_bifurcating)
+trajectory <- example_bifurcating
+
+trajectory <- trajectory %>% add_root()
+grouping <- trajectory$prior_information$groups_id
+groups <- tibble(dynwrap::group_onto_nearest_milestones(trajectory)) %>% 
   mutate(color=dynplot:::milestone_palette_list$auto(n()))
-features_oi <- apply(traj$counts, 2, sd) %>% sort() %>% names() %>% tail(10)
-feature_oi <- features_oi[[1]]
+features_oi <- apply(as.matrix(trajectory$counts), 2, sd) %>% sort() %>% names() %>% tail(10)
+feature_oi <- features_oi[[10]]
 ```
 
 
@@ -64,38 +64,38 @@ title <- list(
 
 dendro <- list(
   empty + geom_label(aes(0, 0, label="Dendrogram")),
-  # plot_dendro(traj),
-  plot_dendro(traj, "milestone"),
-  plot_dendro(traj, grouping=grouping, groups=groups),
-  plot_dendro(traj, feature_oi=feature_oi),
-  plot_dendro(traj, "pseudotime")
+  # plot_dendro(trajectory),
+  plot_dendro(trajectory, "milestone"),
+  plot_dendro(trajectory, grouping=grouping, groups=groups),
+  plot_dendro(trajectory, feature_oi=feature_oi),
+  plot_dendro(trajectory, "pseudotime")
 )
 
 onedim <- list(
     empty + geom_label(aes(0, 0, label="Onedim")),
-    # plot_onedim(traj),
-    plot_onedim(traj, "milestone"),
-    plot_onedim(traj, grouping=grouping, groups=groups),
-    plot_onedim(traj, feature_oi=feature_oi),
-    plot_onedim(traj, "pseudotime")
+    # plot_onedim(trajectory),
+    plot_onedim(trajectory, "milestone"),
+    plot_onedim(trajectory, grouping=grouping, groups=groups),
+    plot_onedim(trajectory, feature_oi=feature_oi),
+    plot_onedim(trajectory, "pseudotime")
   )
 
 graph <- list(
   empty + geom_label(aes(0, 0, label="Graph")),
-  # plot_graph(traj),
-  plot_graph(traj, "milestone"),
-  plot_graph(traj, grouping=grouping, groups=groups),
-  plot_graph(traj, feature_oi=feature_oi),
-  plot_graph(traj, "pseudotime")
+  # plot_graph(trajectory),
+  plot_graph(trajectory, "milestone"),
+  plot_graph(trajectory, grouping=grouping, groups=groups),
+  plot_graph(trajectory, feature_oi=feature_oi),
+  plot_graph(trajectory, "pseudotime")
 )
 
 dimred <- list(
   empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
-  # plot_dimred(traj),
-  plot_dimred(traj, "milestone"),
-  plot_dimred(traj, grouping=grouping, groups=groups),
-  plot_dimred(traj, feature_oi=feature_oi),
-  plot_dimred(traj, "pseudotime")
+  # plot_dimred(trajectory),
+  plot_dimred(trajectory, "milestone"),
+  plot_dimred(trajectory, grouping=grouping, groups=groups),
+  plot_dimred(trajectory, feature_oi=feature_oi),
+  plot_dimred(trajectory, "pseudotime")
 )
 
 wrap_plots(
@@ -103,13 +103,28 @@ wrap_plots(
   nrow=5,
   byrow=TRUE
 ) & theme(legend.position = "none")
-
 ```
 
 
 And to plot the expression and feature importances of many genes along the trajectory
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
-cell_feature_importance <- dynfeature::calculate_cell_feature_importance(traj %>% dynwrap::add_waypoints())
-plot_heatmap(traj, cell_feature_importance=cell_feature_importance, grouping = traj$prior_information$grouping_assignment)
+cell_feature_importance <- dynfeature::calculate_cell_feature_importance(trajectory %>% dynwrap::add_waypoints())
+plot_heatmap(trajectory, grouping = trajectory$prior_information$grouping_assignment)
 ```
+
+## Latest changes
+
+Check out `news(package = "dynwrap")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+```{r news, echo=FALSE, results="asis"}
+dynutils::update_news()
+cat(dynutils::recent_news())
+```
+
+## Dynverse dependencies
+
+<!-- Generated by "update_dependency_graphs.R" in the main dynverse repo -->
+![](man/figures/dependencies.png)

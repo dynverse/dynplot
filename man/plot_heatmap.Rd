@@ -2,17 +2,18 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Plot the traj as a heatmap}
+\title{Plot the expression across a trajectory in a heatmap}
 \usage{
-plot_heatmap(traj, expression_source = "expression", features_oi = 20,
-  clust = "ward.D2", margin = 0.02, color_cells = NULL,
-  milestones = NULL, milestone_percentages = traj$milestone_percentages,
+plot_heatmap(trajectory, expression_source = "expression",
+  features_oi = 20, clust = "ward.D2", margin = 0.02,
+  color_cells = NULL, milestones = NULL,
+  milestone_percentages = trajectory$milestone_percentages,
   grouping = NULL, groups = NULL, cell_feature_importances = NULL,
-  heatmap_type = c("tiled", "dotted"), scale = dynutils::scale_quantile,
-  label_milestones = TRUE)
+  heatmap_type = c("tiled", "dotted"),
+  scale = dynutils::scale_quantile, label_milestones = TRUE)
 }
 \arguments{
-\item{traj}{The trajectory}
+\item{trajectory}{The trajectory}
 
 \item{expression_source}{Source of the feature expression, defaults to `expression`}
 
@@ -41,5 +42,14 @@ plot_heatmap(traj, expression_source = "expression", features_oi = 20,
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
 \description{
-Plot the traj as a heatmap
+When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 }
+\examples{
+data(example_linear)
+plot_heatmap(example_linear)
+
+data(example_bifurcating)
+plot_heatmap(example_bifurcating)
+
+}
+\keyword{plot_trajectory}

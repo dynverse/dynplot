@@ -18,3 +18,4 @@ plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 \description{
 Plot strip
 }
+\keyword{compare_trajectory}
