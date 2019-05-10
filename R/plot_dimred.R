@@ -180,7 +180,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # get dimensionality reduction from trajectory
     dimred <- get_dimred(
-      trajectory,
+      dataset = trajectory,
       dimred = dimred,
       expression_source = expression_source
     )
