@@ -29,6 +29,8 @@ GeomVelocityArrow <- ggproto(
 #'
 #'
 #' @rdname geom_velocity
+#'
+#' @export
 geom_velocity_arrow <- function(
   mapping = NULL,
   stat = stat_velocity_grid(),
@@ -59,7 +61,7 @@ construct_get_velocity_info <- function(position) {
   get_velocity_info <- function(data) {
     cell_positions <- attr(data, "data")$cell_info
     assert_that(
-      all(c("x", "y", "x_projected", "y_projected") %in% colnames(cell_positions)),
+      c("x", "y", "x_projected", "y_projected") %all_in% colnames(cell_positions),
       msg = "This layout does not contain information on velocity"
     )
 
@@ -90,7 +92,7 @@ embed_arrows_grid <- function(
   filter = rlang::quo(mass > max(mass) * 0.1)
 ) {
   assert_that(is.data.frame(cell_positions))
-  assert_that(all(c("x", "y", "x_projected", "y_projected") %in% colnames(cell_positions)))
+  assert_that(c("x", "y", "x_projected", "y_projected") %all_in% colnames(cell_positions))
 
   if (length(grid_n) == 1) {
     grid_n <- c(grid_n, grid_n)
@@ -162,7 +164,7 @@ embed_arrows_grid <- function(
   garrows
 }
 
-
+#' @export
 stat_velocity_cells <- dynutils::inherit_default_params(
   list(embed_arrows_cells),
   function(...) {
@@ -175,6 +177,7 @@ stat_velocity_cells <- dynutils::inherit_default_params(
 )
 formals(stat_velocity_cells) <- formals(embed_arrows_cells)[2:length(formals(embed_arrows_cells))]
 
+#' @export
 stat_velocity_grid <- dynutils::inherit_default_params(
   list(embed_arrows_grid),
   function(...) {
@@ -193,6 +196,7 @@ stat_velocity_grid <- dynutils::inherit_default_params(
 )
 formals(stat_velocity_grid) <- formals(embed_arrows_grid)[2:length(formals(embed_arrows_grid))]
 
+#' @export
 stat_velocity_random <- dynutils::inherit_default_params(
   list(embed_arrows_cells),
   function(sample_n = 100, ...) {

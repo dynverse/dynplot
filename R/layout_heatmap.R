@@ -16,6 +16,7 @@ layout_heatmap <- function(
   )
 }
 
+#' @export
 get_features <- function(dataset, n_modules = 5) {
   feature_importances <- dynfeature::calculate_overall_feature_importance(dataset)
   features_oi <- feature_importances %>% top_n(100, importance) %>% pull(feature_id)
@@ -33,7 +34,7 @@ get_features <- function(dataset, n_modules = 5) {
 }
 
 
-
+#' @export
 layout_modules <- function(dataset, feature_modules, cell_layout, margin = 0.02) {
   margin <- margin * nrow(feature_modules)
 

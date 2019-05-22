@@ -1,3 +1,4 @@
+#' @export
 select_expression <- function(feature_id) {
   assert_that(!is.null(data))
   assert_that(feature_id %in% attr(data, "data")$dataset$feature_info$feature_id)

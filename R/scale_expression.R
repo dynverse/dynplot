@@ -10,6 +10,7 @@ ScaleExpressionFillColour <- ggproto(
   oob = scales::squish
 )
 
+#' @export
 scale_expression_fillcolour <- function(...){
   ggproto(
     "",

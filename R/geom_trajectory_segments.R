@@ -151,7 +151,7 @@ position_trajectory_arrows_boundaries <- function(quantile = 0.3) {
 
 
 
-
+#' @export
 shadow <- function(size = 1, color = "#222222") {
   lst(
     size,
