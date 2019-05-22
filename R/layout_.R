@@ -42,12 +42,19 @@ layout_dimred <- function(dataset) {
   }
 
   # cell positions
-  cell_positions <- dataset$dimred %>%
+  dimred <- dataset$dimred
+  if (!is.null(dataset$dimred_projected)) {
+    dimred <- cbind(
+      dimred,
+      dataset$dimred_projected %>% {set_colnames(., paste0(colnames(.), "_projected"))}
+    )
+  }
+  cell_positions <- dimred %>%
     rename_dimred_xy() %>%
     as.data.frame() %>%
     rownames_to_column("cell_id")
 
-  assert_that(all(cell_positions$cell_id %in% dataset$cell_ids))
+  assert_that(cell_positions$cell_id %all_in% dataset$cell_ids)
   layout$cell_positions <- cell_positions
 
   # trajectory --------------------------------------------------------------
