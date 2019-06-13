@@ -39,6 +39,7 @@ Imports:
   shades,
   RColorBrewer,
   reshape2,
+  stringr,
   testthat,
   tibble,
   tidyr,

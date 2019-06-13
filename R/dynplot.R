@@ -128,6 +128,7 @@ aesIntersect <- function(aes1, aes2) {
 
 
 
+#' @importFrom stringr str_detect
 #' @export
 ggplot_build.dynplot <- function(plot) {
   # do some checks for aesthetics
