@@ -17,9 +17,12 @@ layout_heatmap <- function(
 }
 
 #' @export
-get_features <- function(dataset, n_modules = 5) {
+get_features <- function(dataset, n_modules = 5, num_features = 100) {
   feature_importances <- dynfeature::calculate_overall_feature_importance(dataset)
-  features_oi <- feature_importances %>% top_n(100, importance) %>% pull(feature_id)
+  features_oi <-
+    feature_importances %>%
+    top_n(num_features, importance) %>%
+    pull(feature_id)
 
   expression <- get_expression(dataset)[, features_oi]
 
