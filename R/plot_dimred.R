@@ -95,7 +95,7 @@ project_waypoints <- function(
 #'   The lower, the more closely the trajectory will follow the cells
 #' @param alpha_cells The alpha of the cells
 #' @param size_trajectory The size of the trajectory segments
-#' @param hex_cells When plotting a lot of cells,
+#' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
 #'
 #'
 #' @inheritParams add_cell_coloring
@@ -141,7 +141,7 @@ plot_dimred <- dynutils::inherit_default_params(
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     alpha_cells = 1,
     size_trajectory = 1,
-    hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, FALSE),
+    hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
 
     # trajectory information
     grouping,
@@ -248,7 +248,7 @@ plot_dimred <- dynutils::inherit_default_params(
       plot <- plot + density_plots$scale
 
     # add cells
-    if (FALSE && is.numeric(hex_cells)) {
+    if (is.numeric(hex_cells)) {
       hex_coordinates <- calculate_hex_coords(cell_positions, hex_cells)
 
       plot +
@@ -454,16 +454,16 @@ calculate_hex_coords <- function(cell_positions, hex_cells) {
     xrange <- c(xrange[1], xrange[2] + diff(xrange) * (1/shape - 1))
   }
 
-  # hexbin <- hexbin::hexbin(
-  #   cell_positions$comp_1,
-  #   cell_positions$comp_2,
-  #   IDs = T,
-  #   xbins = hex_cells,
-  #   xbnds = xrange,
-  #   ybnds = yrange,
-  #   shape = 1
-  # )
-  # xy <- hexbin::hcell2xy(hexbin, check.erosion = FALSE)
+  hexbin <- hexbin::hexbin(
+    cell_positions$comp_1,
+    cell_positions$comp_2,
+    IDs = T,
+    xbins = hex_cells,
+    xbnds = xrange,
+    ybnds = yrange,
+    shape = 1
+  )
+  xy <- hexbin::hcell2xy(hexbin, check.erosion = FALSE)
 
   cell_positions$bin <- hexbin@cID
   bin_positions <- cell_positions %>%
@@ -474,10 +474,10 @@ calculate_hex_coords <- function(cell_positions, hex_cells) {
       comp_2 = xy$y[match(bin, hexbin@cell)]
     )
 
-  # hexcoords <- hexbin::hexcoords(
-  #   diff(hexbin@xbnds)/hexbin@xbins / 2,
-  #   diff(hexbin@xbnds)/hexbin@xbins / sqrt(3) / 2
-  # )
+  hexcoords <- hexbin::hexcoords(
+    diff(hexbin@xbnds)/hexbin@xbins / 2,
+    diff(hexbin@xbnds)/hexbin@xbins / sqrt(3) / 2
+  )
 
   hex_coords <- tibble(
     comp_1 = rep.int(hexcoords$x, nrow(bin_positions)) + rep(bin_positions$comp_1, each = 6),

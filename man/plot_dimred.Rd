@@ -12,7 +12,7 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
   !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   alpha_cells = 1, size_trajectory = 1,
-  hex_cells = ifelse(length(trajectory$cell_ids) > 1000, 100, FALSE),
+  hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
   grouping = NULL, groups = NULL, feature_oi = NULL,
   color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
   milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
@@ -40,7 +40,7 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{size_trajectory}{The size of the trajectory segments}
 
-\item{hex_cells}{When plotting a lot of cells,}
+\item{hex_cells}{The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000}
 
 \item{grouping}{The grouping of the cells}
 
