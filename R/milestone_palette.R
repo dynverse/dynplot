@@ -23,7 +23,8 @@ milestone_palette_list <- list(
       # milestone_palette_list$cubeHelix(n)
       all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)]
       all_colors <- sort_by_hue(all_colors)[-c(1:2)] # sort and remove white/black
-      all_colors[seq(0, length(all_colors), length(all_colors)/(n+1)) %>% ceiling() %>% head(-1)]
+      ix <- ceiling(seq(0, length(all_colors), length(all_colors)/(n+1)))
+      all_colors[head(ix, -1)]
     }
   }
 )
