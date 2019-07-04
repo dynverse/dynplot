@@ -9,7 +9,8 @@ plot_onedim(trajectory, color_cells = c("auto", "none", "grouping",
   groups = NULL, feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", color_milestones = c("auto",
   "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
-  milestone_percentages = NULL, orientation = 1, margin = 0.05,
+  milestone_percentages = NULL, alpha_cells = 1, size_cells = 2.5,
+  border_radius_percentage = 0.1, orientation = 1, margin = 0.05,
   linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
   quasirandom_width = 0.2, plot_cells = TRUE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory))
@@ -34,6 +35,12 @@ plot_onedim(trajectory, color_cells = c("auto", "none", "grouping",
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
 \item{milestone_percentages}{The milestone percentages}
+
+\item{alpha_cells}{The alpha of the cells}
+
+\item{size_cells}{The size of the cells}
+
+\item{border_radius_percentage}{The fraction of the radius that is used for the border}
 
 \item{orientation}{Whether to plot the connections in the top (1) or bottom (-1)}
 

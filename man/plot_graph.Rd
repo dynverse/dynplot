@@ -11,7 +11,8 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
   groups = NULL, feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", milestones = NULL,
   milestone_percentages = NULL, transition_size = 3,
-  milestone_size = 5, arrow_length = grid::unit(1, "cm"),
+  milestone_size = 5, alpha_cells = 1, size_cells = 2.5,
+  border_radius_percentage = 0.1, arrow_length = grid::unit(1, "cm"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   plot_milestones = FALSE, adjust_weights = FALSE)
 }
@@ -39,6 +40,12 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
 \item{transition_size}{The size of the transition lines between milestones.}
 
 \item{milestone_size}{The size of milestones.}
+
+\item{alpha_cells}{The alpha of the cells.}
+
+\item{size_cells}{The size of the cells.}
+
+\item{border_radius_percentage}{The fraction of the radius that is used for the border.}
 
 \item{arrow_length}{length of the arrow.}
 

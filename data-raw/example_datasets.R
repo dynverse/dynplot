@@ -1,6 +1,6 @@
-example_linear <- dyntoy::generate_dataset(model = "linear")
-example_bifurcating <- dyntoy::generate_dataset(model = "bifurcating")
-example_tree <- dyntoy::generate_dataset(model = "tree")
-example_disconnected <- dyntoy::generate_dataset(model = "disconnected")
+example_linear <- dyntoy::generate_dataset(model = "linear") %>% add_root()
+example_bifurcating <- dyntoy::generate_dataset(model = "bifurcating") %>% add_root()
+example_tree <- dyntoy::generate_dataset(model = "tree") %>% add_root()
+example_disconnected <- dyntoy::generate_dataset(model = "disconnected") %>% add_root()
 
 usethis::use_data(example_linear, example_bifurcating, example_tree, example_disconnected, compress = "xz", overwrite = TRUE)

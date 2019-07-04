@@ -4,6 +4,9 @@
 #' @param quasirandom_width The width of the quasirandom cell spreading
 #' @param plot_cells Whether to plot the cells
 #' @param orientation Whether to plot the connections in the top (1) or bottom (-1)
+#' @param alpha_cells The alpha of the cells
+#' @param size_cells The size of the cells
+#' @param border_radius_percentage The fraction of the radius that is used for the border
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
@@ -35,6 +38,9 @@ plot_onedim <- dynutils::inherit_default_params(
     color_milestones,
     milestones,
     milestone_percentages,
+    alpha_cells = 1,
+    size_cells = 2.5,
+    border_radius_percentage = .1,
     orientation = 1,
     margin = 0.05,
     linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
@@ -108,9 +114,16 @@ plot_onedim <- dynutils::inherit_default_params(
 
     # add the cells
     if (plot_cells) {
+      if (border_radius_percentage > 0) {
+        plot <- plot +
+          geom_point(aes(x, y), size = size_cells, color = "black", data = cell_positions)
+      }
+      if (alpha_cells < 1) {
+        plot <- plot +
+          geom_point(aes(x, y), size = size_cells * (1 - border_radius_percentage), color = "white", data = cell_positions)
+      }
       plot <- plot +
-        geom_point(aes(x, y), size = 2.5, color = "black", data = cell_positions) +
-        geom_point(aes(x, y, color = color), size = 2, data = cell_positions) +
+        geom_point(aes(x, y, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
         color_scale
     }
 

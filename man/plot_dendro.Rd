@@ -9,6 +9,7 @@ plot_dendro(trajectory, color_cells = c("auto", "none", "grouping",
   groups = NULL, feature_oi = NULL, expression_source = "expression",
   pseudotime = NULL, color_milestones = c("auto", "given", "cubeHelix",
   "Set3", "rainbow"), milestones = NULL, milestone_percentages = NULL,
+  alpha_cells = 1, size_cells = 2.5, border_radius_percentage = 0.1,
   diag_offset = 0.05, y_offset = 0.2)
 }
 \arguments{
@@ -31,6 +32,12 @@ plot_dendro(trajectory, color_cells = c("auto", "none", "grouping",
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
 \item{milestone_percentages}{The milestone percentages}
+
+\item{alpha_cells}{The alpha of the cells}
+
+\item{size_cells}{The size of the cells}
+
+\item{border_radius_percentage}{The fraction of the radius that is used for the border}
 
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
 

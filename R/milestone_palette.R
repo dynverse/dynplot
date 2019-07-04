@@ -1,3 +1,11 @@
+sort_by_hue <- function(hex_colors) {
+  hues <- grDevices::rgb2hsv(grDevices::col2rgb(hex_colors))[1, ]
+  hex_colors[order(hues)]
+}
+
+
+
+
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices rainbow rgb2hsv col2rgb
 #' @importFrom rje cubeHelix
@@ -5,8 +13,7 @@ milestone_palette_list <- list(
   cubeHelix = function(n) rje::cubeHelix(n = n),
   Set3 = function(n) {
     cols <- RColorBrewer::brewer.pal(max(3, n), "Set3")[seq_len(n)]
-    hues <- grDevices::rgb2hsv(grDevices::col2rgb(cols))[1, ]
-    cols[order(hues)]
+    sort_by_hue(cols)
   },
   rainbow = function(n) grDevices::rainbow(n = n),
   auto = function(n) {
@@ -15,8 +22,9 @@ milestone_palette_list <- list(
     } else {
       # milestone_palette_list$cubeHelix(n)
       all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)]
-      all_colors <- all_colors[order(shades::hue(all_colors))][-c(1:2)] # sort and remove white/black
-      all_colors[seq(0, length(all_colors), length(all_colors)/(n+1)) %>% ceiling() %>% head(-1)]
+      all_colors <- sort_by_hue(all_colors)[-c(1:2)] # sort and remove white/black
+      ix <- ceiling(seq(0, length(all_colors), length(all_colors)/(n+1)))
+      all_colors[head(ix, -1)]
     }
   }
 )
