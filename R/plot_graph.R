@@ -8,6 +8,9 @@
 #' @param milestone_size The size of milestones.
 #' @param arrow_length length of the arrow.
 #' @param plot_milestones Whether to plot the milestones.
+#' @param alpha_cells The alpha of the cells.
+#' @param size_cells The size of the cells.
+#' @param border_radius_percentage The fraction of the radius that is used for the border.
 #'
 #'
 #' @importFrom grid arrow unit
@@ -48,6 +51,9 @@ plot_graph <- dynutils::inherit_default_params(
     milestone_percentages,
     transition_size = 3,
     milestone_size = 5,
+    alpha_cells = 1,
+    size_cells = 2.5,
+    border_radius_percentage = .1,
     arrow_length = grid::unit(1, "cm"),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     plot_milestones = FALSE,
@@ -161,13 +167,19 @@ plot_graph <- dynutils::inherit_default_params(
     }
 
     # plot the cells
+    if (border_radius_percentage > 0) {
+      plot <- plot +
+        geom_point(aes(comp_1, comp_2), size = size_cells, color = "black", data = cell_positions)
+    }
+
+    if (alpha_cells < 1) {
+      plot <- plot +
+        geom_point(aes(comp_1, comp_2), size = size_cells * (1 - border_radius_percentage), color = "white", data = cell_positions)
+    }
 
     plot <- plot +
-      # Cell borders
-      geom_point(aes(comp_1, comp_2), size = 2.5, color = "black", data = cell_positions) +
-
       # Cell fills
-      geom_point(aes(comp_1, comp_2, color = color), size = 2, data = cell_positions) +
+      geom_point(aes(comp_1, comp_2, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
 
       color_scale +
       theme_graph() +

@@ -2,6 +2,9 @@
 #'
 #' @param diag_offset The x-offset (percentage of the edge lenghts) between milestones
 #' @param y_offset The size of the quasirandom cell spreading in the y-axis
+#' @param alpha_cells The alpha of the cells
+#' @param size_cells The size of the cells
+#' @param border_radius_percentage The fraction of the radius that is used for the border
 #'
 #' @inheritParams add_cell_coloring
 #'
@@ -31,6 +34,9 @@ plot_dendro <- dynutils::inherit_default_params(
     color_milestones,
     milestones,
     milestone_percentages,
+    alpha_cells = 1,
+    size_cells = 2.5,
+    border_radius_percentage = .1,
     diag_offset = 0.05,
     y_offset = 0.2
   ) {
@@ -187,12 +193,25 @@ plot_dendro <- dynutils::inherit_default_params(
       # the main edges
       ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone")) +
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
       # the node labels
       # ggraph::geom_node_label(aes(label = node_id)) +
+
+    # cell border, if needed
+    if (border_radius_percentage > 0) {
+      dendro <- dendro +
+        geom_point(aes(x, y), color = "black", size = size_cells, data = cell_positions)
+    }
+
+    # cell white background, if alpha < 1
+    if (alpha_cells < 1) {
+      dendro <- dendro +
+        geom_point(aes(x, y), color = "white", size = size_cells * (1 - border_radius_percentage), data = cell_positions)
+    }
+
+    dendro <- dendro +
       # the cells
-      geom_point(aes(x, y), size = 2.5, color = "black", data = cell_positions) +
-      geom_point(aes(x, y, color = color), size = 2, data = cell_positions) +
+      geom_point(aes(x, y, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
       color_scale +
       # theme graph
       theme_graph() +

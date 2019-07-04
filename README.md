@@ -41,16 +41,19 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
+### Recent changes in dynplot 1.0.2 (04-07-2019)
+
+  - BUG FIX: Fix weird ceiling warning.
+
+  - BUG FIX: Fix for new select waypoints
+
+  - MINOR CHANGE: Added parameters `size_cells`, `alpha_cells` and
+    `border_radius_percentage` to plotting functions that plot cells.
+
 ### Recent changes in dynplot 1.0.1 (07-05-2019)
 
-  - Remove shades dependency, fixing rgb2hsv bug
-
-### Recent changes in dynplot 1.0.0 (28-03-2019)
-
-  - Initial release of dynplot
-  - Plotting of trajectories
-  - Compatible with all methods of
-dynmethods
+  - BUG FIX: Remove dependency on shades, fixing rgb2hsv
+bug
 
 ## Dynverse dependencies
 

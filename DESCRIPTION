@@ -50,7 +50,7 @@ Suggests:
   destiny,
   knitr,
   rmarkdown
-Remotes:  
+Remotes: 
     thomasp85/patchwork,
     dynverse/dynutils@devel,
     dynverse/dyndimred@devel,
@@ -71,7 +71,6 @@ Collate:
     'plot_edge_flips.R'
     'plot_generic.R'
     'plot_graph.R'
-    'plot_grouped.R'
     'plot_heatmap.R'
     'plot_linearised_comparison.R'
     'plot_onedim.R'

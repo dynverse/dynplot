@@ -94,6 +94,8 @@ project_waypoints <- function(
 #'   This is in the order of maginature as the lengths of the milestone_network.
 #'   The lower, the more closely the trajectory will follow the cells
 #' @param alpha_cells The alpha of the cells
+#' @param size_cells The size of the cells
+#' @param border_radius_percentage The fraction of the radius that is used for the border
 #' @param size_trajectory The size of the trajectory segments
 #' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
 #'
@@ -140,6 +142,8 @@ plot_dimred <- dynutils::inherit_default_params(
     plot_milestone_network = FALSE,
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     alpha_cells = 1,
+    size_cells = 2.5,
+    border_radius_percentage = .1,
     size_trajectory = 1,
     hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
 
@@ -265,10 +269,16 @@ plot_dimred <- dynutils::inherit_default_params(
         ) +
         cell_coloring_output$fill_scale
     } else {
+      if (border_radius_percentage > 0) {
+        plot <- plot +
+          geom_point(size = size_cells, color = "black")
+      }
+      if (alpha_cells < 1) {
+        plot <- plot +
+          geom_point(size = size_cells * (1 - border_radius_percentage), color = "white")
+      }
       plot <- plot +
-        geom_point(size = 2.5, color = "black", alpha = alpha_cells) +
-        geom_point(size = 2, color = "white", alpha = 1) + # add this so the black does not shine through the color if alpha < 1
-        geom_point(aes(color = color), size = 2, alpha = alpha_cells) +
+        geom_point(aes(color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells) +
         cell_coloring_output$color_scale
     }
 
