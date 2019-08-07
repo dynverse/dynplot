@@ -5,10 +5,20 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup1, include=FALSE}
-knitr::opts_chunk$set(fig.path=".readme_files/", warning=FALSE, message=FALSE, error=FALSE, echo = TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = "100%",
+  fig.path = "man/figures/",
+  message = FALSE,
+  dpi = 300
+)
 ```
 
-<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a> <a href="https://codecov.io/gh/dynverse/dynplot"> <img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  [**ℹ️ Tutorials**](https://dynverse.org)  &nbsp;  &nbsp; [**ℹ️ Reference documentation**](https://dynverse.org/reference/dynplot) <br><img src="man/figures/logo.png" align="right" />
+<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a> 
+<a href="https://codecov.io/gh/dynverse/dynplot"><img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  
+[**ℹ️ Tutorials**](https://dynverse.org)  &nbsp;  &nbsp; 
+[**ℹ️ Reference documentation**](https://dynverse.org/reference/dynplot) <br><img src="man/figures/logo.png" align="right" />
 
 # Common visualisation tools for single-cell trajectories
 
@@ -115,12 +125,11 @@ plot_heatmap(trajectory, grouping = trajectory$prior_information$grouping_assign
 
 ## Latest changes
 
-Check out `news(package = "dynwrap")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full list of changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from inst/NEWS.md -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news()
 cat(dynutils::recent_news())
 ```
 

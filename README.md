@@ -26,29 +26,49 @@ On linux, udunits2 has to be installed:
 The package provides different ways to plot both the topology and
 cellular properties of a trajectory:
 
-![](.readme_files/cells-1.png)<!-- -->
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+    
+    #> Warning: Unknown or uninitialised column: 'group_id'.
+
+<img src="man/figures/cells-1.png" width="100%" />
 
 And to plot the expression and feature importances of many genes along
-the trajectory
+the
+    trajectory
 
-![](.readme_files/heatmap-1.png)<!-- -->
+    #> Warning: Column `waypoint_id` joining factors with different levels,
+    #> coercing to character vector
+
+<img src="man/figures/heatmap-1.png" width="100%" />
 
 ## Latest changes
 
-Check out `news(package = "dynwrap")` or [NEWS.md](inst/NEWS.md) for a
-full list of
-changes.
+Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full
+list of changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from inst/NEWS.md -->
 
 ### Recent changes in dynplot 1.0.2 (04-07-2019)
 
   - BUG FIX: Fix weird ceiling warning.
 
-  - BUG FIX: Fix for new select waypoints
+  - BUG FIX: Fix for new select waypoints (\#41).
 
   - MINOR CHANGE: Added parameters `size_cells`, `alpha_cells` and
-    `border_radius_percentage` to plotting functions that plot cells.
+    `border_radius_percentage` to plotting functions that plot cells
+    (\#40).
 
 ### Recent changes in dynplot 1.0.1 (07-05-2019)
 
