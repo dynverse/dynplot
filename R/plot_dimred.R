@@ -8,6 +8,7 @@
 project_waypoints <- function(
   trajectory,
   cell_positions,
+  edge_positions = NULL,
   waypoints = dynwrap::select_waypoints(trajectory),
   trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
   color_trajectory = "none"
@@ -47,9 +48,28 @@ project_waypoints <- function(
 
   # calculate positions
   matrix_to_tibble <- function(x, rownames_column) {y <- as_tibble(x);y[[rownames_column]] <- rownames(x);y}
-  waypoint_positions <- (weights %*% positions) %>%
-    matrix_to_tibble("waypoint_id") %>%
-    left_join(waypoints$waypoints, "waypoint_id")
+  if (!is.null(edge_positions)) {
+    comp_names <- colnames(edge_positions) %>% keep(~grepl("comp_", .))
+    waypoint_positions <-
+      waypoints$progressions %>%
+      group_by(from, to) %>%
+      do({
+        df <- .
+        rel_edge_pos <- edge_positions %>% filter(from == df$from[[1]], to == df$to[[1]])
+        for (cn in comp_names) {
+          df[[cn]] <- approx(rel_edge_pos$percentage, rel_edge_pos[[cn]], df$percentage)$y
+        }
+        df
+      }) %>%
+      ungroup() %>%
+      select(!!comp_names, waypoint_id) %>%
+      left_join(waypoints$waypoints, "waypoint_id")
+  } else {
+    waypoint_positions <- (weights %*% positions) %>%
+      matrix_to_tibble("waypoint_id") %>%
+      left_join(waypoints$waypoints, "waypoint_id")
+  }
+
 
   # add color of closest cell
   if (color_trajectory == "nearest") {
@@ -74,7 +94,8 @@ project_waypoints <- function(
     mutate(
       distance_to_center = (comp_1_to - mean(c(max(comp_1_from), min(comp_1_from))))^2 + (comp_2_to - mean(c(max(comp_2_from), min(comp_2_from))))^2,
       arrow = row_number() == which.min(distance_to_center)
-    )
+    ) %>%
+    ungroup()
 
   lst(
     positions = waypoint_positions,
@@ -170,6 +191,19 @@ plot_dimred <- dynutils::inherit_default_params(
     trajectory_projection_sd,
     color_trajectory
   ) {
+    # defaults
+    # color_cells = "auto"
+    # plot_milestone_network = FALSE
+    # dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds))
+    # plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) && !plot_milestone_network
+    # label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
+    # alpha_cells = 1
+    # size_cells = 2.5
+    # border_radius_percentage = .1
+    # size_trajectory = 1
+    # hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE)
+    # groups <- grouping <- feature_oi <- NULL;  color_milestones <- "auto"; milestones <- milestone_percentages <- pseudotime <- NULL; expression_source <- "expression"; color_density <- "none"; padding <- .1; nbins <- 1000; bw = .2; density_cutoff <- .3; density_cutoff_label <- .03; waypoints <- dynwrap::select_waypoints(trajectory); trajectory_projection_sd <- sum(trajectory$milestone_network$length) * .05; color_trajectory <- "none"
+
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 
@@ -186,8 +220,12 @@ plot_dimred <- dynutils::inherit_default_params(
     dimred <- get_dimred(
       dataset = trajectory,
       dimred = dimred,
-      expression_source = expression_source
+      expression_source = expression_source,
+      return_other_dimreds = TRUE
     )
+    dimred_extra <- attr(dimred, "extra")
+    attr(dimred, "extra") <- NULL
+
     if (any(is.na(dimred))) dimred[is.na(dimred)] <- mean(dimred, na.rm = TRUE) # replace missing cells with mean position
 
     # get cell positions
@@ -222,7 +260,6 @@ plot_dimred <- dynutils::inherit_default_params(
     )
 
     cell_positions <- cell_coloring_output$cell_positions
-
 
     # calculate density
     density_plots <- add_density_coloring(
@@ -285,9 +322,16 @@ plot_dimred <- dynutils::inherit_default_params(
     # add milestone network if requested
     if (plot_milestone_network) {
       # calculate position of milestones
-      milestone_positions <- cell_positions %>%
-        group_by(milestone_id) %>%
-        summarise_at(c("comp_1", "comp_2"), mean)
+      milestone_positions <-
+        if (!is.null(extra$dimred_milestones)) {
+          extra$dimred_milestones %>%
+            as.data.frame() %>%
+            rownames_to_column("milestone_id")
+        } else {
+          cell_positions %>%
+            group_by(milestone_id) %>%
+            summarise_at(c("comp_1", "comp_2"), mean)
+        }
 
       # add missing groups (if no cells were added)
       milestone_positions <- bind_rows(
@@ -305,7 +349,6 @@ plot_dimred <- dynutils::inherit_default_params(
                   rep(3)
               )
 
-
             milestone_positions %>%
               slice(match(close_milestone_ids, milestone_id)) %>%
               summarise_at(c("comp_1", "comp_2"), mean) %>%
@@ -315,7 +358,8 @@ plot_dimred <- dynutils::inherit_default_params(
       )
 
       # get milestone network
-      milestone_network <- trajectory$milestone_network %>%
+      milestone_network <-
+        trajectory$milestone_network %>%
         left_join(
           milestone_positions %>% rename_all(~paste0(., "_from")),
           by = c("from" = "milestone_id_from")
@@ -353,15 +397,23 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # add trajectory if requested
     if (plot_trajectory) {
+      edge_positions <-
+        if (!is.null(dimred_extra$dimred_segment_points) && !is.null(dimred_extra$dimred_segment_progressions)) {
+          data.frame(dimred_extra$dimred_segment_progressions, dimred_extra$dimred_segment_points)
+        } else {
+          NULL
+        }
       waypoint_projection <- project_waypoints(
         trajectory = trajectory,
         cell_positions = cell_positions,
         waypoints = waypoints,
         trajectory_projection_sd = trajectory_projection_sd,
-        color_trajectory = color_trajectory
+        color_trajectory = color_trajectory,
+        edge_positions = edge_positions
       )
 
-      milestone_positions <- waypoint_projection$positions %>%
+      milestone_positions <-
+        waypoint_projection$positions %>%
         filter(!is.na(milestone_id))
 
       # add arrow if directed
