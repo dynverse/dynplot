@@ -17,10 +17,10 @@
 plot_topology <- dynutils::inherit_default_params(
   list(add_milestone_coloring),
   function(
-  trajectory,
-  color_milestones,
-  milestones,
-  layout = NULL
+    trajectory,
+    color_milestones,
+    milestones,
+    layout = NULL
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
@@ -49,7 +49,10 @@ plot_topology <- dynutils::inherit_default_params(
     milestones <- check_milestones(trajectory, milestones) %>% add_milestone_coloring(color_milestones)
     milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
 
-    milestone_graph <- igraph::graph_from_data_frame(trajectory$milestone_network, vertices = milestone_positions %>% select(-x, -y)) %>% as_tbl_graph()
+    milestone_graph <- igraph::graph_from_data_frame(
+      trajectory$milestone_network,
+      vertices = milestone_positions %>% select(-x, -y)
+    ) %>% as_tbl_graph()
 
     arrow <-
       if (any(trajectory$milestone_network$directed)) {
@@ -58,7 +61,7 @@ plot_topology <- dynutils::inherit_default_params(
         NULL
       }
 
-    ggraph(milestone_graph, "manual", node.positions = milestone_positions) +
+    ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
       geom_edge_fan() +
       geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow) +
       geom_node_label(aes(fill = color, label = milestone_id)) +

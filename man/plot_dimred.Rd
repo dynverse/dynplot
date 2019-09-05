@@ -29,7 +29,11 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{color_cells}{How to color the cells}
 
-\item{dimred}{The dimensionality reduction matrix (with cell_ids as rownames) or function which will run the dimensionality reduction}
+\item{dimred}{Can be
+\itemize{
+\item A function which will perform the dimensionality reduction, see \code{\link[dyndimred:dimred]{dyndimred::list_dimred_methods()}}
+\item A matrix with the dimensionality reduction, with cells in rows and dimensions (\emph{comp_1}, \emph{comp_2}, ...) in columns
+}}
 
 \item{plot_trajectory}{Whether to plot the projected trajectory on the dimensionality reduction}
 
