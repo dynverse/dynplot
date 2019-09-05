@@ -9,3 +9,5 @@
 ^\.readme_files
 ^README
 ^tests
+^_pkgdown\.yml$
+^data-raw
