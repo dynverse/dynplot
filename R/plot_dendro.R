@@ -186,7 +186,7 @@ plot_dendro <- dynutils::inherit_default_params(
       }
 
     # generate layout
-    layout <- ggraph::create_layout(milestone_tree, "manual", node.position = milestone_positions)
+    layout <- ggraph::create_layout(milestone_tree, "manual", x = milestone_positions$x, y = milestone_positions$y)
 
     # start plotting!
     dendro <- ggplot(layout) +
