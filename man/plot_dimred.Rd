@@ -12,14 +12,14 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
   !plot_milestone_network, plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   alpha_cells = 1, size_cells = 2.5, border_radius_percentage = 0.1,
-  size_trajectory = 1, hex_cells = ifelse(length(trajectory$cell_ids) >
-  10000, 100, FALSE), grouping = NULL, groups = NULL,
-  feature_oi = NULL, color_milestones = c("auto", "given", "cubeHelix",
-  "Set3", "rainbow"), milestones = NULL, milestone_percentages = NULL,
-  pseudotime = NULL, expression_source = "expression",
-  color_density = c("none", "grouping", "feature"), padding = 0.1,
-  nbins = 1000, bw = 0.2, density_cutoff = 0.3,
-  density_cutoff_label = density_cutoff/10,
+  size_milestones = 6, size_transitions = 1,
+  hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
+  grouping = NULL, groups = NULL, feature_oi = NULL,
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
+  expression_source = "expression", color_density = c("none",
+  "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
+  density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
   waypoints = dynwrap::select_waypoints(trajectory),
   trajectory_projection_sd = sum(trajectory$milestone_network$length) *
   0.05, color_trajectory = "none")
@@ -47,7 +47,9 @@ plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{border_radius_percentage}{The fraction of the radius that is used for the border}
 
-\item{size_trajectory}{The size of the trajectory segments}
+\item{size_milestones}{The size of the milestones}
+
+\item{size_transitions}{The size of the trajectory segments}
 
 \item{hex_cells}{The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000}
 

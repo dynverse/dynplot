@@ -118,7 +118,8 @@ project_waypoints <- function(
 #' @param alpha_cells The alpha of the cells
 #' @param size_cells The size of the cells
 #' @param border_radius_percentage The fraction of the radius that is used for the border
-#' @param size_trajectory The size of the trajectory segments
+#' @param size_milestones The size of the milestones
+#' @param size_transitions The size of the trajectory segments
 #' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
 #'
 #'
@@ -166,7 +167,8 @@ plot_dimred <- dynutils::inherit_default_params(
     alpha_cells = 1,
     size_cells = 2.5,
     border_radius_percentage = .1,
-    size_trajectory = 1,
+    size_milestones = 6,
+    size_transitions = 1,
     hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
 
     # trajectory information
@@ -201,7 +203,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # alpha_cells = 1
     # size_cells = 2.5
     # border_radius_percentage = .1
-    # size_trajectory = 1
+    # size_transitions = 1
     # hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE)
     # groups <- grouping <- feature_oi <- NULL;  color_milestones <- "auto"; milestones <- milestone_percentages <- pseudotime <- NULL; expression_source <- "expression"; color_density <- "none"; padding <- .1; nbins <- 1000; bw = .2; density_cutoff <- .3; density_cutoff_label <- .03; waypoints <- dynwrap::select_waypoints(trajectory); trajectory_projection_sd <- sum(trajectory$milestone_network$length) * .05; color_trajectory <- "none"
 
@@ -388,11 +390,11 @@ plot_dimred <- dynutils::inherit_default_params(
 
       if (color_cells == "milestone") {
         plot <- plot +
-          geom_point(color = "black", data = milestone_positions, size = 6) +
-          geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = 4)
+          geom_point(color = "black", data = milestone_positions, size = size_milestones) +
+          geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = size_milestone*.75)
       } else {
         plot <- plot +
-          geom_point(color = "#333333", data = milestone_positions, size = 6, alpha = 1)
+          geom_point(color = "#333333", data = milestone_positions, size = size_milestones, alpha = 1)
       }
     }
 
@@ -427,7 +429,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       # plot milestones and arrows
       plot <- plot +
-        geom_point(color = "#333333", data = milestone_positions, size = 4, alpha = 1)+
+        geom_point(color = "#333333", data = milestone_positions, size = size_milestones, alpha = 1) +
         geom_segment(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
@@ -453,13 +455,13 @@ plot_dimred <- dynutils::inherit_default_params(
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
             data = waypoint_projection$edges,
-            size = size_trajectory + 1,
+            size = size_transitions + 1,
             color = "#333333"
           ) +
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
             data = waypoint_projection$edges,
-            size = size_trajectory
+            size = size_transitions
           ) +
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
@@ -469,13 +471,13 @@ plot_dimred <- dynutils::inherit_default_params(
             linejoin = "mitre",
             lineend = "butt"
           ) +
-          geom_point(aes(color = color), data = milestone_positions, size = 3, alpha = 1)
+          geom_point(aes(color = color), data = milestone_positions, size = size_milestones*.75, alpha = 1)
       } else {
         plot <- plot +
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
             data = waypoint_projection$edges,
-            size = size_trajectory,
+            size = size_transitions,
             color = "#333333"
           )
       }

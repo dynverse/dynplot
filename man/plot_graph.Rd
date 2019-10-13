@@ -10,8 +10,8 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
   "given", "cubeHelix", "Set3", "rainbow"), grouping = NULL,
   groups = NULL, feature_oi = NULL, pseudotime = NULL,
   expression_source = "expression", milestones = NULL,
-  milestone_percentages = NULL, transition_size = 3,
-  milestone_size = 5, alpha_cells = 1, size_cells = 2.5,
+  milestone_percentages = NULL, size_trajectory = 3,
+  size_milestones = 8, alpha_cells = 1, size_cells = 2.5,
   border_radius_percentage = 0.1, arrow_length = grid::unit(1, "cm"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   plot_milestones = FALSE, adjust_weights = FALSE)
@@ -37,9 +37,9 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{milestone_percentages}{The milestone percentages}
 
-\item{transition_size}{The size of the transition lines between milestones.}
+\item{size_trajectory}{The size of the transition lines between milestones.}
 
-\item{milestone_size}{The size of milestones.}
+\item{size_milestones}{The size of milestones.}
 
 \item{alpha_cells}{The alpha of the cells.}
 

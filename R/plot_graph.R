@@ -4,8 +4,8 @@
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @inheritParams plot_dimred
-#' @param transition_size The size of the transition lines between milestones.
-#' @param milestone_size The size of milestones.
+#' @param size_trajectory The size of the transition lines between milestones.
+#' @param size_milestones The size of milestones.
 #' @param arrow_length length of the arrow.
 #' @param plot_milestones Whether to plot the milestones.
 #' @param alpha_cells The alpha of the cells.
@@ -49,8 +49,8 @@ plot_graph <- dynutils::inherit_default_params(
     expression_source,
     milestones,
     milestone_percentages,
-    transition_size = 3,
-    milestone_size = 5,
+    size_trajectory = 3,
+    size_milestones = 8,
     alpha_cells = 1,
     size_cells = 2.5,
     border_radius_percentage = .1,
@@ -136,7 +136,7 @@ plot_graph <- dynutils::inherit_default_params(
       geom_segment(
         aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
         dimred_segments,
-        size = transition_size + 2,
+        size = size_trajectory + 2,
         colour = "grey"
       ) +
 
@@ -153,17 +153,17 @@ plot_graph <- dynutils::inherit_default_params(
       geom_segment(
         aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
         dimred_segments,
-        size = transition_size,
+        size = size_trajectory,
         colour = "white"
       )
 
     if (plot_milestones) {
       plot <- plot +
         # Milestone white bowl
-        geom_point(aes(comp_1, comp_2), size = 10, data = milestone_positions, colour = "white") +
+        geom_point(aes(comp_1, comp_2), size = size_milestones, data = milestone_positions, colour = "white") +
 
         # Milestone fill
-        geom_point(aes(comp_1, comp_2, colour = color), size = 8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5)
+        geom_point(aes(comp_1, comp_2, colour = color), size = size_milestones * .8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5)
     }
 
     # plot the cells
