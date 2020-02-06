@@ -42,7 +42,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
   function(
     cell_positions,
     color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
-    trajectory,
+    dataset,
+    trajectory = dataset,
     grouping = NULL,
     groups = NULL,
     feature_oi = NULL,
@@ -157,7 +158,8 @@ add_cell_coloring <- dynutils::inherit_default_params(
 add_density_coloring <- function(
   cell_positions,
   color_density = c("none", "grouping", "feature"),
-  trajectory,
+  dataset,
+  trajectory = dataset,
   grouping = NULL,
   groups = NULL,
   feature_oi = NULL,

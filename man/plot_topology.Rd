@@ -4,8 +4,12 @@
 \alias{plot_topology}
 \title{Plot the topology of a trajectory}
 \usage{
-plot_topology(trajectory, color_milestones = c("auto", "given",
-  "cubeHelix", "Set3", "rainbow"), milestones = NULL, layout = NULL)
+plot_topology(
+  trajectory,
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL,
+  layout = NULL
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}
@@ -14,7 +18,8 @@ plot_topology(trajectory, color_milestones = c("auto", "given",
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
-\item{layout}{The type of layout to create.}
+\item{layout}{The type of layout to create. Either a valid string, a
+function, a matrix, or a data.frame (see Details)}
 }
 \description{
 Plot the topology of a trajectory

@@ -125,7 +125,7 @@ project_waypoints <- function(
 #' }
 #'
 #' @export
-plot_dimred <- dynutils::inherit_default_params(
+plot_dimred_old <- dynutils::inherit_default_params(
   list(
     add_cell_coloring,
     add_milestone_coloring,

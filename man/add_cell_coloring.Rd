@@ -4,12 +4,20 @@
 \alias{add_cell_coloring}
 \title{Add coloring}
 \usage{
-add_cell_coloring(cell_positions, color_cells = c("auto", "none",
-  "grouping", "feature", "milestone", "pseudotime"), trajectory,
-  grouping = NULL, groups = NULL, feature_oi = NULL,
-  expression_source = "expression", pseudotime = NULL,
+add_cell_coloring(
+  cell_positions,
+  color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
+  dataset,
+  trajectory = dataset,
+  grouping = NULL,
+  groups = NULL,
+  feature_oi = NULL,
+  expression_source = "expression",
+  pseudotime = NULL,
   color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
-  milestones = NULL, milestone_percentages = NULL)
+  milestones = NULL,
+  milestone_percentages = NULL
+)
 }
 \arguments{
 \item{cell_positions}{The positions of the cells}

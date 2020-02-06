@@ -4,15 +4,24 @@
 \alias{plot_onedim}
 \title{Plot onedim}
 \usage{
-plot_onedim(trajectory, color_cells = c("auto", "none", "grouping",
-  "feature", "milestone", "pseudotime"), grouping = NULL,
-  groups = NULL, feature_oi = NULL, pseudotime = NULL,
-  expression_source = "expression", color_milestones = c("auto",
-  "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
-  milestone_percentages = NULL, orientation = 1, margin = 0.05,
+plot_onedim(
+  trajectory = dataset,
+  color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
+  grouping = NULL,
+  groups = NULL,
+  feature_oi = NULL,
+  pseudotime = NULL,
+  expression_source = "expression",
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL,
+  milestone_percentages = NULL,
+  orientation = 1,
+  margin = 0.05,
   linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
-  quasirandom_width = 0.2, plot_cells = TRUE,
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory))
+  quasirandom_width = 0.2,
+  plot_cells = TRUE,
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}

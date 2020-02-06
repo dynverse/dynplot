@@ -71,7 +71,7 @@ linearise_cells <- function(
 progressions_one_edge <- function(progressions) {
   progressions %>%
     group_by(cell_id) %>%
-    arrange(-percentage) %>%
+    arrange(percentage) %>%
     filter(dplyr::row_number() == 1) %>%
     ungroup()
 }

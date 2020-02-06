@@ -53,6 +53,9 @@ plot_graph <- dynutils::inherit_default_params(
     plot_milestones = FALSE,
     adjust_weights = FALSE
   ) {
+    warning("Not implemented using ggplot2")
+    return(ggplot())
+
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
 

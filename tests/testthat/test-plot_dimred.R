@@ -8,7 +8,7 @@ test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
 
   space <- dimred_pca(dataset$expression)
   feature_oi <- first(colnames(dataset$expression))
-  grouping <- dataset$prior_information$grouping_assignment
+  grouping <- dataset$prior_information$groups_id
 
   test_that(paste0("plot_dimred on ", dataset$id, "with giving space"), {
     g <- plot_dimred(dataset, dimred = space)
@@ -26,32 +26,22 @@ test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
   })
 
   test_that(paste0("plot_dimred on ", dataset$id, " with milestone"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space)
+    g <- plot_dimred(dataset, color_cells = "milestone", dimred = space)
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", dataset$id, " with feature"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space, feature_oi = feature_oi)
+    g <- plot_dimred(dataset, color_cells = "milestone", dimred = space, feature_oi = feature_oi)
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", dataset$id, " with grouping"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space, color_density = "grouping", grouping = grouping)
-    expect_ggplot(g)
-  })
-
-  test_that(paste0("plot_dimred on ", dataset$id, " with feature density"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space, color_density = "feature", feature_oi = feature_oi)
-    expect_ggplot(g)
-  })
-
-  test_that(paste0("plot_dimred on ", dataset$id, " with milestone network"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space, plot_milestone_network = TRUE)
+    g <- plot_dimred(dataset, color_cells = "milestone", dimred = space, plot_contour = "grouping", grouping = deframe(grouping))
     expect_ggplot(g)
   })
 
   test_that(paste0("plot_dimred on ", dataset$id, " with trajectory projection"), {
-    g <- plot_dimred(dataset, "milestone", dimred = space, plot_trajectory = TRUE)
+    g <- plot_dimred(dataset, color_cells = "milestone", dimred = space)
     expect_ggplot(g)
   })
 

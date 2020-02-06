@@ -4,10 +4,13 @@
 \alias{project_waypoints}
 \title{Project the waypoints}
 \usage{
-project_waypoints(trajectory, cell_positions,
+project_waypoints(
+  trajectory,
+  cell_positions,
   waypoints = dynwrap::select_waypoints(trajectory),
-  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
-  0.05, color_trajectory = "none")
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
+  color_trajectory = "none"
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}

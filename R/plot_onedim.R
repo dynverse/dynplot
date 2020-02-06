@@ -158,7 +158,7 @@ plot_onedim <- dynutils::inherit_default_params(
 )
 
 
-make_connection_plotdata <- function(linearised) {
+  make_connection_plotdata <- function(linearised) {
   connections <- crossing(
     linearised$milestone_network %>% select(from, x_from = cumstart),
     linearised$milestone_network %>% select(to, x_to = cumend)

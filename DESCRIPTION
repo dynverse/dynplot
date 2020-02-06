@@ -11,7 +11,7 @@ Description: Package that create ggplot2 plots of single-cell trajectories. This
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 SystemRequirements: libudunits2-dev (deb) or udunits2-devel (rpm)
 Depends:
   R (>= 3.0.0)
@@ -23,6 +23,7 @@ Imports:
   dynfeature (>= 1.0.0),
   dyndimred (>= 1.0.0),
   dynwrap (>= 1.0.0),
+  dynplot2,
   GA,
   ggbeeswarm,
   ggplot2 (>= 3.0),
@@ -50,12 +51,13 @@ Suggests:
   destiny,
   knitr,
   rmarkdown
-Remotes:  
+Remotes: 
     thomasp85/patchwork,
     dynverse/dynutils@devel,
     dynverse/dyndimred@devel,
     dynverse/dynwrap@devel,
-    dynverse/dynfeature@devel
+    dynverse/dynfeature@devel,
+    dynverse/dynplot2@devel
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
@@ -63,19 +65,29 @@ Collate:
     'data.R'
     'dummy_proofing.R'
     'is_colour_vector.R'
+    'layer_cells.R'
+    'layer_contour.R'
+    'layer_milestones.R'
+    'layer_trajectory.R'
+    'layer_velocity.R'
     'linearise_cells.R'
     'optimize_order.R'
     'package.R'
     'plot_dendro.R'
+    'plot_dendro2.R'
     'plot_dimred.R'
+    'plot_dimred2.R'
     'plot_edge_flips.R'
     'plot_generic.R'
     'plot_graph.R'
-    'plot_grouped.R'
     'plot_heatmap.R'
+    'plot_heatmap_annotations.R'
+    'plot_heatmap2.R'
     'plot_linearised_comparison.R'
     'plot_onedim.R'
     'plot_strip.R'
     'plot_topology.R'
+    'preprocess.R'
     'process_dynplot.R'
+    'scales.R'
     'theme_clean.R'

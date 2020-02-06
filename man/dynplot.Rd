@@ -3,7 +3,6 @@
 \docType{package}
 \name{dynplot}
 \alias{dynplot}
-\alias{dynplot-package}
 \title{Plot all the trajectories}
 \description{
 Plot all the trajectories

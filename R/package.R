@@ -10,8 +10,10 @@
 #' @import dynwrap
 #' @import dyndimred
 #' @import purrr
+#' @import dynplot2
 #' @importFrom assertthat assert_that
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
+#' @importFrom zeallot %<-%
 #'
 #' @docType package
 #' @name dynplot

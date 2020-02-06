@@ -24,7 +24,7 @@
 #' plot_heatmap(example_bifurcating)
 #'
 #' @export
-plot_heatmap <- function(
+plot_heatmap_old <- function(
   trajectory,
   expression_source = "expression",
   features_oi = 20,
@@ -42,8 +42,6 @@ plot_heatmap <- function(
 ) {
   # make sure a trajectory was provided
   testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
-
-  heatmap_type <- match.arg(heatmap_type)
 
   # process expression
   expression <- get_expression(trajectory, expression_source)
@@ -207,5 +205,3 @@ plot_heatmap <- function(
     heights = c(0.5, 10, 2)
   )
 }
-
-
