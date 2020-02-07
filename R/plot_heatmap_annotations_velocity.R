@@ -78,9 +78,15 @@ annotate_velocity <- function(
   dataset,
   trajectory = dataset,
   linearised,
-  plot_velocity = c("top", "bottom", "none"),
+  plot_velocity = case_when(
+    !is.null(dataset$velocity) ~ "top",
+    TRUE ~ "none"
+  ),
   velocity_each = as.integer(length(trajectory$cell_ids) / 100)
 ) {
+  assert_that(plot_velocity %in% c("top", "bottom", "none"))
+  assert_that(length(plot_velocity) == 1)
+
   cell_trajectory_velocities <- calculate_cell_trajectory_velocity(dataset, trajectory)
 
   # select waypoint cells
