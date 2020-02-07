@@ -9,15 +9,26 @@ plot_heatmap(
   trajectory = dataset,
   expression_source = dataset,
   features_oi = 20,
+  feature_info = NULL,
+  row_gap = unit(3, "mm"),
   clust = "ward.D2",
   color_cells = NULL,
   milestones = NULL,
   milestone_percentages = trajectory$milestone_percentages,
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
   grouping = NULL,
   groups = NULL,
   scale = dynutils::scale_quantile,
-  column_gap = unit(1, "mm"),
-  plot_milestone_percentages = c("top", "bottom", "none")
+  column_gap = unit(3, "mm"),
+  top_annotation = list(),
+  plot_milestone_percentages = c("top", "bottom", "none"),
+  plot_milestone_network = c("bottom", "none", "top"),
+  milestone_network_orientation = case_when(first(plot_milestone_network) == "bottom" ~
+    "bottom", TRUE ~ "top"),
+  milestone_network_arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"), type =
+    "closed"),
+  plot_velocity = c("bottom", "none", "top"),
+  velocity_each
 )
 }
 \arguments{
@@ -26,6 +37,8 @@ plot_heatmap(
 \item{clust}{The method to cluster the features, or a hclust object}
 
 \item{scale}{Whether to rescale the expression, can be a function or boolean}
+
+\item{features_labels}{The labels for the features. If NULL, will use either the names of the features_oi (if exists) or the features_oi themselves. If not NULL, this should be a named character vector providing the label of a features given its feature_id}
 }
 \description{
 Plot the expression across a trajectory in a heatmap

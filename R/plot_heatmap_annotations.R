@@ -4,7 +4,7 @@ create_milestone_legend <- function(milestones) {
     title = "Milestones",
     at = milestones$milestone_id,
     legend_gp = grid::gpar(fill=milestones$color),
-    labels = milestones$milestone_id
+    labels = milestones$label
   )
 }
 
@@ -35,7 +35,7 @@ annotate_milestone_percentages <- function(
 
   annotation_milestone_percentages <- ComplexHeatmap::anno_simple(
     milestone_percentages_cellwise[linearised$progressions$cell_id],
-    col = ColorMapping("Milestone", col_fun = col_fun, breaks = list())
+    col = ComplexHeatmap::ColorMapping("Milestone", col_fun = col_fun, breaks = list())
   )
 
   list(
@@ -94,13 +94,14 @@ annotate_milestone_network <- function(
   trajectory = dataset,
   milestones = NULL,
   linearised,
-  plot_milestone_network = c("bottom", "none", "top"),
+  plot_milestone_network = c("top", "bottom", "none"),
   milestone_network_orientation = case_when(
-    plot_milestone_network == "bottom" ~ "bottom",
+    first(plot_milestone_network) == "bottom" ~ "bottom",
     TRUE ~ "top"
   ),
+  milestone_network_arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"), type = "closed"),
   plot_milestones = c("point", "none", "label"),
-  column_gap = unit(5, "mm")
+  column_gap = unit(3, "mm")
 ) {
   requireNamespace("ComplexHeatmap")
 
@@ -155,22 +156,34 @@ annotate_milestone_network <- function(
         unit.c(base_y, base_y)
       )
 
+      # arrow
+      grid.lines(
+        unit.c(unit(n*0.49, "native"), unit(n*0.5, "native")),
+        unit.c(base_y, base_y),
+        arrow = milestone_network_arrow,
+        gp = gpar(fill = "#333333")
+      )
+
       # labels of milestones
       if(plot_milestones != "none") {
         milestone_from <- milestones %>% dplyr::filter(milestone_id == milestone_edge$from) %>% extract_row_to_list(1)
         milestone_to <- milestones %>% dplyr::filter(milestone_id == milestone_edge$to) %>% extract_row_to_list(1)
 
-        grob <- ggplot2:::labelGrob(
-          milestone_from$label, unit(0, "native"), base_y, just = c(0, 0.5),
-          rect.gp = grid::gpar(fill = milestone_from$color)
-        )
-        grid::grid.draw(grob)
+        if(milestone_from$label != "") {
+          grob <- ggplot2:::labelGrob(
+            milestone_from$label, unit(0, "native"), base_y, just = c(0, 0.5),
+            rect.gp = grid::gpar(fill = milestone_from$color)
+          )
+          grid::grid.draw(grob)
+        }
 
-        grob <- ggplot2:::labelGrob(
-          milestone_to$label, unit(n, "native"), base_y, just = c(1, 0.5),
-          rect.gp = grid::gpar(fill = milestone_to$color)
-        )
-        grid::grid.draw(grob)
+        if(milestone_to$label != "") {
+          grob <- ggplot2:::labelGrob(
+            milestone_to$label, unit(n, "native"), base_y, just = c(1, 0.5),
+            rect.gp = grid::gpar(fill = milestone_to$color)
+          )
+          grid::grid.draw(grob)
+        }
       }
 
       popViewport()
@@ -179,6 +192,9 @@ annotate_milestone_network <- function(
       milestone_network = milestone_network,
       milestones = milestones,
       connections = connections,
+      milestone_network_arrow = milestone_network_arrow,
+      milestone_network_orientation = milestone_network_orientation,
+
       height = unit(max(connections$level) + 1, "cm"),
       padding = unit(0.5, "cm"),
       column_gap = column_gap
@@ -189,7 +205,6 @@ annotate_milestone_network <- function(
   )
 
   lst(
-    annotation_milestone_network,
-    legend_milestone_id = create_milestone_legend(milestones)
+    annotation_milestone_network
   )
 }
