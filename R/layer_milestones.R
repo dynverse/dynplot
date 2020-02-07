@@ -22,9 +22,10 @@ layer_milestones <- dynutils::inherit_default_params(
   if (plot_milestones_ != "none") {
     milestones <- check_milestones(trajectory, milestones, milestone_percentages, check_color = TRUE, color_milestones = color_milestones)
     if(plot_milestones_ == "label") {
+      hjust = 0.5 # default hjust in case it does not exist in the milestone_positions created by dynplot2
       current_plot <- current_plot +
         ggnewscale::new_scale_fill() +
-        geom_milestone_label(aes(fill = milestone_id), color = "black", size = size_milestones) +
+        geom_milestone_label(aes(fill = milestone_id, hjust = hjust), color = "black", size = size_milestones) +
         scale_fill_manual("Milestone", values = milestones %>% select(milestone_id, color) %>% deframe())
     } else if (plot_milestones_ == "point") {
       current_plot <- current_plot +

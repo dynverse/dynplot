@@ -77,7 +77,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
   if (first(color_cells) == "auto") {
     color_cells <- case_when(
-      first(plot_contour) != "none" ~ "auto",
+      first(plot_contour) != "none" ~ "grey",
       TRUE ~ "auto"
     )
   }

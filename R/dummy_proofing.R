@@ -78,6 +78,9 @@ check_milestones <- function(trajectory, milestones, milestone_percentages = NUL
 
   # add labels
   if (!"label" %in% names(milestones)) {
+    if(is.null(trajectory$milestone_labelling)){
+      trajectory$milestone_labelling <- character()
+    }
     milestones <- milestones %>% mutate(
       label = case_when(
         is.na(trajectory$milestone_labelling[milestone_id]) ~  milestone_id,

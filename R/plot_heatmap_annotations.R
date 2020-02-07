@@ -1,8 +1,9 @@
 create_milestone_legend <- function(milestones) {
-  legend_milestone_id = Legend(
+  requireNamespace("ComplexHeatmap")
+  legend_milestone_id = ComplexHeatmap::Legend(
     title = "Milestones",
     at = milestones$milestone_id,
-    legend_gp = gpar(fill=milestones$color),
+    legend_gp = grid::gpar(fill=milestones$color),
     labels = milestones$milestone_id
   )
 }
@@ -16,6 +17,8 @@ annotate_milestone_percentages <- function(
   linearised,
   plot_milestone_percentages = c("top", "bottom", "none")
 ) {
+  requireNamespace("ComplexHeatmap")
+
   plot_milestone_percentages <- match.arg(plot_milestone_percentages)
 
   milestone_percentages_cellwise <- trajectory$milestone_percentages %>% nest(data = c(milestone_id, percentage)) %>% deframe()
@@ -30,7 +33,7 @@ annotate_milestone_percentages <- function(
     })
   }
 
-  annotation_milestone_percentages <- anno_simple(
+  annotation_milestone_percentages <- ComplexHeatmap::anno_simple(
     milestone_percentages_cellwise[linearised$progressions$cell_id],
     col = ColorMapping("Milestone", col_fun = col_fun, breaks = list())
   )
@@ -96,8 +99,11 @@ annotate_milestone_network <- function(
     plot_milestone_network == "bottom" ~ "bottom",
     TRUE ~ "top"
   ),
-  plot_milestones = c("point", "none", "label")
+  plot_milestones = c("point", "none", "label"),
+  column_gap = unit(5, "mm")
 ) {
+  requireNamespace("ComplexHeatmap")
+
   plot_milestone_network <- match.arg(plot_milestone_network)
   assert_that(all(milestone_network_orientation %in% c("bottom", "top")))
   assert_that(length(milestone_network_orientation) == 1)
@@ -106,7 +112,7 @@ annotate_milestone_network <- function(
   connections <- get_connections(linearised)
   milestone_network <- linearised$milestone_network
 
-  annotation_milestone_network = AnnotationFunction(
+  annotation_milestone_network = ComplexHeatmap::AnnotationFunction(
     fun = function(index, k, n) {
       ymax <- max(connections$level)
 
@@ -130,7 +136,7 @@ annotate_milestone_network <- function(
           x_to <- unit(connection$x_to, "native") + column_gap * (connection$edge_ix_to - 1)
           y <- unit(connection$level, "native") * y_multiplier + base_y
 
-          connection_gpar <- gpar(lty = "dashed")
+          connection_gpar <- grid::gpar(lty = "dashed")
 
           grid.lines(
             unit.c(x_from, x_from, x_to, x_to),
@@ -156,24 +162,26 @@ annotate_milestone_network <- function(
 
         grob <- ggplot2:::labelGrob(
           milestone_from$label, unit(0, "native"), base_y, just = c(0, 0.5),
-          rect.gp = gpar(fill = milestone_from$color)
+          rect.gp = grid::gpar(fill = milestone_from$color)
         )
-        grid.draw(grob)
+        grid::grid.draw(grob)
 
         grob <- ggplot2:::labelGrob(
           milestone_to$label, unit(n, "native"), base_y, just = c(1, 0.5),
-          rect.gp = gpar(fill = milestone_to$color)
+          rect.gp = grid::gpar(fill = milestone_to$color)
         )
-        grid.draw(grob)
+        grid::grid.draw(grob)
       }
 
       popViewport()
     },
     var_import = list(
       milestone_network = milestone_network,
+      milestones = milestones,
       connections = connections,
       height = unit(max(connections$level) + 1, "cm"),
-      padding = unit(0.5, "cm")
+      padding = unit(0.5, "cm"),
+      column_gap = column_gap
     ),
     n = nrow(linearised$progressions),
     subsetable = FALSE,

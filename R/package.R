@@ -11,6 +11,7 @@
 #' @import dyndimred
 #' @import purrr
 #' @import dynplot2
+#' @import grid
 #' @importFrom assertthat assert_that
 #' @importFrom magrittr %<>% %$% set_rownames set_colnames
 #' @importFrom zeallot %<-%

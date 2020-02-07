@@ -6,12 +6,12 @@
 \usage{
 plot_heatmap(
   dataset,
-  trajectory,
+  trajectory = dataset,
   expression_source = dataset,
   features_oi = 20,
   clust = "ward.D2",
   color_cells = NULL,
-  milestones,
+  milestones = NULL,
   milestone_percentages = trajectory$milestone_percentages,
   grouping = NULL,
   groups = NULL,
