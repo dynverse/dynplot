@@ -4,7 +4,8 @@ create_milestone_legend <- function(milestones) {
     title = "Milestones",
     at = milestones$milestone_id,
     legend_gp = grid::gpar(fill=milestones$color),
-    labels = milestones$label
+    labels = milestones$label,
+    direction = "horizontal"
   )
 }
 
@@ -95,23 +96,25 @@ annotate_milestone_network <- function(
   milestones = NULL,
   linearised,
   plot_milestone_network = c("top", "bottom", "none"),
+  plot_milestones = c("point", "none", "label"),
   milestone_network_orientation = case_when(
     first(plot_milestone_network) == "bottom" ~ "bottom",
     TRUE ~ "top"
   ),
   milestone_network_arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"), type = "closed"),
-  plot_milestones = c("point", "none", "label"),
   column_gap = unit(3, "mm")
 ) {
   requireNamespace("ComplexHeatmap")
 
   plot_milestone_network <- match.arg(plot_milestone_network)
+  plot_milestones <- match.arg(plot_milestones)
   assert_that(all(milestone_network_orientation %in% c("bottom", "top")))
   assert_that(length(milestone_network_orientation) == 1)
-  plot_milestones <- match.arg(plot_milestones)
 
   connections <- get_connections(linearised)
   milestone_network <- linearised$milestone_network
+
+  height <- unit(max(connections$level) + 1, "cm")
 
   annotation_milestone_network = ComplexHeatmap::AnnotationFunction(
     fun = function(index, k, n) {
@@ -189,19 +192,23 @@ annotate_milestone_network <- function(
       popViewport()
     },
     var_import = list(
+      plot_milestones = plot_milestones,
       milestone_network = milestone_network,
       milestones = milestones,
+
       connections = connections,
+
       milestone_network_arrow = milestone_network_arrow,
       milestone_network_orientation = milestone_network_orientation,
 
-      height = unit(max(connections$level) + 1, "cm"),
+      # parameters for positioning
+      height = height,
       padding = unit(0.5, "cm"),
       column_gap = column_gap
     ),
     n = nrow(linearised$progressions),
     subsetable = FALSE,
-    height = unit(max(connections$level) + 1, "cm")
+    height = height
   )
 
   lst(

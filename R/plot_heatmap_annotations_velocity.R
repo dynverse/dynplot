@@ -4,6 +4,8 @@ calculate_cell_trajectory_velocity <- function(
 ) {
   assert_that(!is.null(dataset$velocity))
 
+  message("Calculating RNA velocity along the trajectory")
+
   dimred_traj <- calculate_trajectory_dimred(trajectory)
 
   # get milestone network and MAX progressions
@@ -151,7 +153,10 @@ annotate_velocity <- function(
     },
     var_import = list(
       linearised = linearised,
-      cell_waypoint_trajectory_velocities = cell_waypoint_trajectory_velocities
+      cell_waypoint_trajectory_velocities = cell_waypoint_trajectory_velocities,
+
+      # parameters for positioning
+      velocity_each = velocity_each
     ),
     n = nrow(linearised$progressions),
     subsetable = FALSE,
@@ -164,7 +169,8 @@ annotate_velocity <- function(
     type = "points",
     pch = "\U25BA",
     legend_gp = gpar(fill = "#333333", fontsize = c(20, 10, 5)),
-    background = NULL
+    background = NULL,
+    direction = "horizontal"
   )
 
   lst(

@@ -14,7 +14,7 @@
 #' data(example_bifurcating)
 #' plot_heatmap(example_bifurcating)
 #'
-#' @include plot_heatmap_annotations.R plot_heatmap_annotations_velocity.R
+#' @include plot_heatmap_annotations.R plot_heatmap_annotations_velocity.R plot_heatmap_annotations_features.R
 #'
 #' @export
 plot_heatmap <- inherit_default_params(
@@ -22,6 +22,7 @@ plot_heatmap <- inherit_default_params(
     annotate_milestone_percentages,
     annotate_milestone_network,
     annotate_velocity,
+    annotate_features,
     add_milestone_coloring
   ),
   function(
@@ -32,6 +33,7 @@ plot_heatmap <- inherit_default_params(
     # feature parameters
     features_oi = 20,
     feature_info = NULL,
+    highlight_features,
     row_gap = unit(3, "mm"),
 
     clust = "ward.D2",
@@ -55,12 +57,16 @@ plot_heatmap <- inherit_default_params(
 
     # milestone network
     plot_milestone_network,
+    plot_milestones,
     milestone_network_orientation,
     milestone_network_arrow,
 
     # velocity
     plot_velocity,
-    velocity_each
+    velocity_each,
+
+    # legends
+    heatmap_legend_param = list(direction = "horizontal")
 ) {
   requireNamespace("ComplexHeatmap")
 
@@ -164,20 +170,23 @@ plot_heatmap <- inherit_default_params(
     annotation_legends$Milestones <- legend_milestone_id
   }
 
-  # plot feature labels
-  if(is.null(feature_info)) {
-    feature_info <- tibble(feature_id = features_oi, label = feature_id)
-  } else if (is.null(feature_info$label)) {
-    feature_info$label <- feature_info$feature_id
-  }
-  feature_labels <- feature_info %>% slice(match(features_oi, feature_id)) %>% select(feature_id, label) %>% deframe()
-  feature_labels <- feature_labels %>% purrr::discard(is.na)
-  feature_labels_at <- match(names(feature_labels), colnames(expression_matrix))
-  if(length(feature_labels) == length(features_oi)) {
-    show_row_names <- TRUE
-  } else {
-    right_annotation$Features <- ComplexHeatmap::anno_mark(at = feature_labels_at, labels = feature_labels, which = "row")
-    show_row_names <- FALSE
+  # feature labels and feature annotation
+  c(
+    annotation_features,
+    feature_labels,
+    show_row_names,
+    row_labels,
+    row_names_gp
+  ) %<-% annotate_features(
+    dataset,
+    trajectory,
+    features_oi = features_oi,
+    feature_info = feature_info,
+    highlight_features = highlight_features
+  )
+
+  if(!is.null(annotation_features)) {
+    right_annotation$Features <- annotation_features
   }
 
   # wrap up annotations
@@ -191,9 +200,10 @@ plot_heatmap <- inherit_default_params(
     invoke(ComplexHeatmap::HeatmapAnnotation, right_annotation, which = "row")
   } else {NULL}
 
+  browser()
+
   heatmap <- ComplexHeatmap::Heatmap(
     Matrix::t(dynutils::scale_quantile(expression_matrix)),
-    row_labels = names(features_oi) %||% features_oi,
     name = "Expression",
 
     cluster_rows = clust,
@@ -206,8 +216,11 @@ plot_heatmap <- inherit_default_params(
     column_split = linearised$progressions$label,
     column_gap = column_gap,
 
-    # right
+    # features
     show_row_names = show_row_names,
+    row_labels = row_labels,
+    row_names_gp = row_names_gp,
+
     right_annotation = right_annotation,
     cluster_columns = FALSE,
     show_column_names = FALSE,
@@ -217,17 +230,21 @@ plot_heatmap <- inherit_default_params(
 
     # annotation
     top_annotation = top_annotation,
-    bottom_annotation = bottom_annotation
+    bottom_annotation = bottom_annotation,
+
+    # legend
+    heatmap_legend_param = heatmap_legend_param
   )
 
   heatmap_list <- ComplexHeatmap::HeatmapList()
   heatmap_list <- ComplexHeatmap::add_heatmap(heatmap, heatmap_list)
+
   heatmap <- ComplexHeatmap::make_layout(
     heatmap_list,
     annotation_legend_list = annotation_legends,
-    merge_legends = TRUE,
-    heatmap_legend_side = "right",
-    annotation_legend_side = "right"
+    merge_legend = TRUE,
+    heatmap_legend_side = "bottom",
+    annotation_legend_side = "bottom"
   )
   heatmap
 })

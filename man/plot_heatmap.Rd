@@ -8,8 +8,9 @@ plot_heatmap(
   dataset,
   trajectory = dataset,
   expression_source = dataset,
-  features_oi = 20,
-  feature_info = NULL,
+  features_oi,
+  feature_info = dataset$feature_info,
+  highlight_features = NULL,
   row_gap = unit(3, "mm"),
   clust = "ward.D2",
   color_cells = NULL,
@@ -22,13 +23,15 @@ plot_heatmap(
   column_gap = unit(3, "mm"),
   top_annotation = list(),
   plot_milestone_percentages = c("top", "bottom", "none"),
-  plot_milestone_network = c("bottom", "none", "top"),
+  plot_milestone_network = c("top", "bottom", "none"),
+  plot_milestones = c("point", "none", "label"),
   milestone_network_orientation = case_when(first(plot_milestone_network) == "bottom" ~
     "bottom", TRUE ~ "top"),
   milestone_network_arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"), type =
     "closed"),
-  plot_velocity = c("bottom", "none", "top"),
-  velocity_each
+  plot_velocity = case_when(!is.null(dataset$velocity) ~ "top", TRUE ~ "none"),
+  velocity_each = as.integer(length(trajectory$cell_ids)/100),
+  heatmap_legend_param = list(direction = "horizontal")
 )
 }
 \arguments{
