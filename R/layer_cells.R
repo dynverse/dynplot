@@ -71,6 +71,7 @@ layer_cells <- dynutils::inherit_default_params(
   if(color_cells == "grouping") {
     if (isFALSE(hex_cells)) {
       current_plot <- current_plot +
+        ggnewscale::new_scale_color() +
         geom_cell_point(aes(color = grouping), size = size_cells, alpha = alpha_cells)
 
       current_plot <- current_plot +
