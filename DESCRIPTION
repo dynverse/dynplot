@@ -81,6 +81,7 @@ Collate:
     'plot_generic.R'
     'plot_graph.R'
     'plot_heatmap.R'
+    'plot_heatmap_annotations_features.R'
     'plot_heatmap_annotations_velocity.R'
     'plot_heatmap_annotations.R'
     'plot_heatmap2.R'

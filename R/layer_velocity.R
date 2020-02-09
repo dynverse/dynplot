@@ -2,18 +2,19 @@ layer_velocity <- function(
   current_plot,
   dataset,
   trajectory = dataset,
-  plot_velocity_ = c("none", "grid", "stream")
+  plot_velocity = case_when(
+    !is.null(dataset$velocity) ~ "stream",
+    TRUE ~ "none"
+  )
 ) {
-  if(isTRUE(plot_velocity_)) plot_velocity_ <- "grid"
-  if(isFALSE(plot_velocity_)) plot_velocity_ <- "none"
-  plot_velocity_ <- match.arg(plot_velocity_)
+  assert_that(plot_velocity %in% c("stream", "grid", "none"))
 
-  if(plot_velocity_ == "grid") {
+  if(plot_velocity == "grid") {
     current_plot <- current_plot +
       geom_velocity_arrow()
-  } else if (plot_velocity_ == "stream") {
+  } else if (plot_velocity == "stream") {
     current_plot <- current_plot +
-      geom_velocity_stream()
+      geom_velocity_stream(alpha = 0.5)
   }
   current_plot
 }

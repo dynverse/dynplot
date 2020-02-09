@@ -1,4 +1,7 @@
-#' @include layer_milestones.R layer_trajectory.R layer_cells.R layer_velocity.R layer_contour.R
+#' Plot a trajectory on dimensionality reduction
+#'
+#' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
+#' #' @include layer_milestones.R layer_trajectory.R layer_cells.R layer_velocity.R layer_contour.R
 plot_dimred <- dynutils::inherit_default_params(
   list(
     layer_cells,
@@ -43,10 +46,7 @@ plot_dimred <- dynutils::inherit_default_params(
     contour_density_cutoff,
 
     # velocity
-    plot_velocity = case_when(
-      !is.null(dataset$velocity) ~ "grid",
-      TRUE ~ "none"
-    )
+    plot_velocity
   ) {
 
   if(is.null(dataset)) dataset <- trajectory
@@ -104,7 +104,7 @@ plot_dimred <- dynutils::inherit_default_params(
     current_plot,
     dataset,
     trajectory = trajectory,
-    plot_velocity_ = plot_velocity
+    plot_velocity = plot_velocity
   )
 
   if (plot_trajectory == "auto") {
