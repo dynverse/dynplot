@@ -1,23 +1,40 @@
-
 annotate_features <- function(
   dataset,
   trajectory = dataset,
   features_oi,
   feature_info = dataset$feature_info,
 
-  # simple interface
-  highlight_features = NULL
+  feature_annotation = NULL
 ) {
-  # determine gpars of feature labels
+
+}
+
+
+annotate_feature_labels <- function(
+  dataset,
+  trajectory = dataset,
+  features_oi,
+  feature_info = dataset$feature_info,
+
+  feature_annotation_labels = NULL
+) {
   feature_label_gpars <- tibble(
-    feature_id = features_oi
+    feature_id = features_oi,
+    fontsize = 12
   )
-  feature_label_gpars$fontsize <- 12
-  if (!is.null(highlight_features)) {
-    feature_label_gpars$fontface <- case_when(
-      feature_label_gpars$feature_id %in% highlight_features ~ "bold",
-      TRUE ~ "plain"
-    )
+
+  # evaluate and map all aesthetics
+  assert_that(names(feature_annotation_labels$aes) %all_in% names(feature_annotation_labels$mappers))
+  for(aesthetic_id in names(feature_annotation_labels$aes)) {
+    # evaluate
+    y <- rlang::eval_tidy(feature_annotation_labels$aes[[aesthetic_id]], feature_info)
+    names(y) <- feature_info$feature_id
+
+    # map to aesthetics
+    mapped <- feature_annotation_labels$mappers[[aesthetic_id]](y)
+    names(mapped) <- feature_info$feature_id
+
+    feature_label_gpars[[aesthetic_id]] <- mapped[feature_label_gpars$feature_id]
   }
 
   # determine feature labels and whether they are annotated using marks
@@ -65,8 +82,18 @@ create_rownames_gpars <- function(
 ) {
   feature_label_gpars <- feature_label_gpars %>% filter(feature_id %in% features_subset)
 
+  # rename from full names (e.g. colour) to gpar names
+  rename_to_gpar <- function(x) {
+    case_when(
+      x == "colour" ~ "col",
+      TRUE ~ x
+    )
+  }
+  colnames(feature_label_gpars) <- rename_to_gpar(colnames(feature_label_gpars))
+
   feature_label_gpars_list <- as.list(feature_label_gpars %>% select(-feature_id))
   row_names_gp <- invoke(gpar, feature_label_gpars_list)
 
   row_names_gp
 }
+

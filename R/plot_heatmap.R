@@ -33,7 +33,7 @@ plot_heatmap <- inherit_default_params(
     # feature parameters
     features_oi = 20,
     feature_info = NULL,
-    highlight_features,
+    feature_annotation,
     row_gap = unit(3, "mm"),
 
     clust = "ward.D2",
@@ -172,21 +172,21 @@ plot_heatmap <- inherit_default_params(
 
   # feature labels and feature annotation
   c(
-    annotation_features,
+    annotation_feature_labels,
     feature_labels,
     show_row_names,
     row_labels,
     row_names_gp
-  ) %<-% annotate_features(
+  ) %<-% annotate_feature_labels(
     dataset,
     trajectory,
     features_oi = features_oi,
     feature_info = feature_info,
-    highlight_features = highlight_features
+    feature_annotation_labels = feature_annotation$labels
   )
 
-  if(!is.null(annotation_features)) {
-    right_annotation$Features <- annotation_features
+  if(!is.null(annotation_feature_labels)) {
+    right_annotation$Features <- annotation_feature_labels
   }
 
   # wrap up annotations
@@ -199,8 +199,6 @@ plot_heatmap <- inherit_default_params(
   right_annotation <- if(length(right_annotation) > 0) {
     invoke(ComplexHeatmap::HeatmapAnnotation, right_annotation, which = "row")
   } else {NULL}
-
-  browser()
 
   heatmap <- ComplexHeatmap::Heatmap(
     Matrix::t(dynutils::scale_quantile(expression_matrix)),
