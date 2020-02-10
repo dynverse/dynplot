@@ -10,7 +10,7 @@ plot_heatmap(
   expression_source = dataset,
   features_oi,
   feature_info = dataset$feature_info,
-  highlight_features = NULL,
+  feature_annotation = NULL,
   row_gap = unit(3, "mm"),
   clust = "ward.D2",
   color_cells = NULL,
