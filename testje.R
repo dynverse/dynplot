@@ -53,21 +53,36 @@ features_oi <- feature_importances %>%
 
 ##
 
+cell_info <- dataset$cell_info
 
 trajectory <- trajectory %>% label_milestones(c("2" = "progenitor", "4" = "", "1" = "end 1", "3" = "end 2"))
+
+
+dataset$expression
 
 {
   feature_info  <- feature_info %>%
     mutate(label = symbol) %>%
-    mutate(label = symbol) %>% mutate(interesting = symbol %in% c("Dpp4"))
+    mutate(
+      interesting = symbol %in% c("Dpp4"),
+      random = sample(c(TRUE, FALSE), n(), replace = TRUE),
+      random2 = runif(n())
+    )
+
   heatmap <- plot_heatmap(
     dataset,
     trajectory,
     features_oi = features_oi,
     feature_info = feature_info,
+    cell_info = cell_info,
     plot_velocity = "none",
     feature_annotation = list(
-      labels = annotate_labels(aes(fontface = interesting, color = interesting))
+      # labels = annotate_labels(aes(show = interesting)),
+      interesting = annotate_simple(aes(fill = interesting))
+      # random2 = annotate_simple(aes(fill = random2))
+    ),
+    cell_annotation = list(
+       `Clustering` = annotate_simple(aes(fill = cluster))
     )
   )
 
@@ -75,17 +90,4 @@ trajectory <- trajectory %>% label_milestones(c("2" = "progenitor", "4" = "", "1
   ComplexHeatmap::draw(heatmap)
   dev.off()
   invisible()
-}
-
-
-
-map_labels <- function(x, data) {
-  y <- rlang::eval_tidy(x, data)
-  tibble(
-    feature_id = data$feature_id,
-    fontface = case_when(
-      y ~ "bold",
-      !y ~  plain
-    )
-  )
 }

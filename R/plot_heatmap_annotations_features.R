@@ -6,7 +6,14 @@ annotate_features <- function(
 
   feature_annotation = NULL
 ) {
+  feature_annotation <- feature_annotation[!names(feature_annotation) == "labels"]
 
+  evaluate_annotations(
+    feature_annotation,
+    feature_info %>% slice(match(features_oi, feature_id)),
+    "feature_id",
+    which = "row"
+  )
 }
 
 
@@ -18,42 +25,46 @@ annotate_feature_labels <- function(
 
   feature_annotation_labels = NULL
 ) {
-  feature_label_gpars <- tibble(
+  mapped <- tibble(
     feature_id = features_oi,
     fontsize = 12
   )
 
   # evaluate and map all aesthetics
-  assert_that(names(feature_annotation_labels$aes) %all_in% names(feature_annotation_labels$mappers))
-  for(aesthetic_id in names(feature_annotation_labels$aes)) {
-    # evaluate
-    y <- rlang::eval_tidy(feature_annotation_labels$aes[[aesthetic_id]], feature_info)
-    names(y) <- feature_info$feature_id
-
-    # map to aesthetics
-    mapped <- feature_annotation_labels$mappers[[aesthetic_id]](y)
-    names(mapped) <- feature_info$feature_id
-
-    feature_label_gpars[[aesthetic_id]] <- mapped[feature_label_gpars$feature_id]
-  }
+  c(mapped, mapped_legends) %<-% evaluate_annotation(
+    feature_annotation_labels,
+    feature_info,
+    mapped,
+    "feature_id"
+  )
 
   # determine feature labels and whether they are annotated using marks
+  # add label column if not given, by using the feature ids
   if(is.null(feature_info)) {
     feature_info <- tibble(feature_id = features_oi, label = feature_id)
   } else if (is.null(feature_info$label)) {
     feature_info$label <- feature_info$feature_id
   }
   feature_labels <- feature_info %>% slice(match(features_oi, feature_id)) %>% select(feature_id, label) %>% deframe()
+  # filter labels
+  # - have a non-NA label
   feature_labels <- feature_labels %>% purrr::discard(is.na)
+
+  # - are TRUE for show, if applicable
+  if("show" %in% names(mapped)) {
+    feature_labels <- feature_labels[mapped %>% filter(show) %>% pull(feature_id)]
+    mapped <- mapped %>% select(-show)
+  }
+
   feature_labels_at <- match(names(feature_labels), features_oi)
   if(length(feature_labels) == length(features_oi)) {
     row_labels <- feature_labels
     show_row_names <- TRUE
     annotation_features <- NULL
 
-    row_names_gp <- create_rownames_gpars(feature_label_gpars)
-  } else {
-    labels_gp <- create_rownames_gpars(feature_label_gpars)
+    row_names_gp <- create_rownames_gpars(mapped)
+  } else if(length(feature_labels_at) > 0) {
+    labels_gp <- create_rownames_gpars(mapped)
     annotation_features <- ComplexHeatmap::anno_mark(
       at = feature_labels_at,
       labels = feature_labels,
@@ -62,7 +73,12 @@ annotate_feature_labels <- function(
     )
     show_row_names <- FALSE
     row_labels <- NULL
-    row_names_gp <- NULL
+    row_names_gp <- gpar()
+  } else {
+    annotation_features <- NULL
+    show_row_names <- FALSE
+    row_labels <- NULL
+    row_names_gp <- gpar()
   }
 
   lst(
@@ -77,22 +93,15 @@ annotate_feature_labels <- function(
 
 
 create_rownames_gpars <- function(
-  feature_label_gpars,
-  features_subset = feature_label_gpars$feature_id
+  mapped,
+  features_subset = mapped$feature_id
 ) {
-  feature_label_gpars <- feature_label_gpars %>% filter(feature_id %in% features_subset)
+  mapped <- mapped %>%
+    filter(feature_id %in% features_subset) %>%
+    rename_to_gpar()
 
-  # rename from full names (e.g. colour) to gpar names
-  rename_to_gpar <- function(x) {
-    case_when(
-      x == "colour" ~ "col",
-      TRUE ~ x
-    )
-  }
-  colnames(feature_label_gpars) <- rename_to_gpar(colnames(feature_label_gpars))
-
-  feature_label_gpars_list <- as.list(feature_label_gpars %>% select(-feature_id))
-  row_names_gp <- invoke(gpar, feature_label_gpars_list)
+  mapped_list <- as.list(mapped %>% select(-feature_id))
+  row_names_gp <- invoke(gpar, mapped)
 
   row_names_gp
 }

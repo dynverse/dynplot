@@ -56,12 +56,18 @@ linearise_cells <- function(
     mutate(
       cumstart = c(0, cumsum(length)[-n()]) + n_margins * margin,
       cumend = cumstart + length,
-      edge_id = factor(seq_len(n()))
+      edge_id = factor(seq_len(n())),
+      major_gap = from != lag(to, default = first(from)),
+      minor_gap = from == lag(to, default = first(to)),
+      minor_gap_next = lead(minor_gap, 1, FALSE),
+      n_major_gaps = cumsum(major_gap),
+      n_minor_gaps = cumsum(minor_gap)
     )
 
   progressions <- progressions %>%
     left_join(milestone_network, by = c("from", "to")) %>%
-    mutate(cumpercentage = cumstart + percentage2 * length)
+    mutate(cumpercentage = cumstart + percentage2 * length) %>%
+    arrange(cumpercentage)
 
   lst(milestone_network, progressions, margin)
 }

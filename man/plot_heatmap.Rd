@@ -20,7 +20,10 @@ plot_heatmap(
   grouping = NULL,
   groups = NULL,
   scale = dynutils::scale_quantile,
-  column_gap = unit(3, "mm"),
+  column_minor_gap = unit(1, "mm"),
+  column_major_gap = unit(3, "mm"),
+  cell_annotation = NULL,
+  cell_info = dataset$cell_info,
   top_annotation = list(),
   plot_milestone_percentages = c("top", "bottom", "none"),
   plot_milestone_network = c("top", "bottom", "none"),
@@ -31,7 +34,8 @@ plot_heatmap(
     "closed"),
   plot_velocity = case_when(!is.null(dataset$velocity) ~ "top", TRUE ~ "none"),
   velocity_each = as.integer(length(trajectory$cell_ids)/100),
-  heatmap_legend_param = list(direction = "horizontal")
+  heatmap_legend_param = list(direction = "horizontal", border = "#333333", at = c(0,
+    1), labels = c("low", "high"), legend_width = unit(3, "cm"))
 )
 }
 \arguments{

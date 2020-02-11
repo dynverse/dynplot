@@ -170,7 +170,8 @@ annotate_velocity <- function(
     pch = "\U25BA",
     legend_gp = gpar(fill = "#333333", fontsize = c(20, 10, 5)),
     background = NULL,
-    direction = "horizontal"
+    direction = "horizontal",
+    title_position = "topcenter"
   )
 
   lst(

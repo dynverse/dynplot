@@ -14,7 +14,7 @@
 #' data(example_bifurcating)
 #' plot_heatmap(example_bifurcating)
 #'
-#' @include plot_heatmap_annotations.R plot_heatmap_annotations_velocity.R plot_heatmap_annotations_features.R
+#' @include plot_heatmap_annotations_milestones.R plot_heatmap_annotations_velocity.R plot_heatmap_annotations_features.R plot_heatmap_annotations_cells.R
 #'
 #' @export
 plot_heatmap <- inherit_default_params(
@@ -23,6 +23,7 @@ plot_heatmap <- inherit_default_params(
     annotate_milestone_network,
     annotate_velocity,
     annotate_features,
+    annotate_cells,
     add_milestone_coloring
   ),
   function(
@@ -49,7 +50,10 @@ plot_heatmap <- inherit_default_params(
     scale = dynutils::scale_quantile,
 
     # cell (column) parameters
-    column_gap,
+    column_minor_gap,
+    column_major_gap,
+    cell_annotation,
+    cell_info,
     top_annotation = list(),
 
     # milestone percentages
@@ -66,7 +70,7 @@ plot_heatmap <- inherit_default_params(
     velocity_each,
 
     # legends
-    heatmap_legend_param = list(direction = "horizontal")
+    heatmap_legend_param = list(direction = "horizontal", border = "#333333", at = c(0, 1), labels = c("low", "high"), legend_width = unit(3, "cm"), title_position = "topcenter")
 ) {
   requireNamespace("ComplexHeatmap")
 
@@ -125,7 +129,8 @@ plot_heatmap <- inherit_default_params(
       milestone_network_orientation = milestone_network_orientation,
       milestone_network_arrow = milestone_network_arrow,
       plot_milestones = plot_milestones,
-      column_gap = column_gap
+      column_major_gap = column_major_gap,
+      column_minor_gap = column_minor_gap
     )
 
     if (first(plot_milestone_network) == "top") {
@@ -170,7 +175,7 @@ plot_heatmap <- inherit_default_params(
     annotation_legends$Milestones <- legend_milestone_id
   }
 
-  # feature labels and feature annotation
+  # feature labels
   c(
     annotation_feature_labels,
     feature_labels,
@@ -182,11 +187,45 @@ plot_heatmap <- inherit_default_params(
     trajectory,
     features_oi = features_oi,
     feature_info = feature_info,
-    feature_annotation_labels = feature_annotation$labels
+    feature_annotation_labels = feature_annotation$labels %||% NULL
   )
 
   if(!is.null(annotation_feature_labels)) {
     right_annotation$Features <- annotation_feature_labels
+  }
+
+  # feature annotation
+  c(
+    annotation_features,
+    legend_features
+  ) %<-% annotate_features(
+    dataset,
+    trajectory,
+    features_oi = features_oi,
+    feature_info = feature_info,
+    feature_annotation = feature_annotation
+  )
+
+  if(!is.null(annotation_features)) {
+    right_annotation[names(annotation_features)] <- annotation_features
+    annotation_legends[names(legend_features)] <- legend_features
+  }
+
+  # cell annotation
+  c(
+    annotation_cells,
+    legend_cells
+  ) %<-% annotate_cells(
+    dataset,
+    trajectory,
+    linearised = linearised,
+    cell_info = cell_info,
+    cell_annotation = cell_annotation
+  )
+
+  if(!is.null(annotation_cells)) {
+    top_annotation[names(annotation_cells)] <- annotation_cells
+    annotation_legends[names(legend_cells)] <- legend_cells
   }
 
   # wrap up annotations
@@ -205,14 +244,13 @@ plot_heatmap <- inherit_default_params(
     name = "Expression",
 
     cluster_rows = clust,
-    row_split = 4,
 
     # rows
     row_gap = row_gap,
 
     # columns
-    column_split = linearised$progressions$label,
-    column_gap = column_gap,
+    column_split = linearised$progressions$edge_id,
+    column_gap = unit(ifelse(linearised$milestone_network$major_gap %>% tail(-1), column_major_gap, column_minor_gap), "mm"),
 
     # features
     show_row_names = show_row_names,
@@ -231,7 +269,10 @@ plot_heatmap <- inherit_default_params(
     bottom_annotation = bottom_annotation,
 
     # legend
-    heatmap_legend_param = heatmap_legend_param
+    heatmap_legend_param = heatmap_legend_param,
+
+    row_title = " ",
+    column_title = " "
   )
 
   heatmap_list <- ComplexHeatmap::HeatmapList()

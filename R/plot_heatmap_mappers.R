@@ -1,4 +1,4 @@
-annotate_labels <- function(aes, mappers = list()) {
+annotate_labels <- function(aes, mappers = list(), legend = TRUE) {
   # add default mappers
   missing_mappers <- setdiff(names(aes), names(mappers))
   mappers <- c(
@@ -8,11 +8,12 @@ annotate_labels <- function(aes, mappers = list()) {
 
   lst(
     aes,
-    mappers
+    mappers,
+    legend
   )
 }
 
-annotate_simple <- function(aes, mappers = list()) {
+annotate_simple <- function(aes, mappers = list(), legend = TRUE) {
   # add default mappers
   missing_mappers <- setdiff(names(aes), names(mappers))
   mappers <- c(
@@ -22,7 +23,8 @@ annotate_simple <- function(aes, mappers = list()) {
 
   lst(
     aes,
-    mappers
+    mappers,
+    legend
   )
 }
 
@@ -37,37 +39,64 @@ map_fontface <- function(x) {
 }
 
 
-map_fillcolour <- function(x) {
+map_fillcolour <- function(
+  x,
+  palette = NULL,
+  colour_ramp = colorRamp(viridis::viridis(10))
+) {
   if(is.character(x)) {
     x <- factor(x)
   }
+  if(is.factor(x)) {
+    if(is.null(palette)) {
+      palette <- RColorBrewer::brewer.pal(9, "Set1")
+    }
+  }
+
   if(is.logical(x)) {
     x <- factor(x)
+    if(is.null(palette)) {
+      palette <- c("#FFFFFF00", "red")
+    }
   }
 
   if(is.factor(x)) {
-    n_levels <- length(levels(x))
-    palette <- c("black", RColorBrewer::brewer.pal(max(3, n_levels - 1), "Set1"))
+    assert_that(!is.null(palette))
 
-    palette[as.integer(x)]
+    n_levels <- length(levels(x))
+
+    # if palette has names, use those as "values" (manual scale), otherwise use the factor ordering
+    if(!is.null(names(palette))) {
+      palette[as.character(x)]
+    } else {
+      palette[as.integer(x)]
+    }
   } else if (is.numeric(x)) {
+    assert_that(!is.null(colour_ramp))
+
     x <- dynutils::scale_minmax(x)
-    colour_ramp <- colourRamp(viridis::viridis(10))
-    colour_ramp(x)
+    colour_ramp(x) %>%
+      apply(1, function(x) rgb(x[1]/255, x[2]/255, x[3]/255))
   }
 }
 
 map_colour <- map_fillcolour
 map_fill <- map_fillcolour
-mapper_colour <- function() {
-  map_colour
+mapper_colour <- function(palette = NULL) {
+  purrr::partial(map_fillcolour, !!!lst(palette))
 }
-mapper_fill <- function() {
-  map_fill
+mapper_fill <- function(palette = NULL) {
+  purrr::partial(map_fillcolour, !!!lst(palette))
+}
+mapper_show <- function() {
+  function(x) {
+    map_lgl(x, isTRUE)
+  }
 }
 
 default_mappers <- list(
   fontface = mapper_fontface(),
   colour = mapper_colour(),
-  fill = mapper_fill()
+  fill = mapper_fill(),
+  show = mapper_show()
 )

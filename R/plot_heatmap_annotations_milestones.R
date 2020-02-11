@@ -5,7 +5,10 @@ create_milestone_legend <- function(milestones) {
     at = milestones$milestone_id,
     legend_gp = grid::gpar(fill=milestones$color),
     labels = milestones$label,
-    direction = "horizontal"
+    direction = "horizontal",
+    ncol = 3,
+    border = "#333333",
+    title_position = "topcenter"
   )
 }
 
@@ -53,8 +56,8 @@ get_connections <- function(linearised) {
     mutate(edge_ix = row_number())
 
   # determine between which nodes a connection should be drawn
-  a <- milestone_network %>% select(from, x_from = cumstart, edge_ix_from = edge_ix) %>% mutate(edge_end_from = "begin")
-  b <- milestone_network %>% select(to, x_to = cumend, edge_ix_to = edge_ix) %>% mutate(edge_end_to = "end")
+  a <- milestone_network %>% select(from, x_from = cumstart, edge_ix_from = edge_ix, n_major_gaps_from = n_major_gaps, n_minor_gaps_from = n_minor_gaps) %>% mutate(edge_end_from = "begin")
+  b <- milestone_network %>% select(to, x_to = cumend, edge_ix_to = edge_ix, n_major_gaps_to = n_major_gaps, n_minor_gaps_to = n_minor_gaps) %>% mutate(edge_end_to = "end")
   connections <- crossing(a,b) %>% filter(
     from == to
   ) %>% mutate(
@@ -102,7 +105,8 @@ annotate_milestone_network <- function(
     TRUE ~ "top"
   ),
   milestone_network_arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"), type = "closed"),
-  column_gap = unit(3, "mm")
+  column_major_gap = unit(3, "mm"),
+  column_minor_gap = unit(0, "mm")
 ) {
   requireNamespace("ComplexHeatmap")
 
@@ -136,8 +140,8 @@ annotate_milestone_network <- function(
       if (k == 1){
         for(i in seq_len(nrow(connections))) {
           connection <- extract_row_to_list(connections, i)
-          x_from <- unit(connection$x_from, "native") + column_gap * (connection$edge_ix_from - 1)
-          x_to <- unit(connection$x_to, "native") + column_gap * (connection$edge_ix_to - 1)
+          x_from <- unit(connection$x_from, "native") + column_major_gap * (connection$n_major_gaps_from) + column_minor_gap * (connection$n_minor_gaps_from)
+          x_to <- unit(connection$x_to, "native") + column_major_gap * (connection$n_major_gaps_to) + column_minor_gap * (connection$n_minor_gaps_to)
           y <- unit(connection$level, "native") * y_multiplier + base_y
 
           connection_gpar <- grid::gpar(lty = "dashed")
@@ -172,20 +176,38 @@ annotate_milestone_network <- function(
         milestone_from <- milestones %>% dplyr::filter(milestone_id == milestone_edge$from) %>% extract_row_to_list(1)
         milestone_to <- milestones %>% dplyr::filter(milestone_id == milestone_edge$to) %>% extract_row_to_list(1)
 
+        # draw the from milestone, if there was no minor gap before
         if(milestone_from$label != "") {
+          hjust <- ifelse(milestone_edge$minor_gap, 0.5, 0)
+
+          color <- ifelse(sum(col2rgb(milestone_from$color)) < 400, "white", "black")
+
           grob <- ggplot2:::labelGrob(
-            milestone_from$label, unit(0, "native"), base_y, just = c(0, 0.5),
-            rect.gp = grid::gpar(fill = milestone_from$color)
+            milestone_from$label, unit(0, "native"), base_y, just = c(hjust, 0.5),
+            rect.gp = grid::gpar(fill = milestone_from$color),
+            text.gp = grid::gpar(col = color)
           )
           grid::grid.draw(grob)
         }
 
-        if(milestone_to$label != "") {
+        # draw the to milestone
+        if(milestone_to$label != "" && !milestone_edge$minor_gap_next) {
+          color <- ifelse(sum(col2rgb(milestone_to$color)) < 400, "white", "black")
+
+
           grob <- ggplot2:::labelGrob(
-            milestone_to$label, unit(n, "native"), base_y, just = c(1, 0.5),
-            rect.gp = grid::gpar(fill = milestone_to$color)
+            milestone_to$label, unit(n, "native"), base_y, just= c(1, 0.5),
+            rect.gp = grid::gpar(fill = milestone_to$color),
+            text.gp = grid::gpar(col = color)
           )
           grid::grid.draw(grob)
+        } else {
+          grid.circle(
+            unit(n, "native"),
+            base_y,
+            r = unit(1, "mm"),
+            gp = gpar(fill = "#333333")
+          )
         }
       }
 
@@ -204,7 +226,8 @@ annotate_milestone_network <- function(
       # parameters for positioning
       height = height,
       padding = unit(0.5, "cm"),
-      column_gap = column_gap
+      column_major_gap = column_major_gap,
+      column_minor_gap = column_minor_gap
     ),
     n = nrow(linearised$progressions),
     subsetable = FALSE,
