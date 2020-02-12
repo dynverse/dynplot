@@ -40,8 +40,6 @@ plot_topology <- dynutils::inherit_default_params(
       }
     }
 
-    browser()
-
     milestone_graph <- tidygraph::as_tbl_graph(trajectory$milestone_network)
     milestone_positions <- milestone_graph %>%
       ggraph::create_layout(layout) %>%
