@@ -42,7 +42,7 @@ annotate_feature_labels <- function(
   # add label column if not given, by using the feature ids
   if(is.null(feature_info)) {
     feature_info <- tibble(feature_id = features_oi, label = feature_id)
-  } else if (is.null(feature_info$label)) {
+  } else if (!"label" %in% names(feature_info)) {
     feature_info$label <- feature_info$feature_id
   }
   feature_labels <- feature_info %>% slice(match(features_oi, feature_id)) %>% select(feature_id, label) %>% deframe()
