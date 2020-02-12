@@ -86,12 +86,12 @@ plot_heatmap <- inherit_default_params(
     margin = 0
   )
 
+  # get features oi
+  features_oi <- check_features_oi(trajectory, expression, features_oi)
+
   # get expression
   expression <- get_expression(dataset, expression_source = expression_source)
   expression_matrix <- as.matrix(expression[linearised$progressions$cell_id, features_oi])
-
-  # get features oi
-  features_oi <- check_features_oi(trajectory, expression, features_oi)
 
   # cluster features
   clust <- hclust(as.dist(dynutils::correlation_distance(t(expression_matrix))), method = "average")
