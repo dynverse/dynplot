@@ -6,7 +6,7 @@ layer_trajectory <- function(
   plot_trajectory_ = c("none", "segments"),
   color_trajectory = c("none"),
   shadow_trajectory = dynplot2::shadow_defaults(size = 1.5),
-  size_trajectory = 2,
+  size_trajectory = 1,
   size_trajectory_arrow = 0.5,
 
   connections = FALSE,

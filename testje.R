@@ -30,8 +30,9 @@ trajectory <- scvelo::orient_topology_to_velocity(trajectory, expression_source 
 
 plot_dimred(dataset, trajectory = trajectory, plot_milestone = "label")
 plot_dimred(dataset, trajectory = trajectory, plot_contour = "grouping")
+
 dimred <- dyndimred::dimred_umap(dataset$expression)
-plot_dimred(dataset, trajectory = trajectory, dimred = dimred, size_trajectory = 0.5)
+plot_dimred(dataset, trajectory = trajectory, dimred = dimred, size_trajectory = 1)
 
 plot_dendro(dataset, trajectory = trajectory, color_cells = "milestone", plot_milestone = "label")
 plot_dendro(dataset, trajectory = trajectory, color_cells = "grouping")

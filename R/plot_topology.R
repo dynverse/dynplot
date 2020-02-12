@@ -58,6 +58,8 @@ plot_topology <- dynutils::inherit_default_params(
         NULL
       }
 
+    browser()
+
     ggraph(milestone_graph, "manual", node.positions = milestone_positions) +
       geom_edge_fan() +
       geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow) +

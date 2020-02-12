@@ -13,7 +13,7 @@ create_milestone_legend <- function(milestones) {
 }
 
 
-
+#' @param plot_milestone_percentages Whether to plot the milestone percentages
 annotate_milestone_percentages <- function(
   dataset,
   trajectory = dataset,

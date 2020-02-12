@@ -20,7 +20,7 @@ plot_heatmap(
   grouping = NULL,
   groups = NULL,
   scale = dynutils::scale_quantile,
-  column_minor_gap = unit(1, "mm"),
+  column_minor_gap = unit(0, "mm"),
   column_major_gap = unit(3, "mm"),
   cell_annotation = NULL,
   cell_info = dataset$cell_info,
@@ -35,7 +35,8 @@ plot_heatmap(
   plot_velocity = case_when(!is.null(dataset$velocity) ~ "top", TRUE ~ "none"),
   velocity_each = as.integer(length(trajectory$cell_ids)/100),
   heatmap_legend_param = list(direction = "horizontal", border = "#333333", at = c(0,
-    1), labels = c("low", "high"), legend_width = unit(3, "cm"))
+    1), labels = c("low", "high"), legend_width = unit(3, "cm"), title_position =
+    "topcenter")
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ plot_heatmap(
 \item{clust}{The method to cluster the features, or a hclust object}
 
 \item{scale}{Whether to rescale the expression, can be a function or boolean}
+
+\item{plot_milestone_percentages}{Whether to plot the milestone percentages}
 
 \item{features_labels}{The labels for the features. If NULL, will use either the names of the features_oi (if exists) or the features_oi themselves. If not NULL, this should be a named character vector providing the label of a features given its feature_id}
 }

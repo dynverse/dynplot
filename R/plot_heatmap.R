@@ -5,6 +5,8 @@
 #' @param scale Whether to rescale the expression, can be a function or boolean
 #' @param features_labels The labels for the features. If NULL, will use either the names of the features_oi (if exists) or the features_oi themselves. If not NULL, this should be a named character vector providing the label of a features given its feature_id
 #'
+#' @inheritParams annotate_milestone_percentages
+#'
 #' @keywords plot_trajectory
 #'
 #' @examples
