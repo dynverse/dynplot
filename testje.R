@@ -1,8 +1,10 @@
-library(dynopaper)
+library(dynomanuscript)
 library(tidyverse)
-devtools::load_all('~/thesis/projects/dynverse/dynplot2/')
-devtools::load_all('~/thesis/projects/dynverse/libraries/scvelo/')
-devtools::load_all('~/thesis/projects/dynverse/dynwrap/')
+
+dynverse_folder <- "~/Workspace/dynverse"
+devtools::load_all(paste0(dynverse_folder, '/dynplot2/'))
+devtools::load_all(paste0(dynverse_folder, '/libraries/scvelo/'))
+devtools::load_all(paste0(dynverse_folder, '/dynwrap/'))
 
 experiment("01-datasets/adipose_differentiation-merick")
 experiment("01-datasets/dyngen-bifurcating")
