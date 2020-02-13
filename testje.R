@@ -1,15 +1,20 @@
 library(dynomanuscript)
 library(tidyverse)
 
-dynverse_folder <- "~/Workspace/dynverse"
+# dynverse_folder <- "/home/rcannood/Workspace/dynverse"
+dynverse_folder <- "/home/wouters/thesis/projects/dynverse"
 devtools::load_all(paste0(dynverse_folder, '/dynplot2/'))
 devtools::load_all(paste0(dynverse_folder, '/libraries/scvelo/'))
 devtools::load_all(paste0(dynverse_folder, '/dynwrap/'))
+
+Sys.setenv(DYNOMANUSCRIPT_PATH = paste0(dynverse_folder, "/manuscripts/dyno_manuscript/"))
 
 experiment("01-datasets/adipose_differentiation-merick")
 experiment("01-datasets/dyngen-bifurcating")
 
 dataset <- read_rds(output_file("dataset.rds"))
+# dataset <- dataset %>% add_velocity()
+# dataset <- dataset %>% add_velocity(mode = "dynamic")
 dataset$velocity$scvelo <- reticulate::py_load_object(output_file("scvelo.pkl"))
 trajectory <- read_rds(output_file("trajectory.rds"))
 
