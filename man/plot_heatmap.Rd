@@ -4,13 +4,22 @@
 \alias{plot_heatmap}
 \title{Plot the expression across a trajectory in a heatmap}
 \usage{
-plot_heatmap(trajectory, expression_source = "expression",
-  features_oi = 20, clust = "ward.D2", margin = 0.02,
-  color_cells = NULL, milestones = NULL,
+plot_heatmap(
+  trajectory,
+  expression_source = "expression",
+  features_oi = 20,
+  clust = "ward.D2",
+  margin = 0.02,
+  color_cells = NULL,
+  milestones = NULL,
   milestone_percentages = trajectory$milestone_percentages,
-  grouping = NULL, groups = NULL, cell_feature_importances = NULL,
+  grouping = NULL,
+  groups = NULL,
+  cell_feature_importances = NULL,
   heatmap_type = c("tiled", "dotted"),
-  scale = dynutils::scale_quantile, label_milestones = TRUE)
+  scale = dynutils::scale_quantile,
+  label_milestones = TRUE
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}

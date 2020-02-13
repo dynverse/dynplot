@@ -4,25 +4,39 @@
 \alias{plot_dimred}
 \title{Plot a trajectory on dimensionality reduction}
 \usage{
-plot_dimred(trajectory, color_cells = c("auto", "none", "grouping",
-  "feature", "milestone", "pseudotime"),
+plot_dimred(
+  trajectory,
+  color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
   dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA,
-  ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
+    ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
   plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) &&
-  !plot_milestone_network, plot_milestone_network = FALSE,
+    !plot_milestone_network,
+  plot_milestone_network = FALSE,
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
-  alpha_cells = 1, size_cells = 2.5, border_radius_percentage = 0.1,
-  size_milestones = 6, size_transitions = 1,
+  alpha_cells = 1,
+  size_cells = 2.5,
+  border_radius_percentage = 0.1,
+  size_milestones = 6,
+  size_transitions = 1,
   hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
-  grouping = NULL, groups = NULL, feature_oi = NULL,
+  grouping = NULL,
+  groups = NULL,
+  feature_oi = NULL,
   color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
-  milestones = NULL, milestone_percentages = NULL, pseudotime = NULL,
-  expression_source = "expression", color_density = c("none",
-  "grouping", "feature"), padding = 0.1, nbins = 1000, bw = 0.2,
-  density_cutoff = 0.3, density_cutoff_label = density_cutoff/10,
+  milestones = NULL,
+  milestone_percentages = NULL,
+  pseudotime = NULL,
+  expression_source = "expression",
+  color_density = c("none", "grouping", "feature"),
+  padding = 0.1,
+  nbins = 1000,
+  bw = 0.2,
+  density_cutoff = 0.3,
+  density_cutoff_label = density_cutoff/10,
   waypoints = dynwrap::select_waypoints(trajectory),
-  trajectory_projection_sd = sum(trajectory$milestone_network$length) *
-  0.05, color_trajectory = "none")
+  trajectory_projection_sd = sum(trajectory$milestone_network$length) * 0.05,
+  color_trajectory = "none"
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}

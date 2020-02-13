@@ -4,8 +4,13 @@
 \alias{plot_linearised_comparison}
 \title{Plot strip onedim}
 \usage{
-plot_linearised_comparison(traj1, traj2, reorder = TRUE, margin = 0.05,
-  reorder_second_by = c("mapping", "optimisation"))
+plot_linearised_comparison(
+  traj1,
+  traj2,
+  reorder = TRUE,
+  margin = 0.05,
+  reorder_second_by = c("mapping", "optimisation")
+)
 }
 \arguments{
 \item{traj1}{The first trajectory}
