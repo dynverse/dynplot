@@ -11,7 +11,7 @@ layer_cells <- dynutils::inherit_default_params(
     size_cells = log10(min(10000, length(dataset$cell_ids)))/4,
     alpha_cells = 1,
 
-    grouping = NULL,
+    grouping = dataset$grouping,
     groups = NULL,
     feature_oi = NULL,
     expression_source = "expression",
