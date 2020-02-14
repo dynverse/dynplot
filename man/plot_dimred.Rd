@@ -33,7 +33,8 @@ plot_dimred(
   plot_contour = "none",
   contour_relative_bandwidth = 0.2,
   contour_density_cutoff = 0.2,
-  plot_velocity = case_when(!is.null(dataset$velocity) ~ "stream", TRUE ~ "none")
+  plot_velocity = case_when(!is.null(dataset$velocity) &&
+    !is.null(dataset$dimred_future) ~ "stream", TRUE ~ "none")
 )
 }
 \arguments{

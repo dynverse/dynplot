@@ -165,7 +165,7 @@ annotate_velocity <- function(
 
   legend_velocity <- ComplexHeatmap::Legend(
     labels = c("Strong", "Medium", "Weak"),
-    title = "Relative RNA velocity",
+    title = "RNA velocity",
     type = "points",
     pch = "\U25BA",
     legend_gp = gpar(fill = "#333333", fontsize = c(20, 10, 5)),

@@ -25,6 +25,8 @@ annotate_feature_labels <- function(
 
   feature_annotation_labels = NULL
 ) {
+  assert_that(features_oi %all_in% feature_info$feature_id)
+
   mapped <- tibble(
     feature_id = features_oi,
     fontsize = 12
