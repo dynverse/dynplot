@@ -3,7 +3,7 @@ layer_velocity <- function(
   dataset,
   trajectory = dataset,
   plot_velocity = case_when(
-    !is.null(dataset$velocity) ~ "stream",
+    !is.null(dataset$velocity) && !is.null(dataset$dimred_future) ~ "stream",
     TRUE ~ "none"
   )
 ) {
