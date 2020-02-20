@@ -38,8 +38,7 @@ plot_dimred(
 )
 }
 \arguments{
-\item{hex_cells}{The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
-#' @include layer_milestones.R layer_trajectory.R layer_cells.R layer_velocity.R layer_contour.R}
+\item{hex_cells}{The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000}
 }
 \description{
 Plot a trajectory on dimensionality reduction

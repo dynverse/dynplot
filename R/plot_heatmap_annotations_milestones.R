@@ -118,7 +118,7 @@ annotate_milestone_network <- function(
   connections <- get_connections(linearised)
   milestone_network <- linearised$milestone_network
 
-  height <- unit(max(connections$level) + 1, "cm")
+  height <- unit(max(connections$level, 0) + 1, "cm")
 
   annotation_milestone_network = ComplexHeatmap::AnnotationFunction(
     fun = function(index, k, n) {

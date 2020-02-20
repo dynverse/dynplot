@@ -1,7 +1,9 @@
 #' Plot a trajectory on dimensionality reduction
 #'
 #' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
-#' #' @include layer_milestones.R layer_trajectory.R layer_cells.R layer_velocity.R layer_contour.R
+#' @include layer_milestones.R layer_trajectory.R layer_cells.R layer_velocity.R layer_contour.R
+#'
+#' @export
 plot_dimred <- dynutils::inherit_default_params(
   list(
     layer_cells,
