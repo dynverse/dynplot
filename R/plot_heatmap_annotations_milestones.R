@@ -122,7 +122,7 @@ annotate_milestone_network <- function(
 
   annotation_milestone_network = ComplexHeatmap::AnnotationFunction(
     fun = function(index, k, n) {
-      ymax <- max(connections$level)
+      ymax <- ifelse(nrow(connections) > 0, max(connections$level), 1)
 
       n = length(index)
       # pushViewport(viewport(xscale = c(0, n), yscale = c(0, ymax + ymax * padding)))

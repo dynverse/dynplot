@@ -241,6 +241,12 @@ plot_heatmap <- inherit_default_params(
     invoke(ComplexHeatmap::HeatmapAnnotation, right_annotation, which = "row")
   } else {NULL}
 
+  column_gap <- if(nrow(linearised$milestone_network) < 2) {
+    unit(0, "mm")
+  } else {
+    unit(ifelse(tail(linearised$milestone_network$major_gap, -1), column_major_gap, column_minor_gap), "mm")
+  }
+
   heatmap <- ComplexHeatmap::Heatmap(
     Matrix::t(dynutils::scale_quantile(expression_matrix)),
     name = "Expression",
@@ -252,7 +258,7 @@ plot_heatmap <- inherit_default_params(
 
     # columns
     column_split = linearised$progressions$edge_id,
-    column_gap = unit(ifelse(linearised$milestone_network$major_gap %>% tail(-1), column_major_gap, column_minor_gap), "mm"),
+    column_gap = column_gap,
 
     # features
     show_row_names = show_row_names,

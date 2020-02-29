@@ -22,7 +22,7 @@ evaluate_annotations <- function(annotations, data, id, which = c("row", "column
 
     if (isTRUE(annotation_element$legend)) {
       legends <-  map2(names(mapped_legends), mapped_legends, function(title, mapped_legend) {
-        mapped_legend %>% mutate(col = fill)
+        mapped_legend <- rename_to_gpar(mapped_legend)
 
         ComplexHeatmap::Legend(
           title = paste0(annotation_title),
