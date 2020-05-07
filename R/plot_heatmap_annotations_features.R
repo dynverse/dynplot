@@ -66,7 +66,7 @@ annotate_feature_labels <- function(
 
     row_names_gp <- create_rownames_gpars(mapped)
   } else if(length(feature_labels_at) > 0) {
-    labels_gp <- create_rownames_gpars(mapped)
+    labels_gp <- create_rownames_gpars(mapped[feature_labels_at, ])
     annotation_features <- ComplexHeatmap::anno_mark(
       at = feature_labels_at,
       labels = feature_labels,

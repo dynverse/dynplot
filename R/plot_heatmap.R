@@ -37,9 +37,10 @@ plot_heatmap <- inherit_default_params(
     features_oi = 20,
     feature_info = NULL,
     feature_annotation,
-    row_gap = unit(3, "mm"),
 
+    row_gap = unit(3, "mm"),
     clust = "ward.D2",
+
     color_cells = NULL,
 
     # milestones
@@ -93,9 +94,15 @@ plot_heatmap <- inherit_default_params(
   expression <- get_expression(dataset, expression_source = expression_source)
   expression_matrix <- as.matrix(expression[linearised$progressions$cell_id, features_oi])
 
-  # cluster features
+  # cluster features & order from highest to lowest expression
   clust <- hclust(as.dist(dynutils::correlation_distance(t(expression_matrix))), method = "average")
 
+  expression_matrix <- Matrix::t(dynutils::scale_quantile(expression_matrix))
+
+  feature_scores <- rank_features_quantile(expression_matrix)
+  clust <- reorder(clust, feature_scores)
+
+  # order of cells
   cell_ids <- rownames(expression_matrix)
 
   # create milestones tibble
@@ -121,6 +128,7 @@ plot_heatmap <- inherit_default_params(
   annotation_legends <- list()
 
   # plot milestone network
+  if(isFALSE(plot_milestone_network)) plot_milestone_network <- "none"
   if(first(plot_milestone_network) != "none") {
     c(annotation_milestone_network) %<-% annotate_milestone_network(
       dataset,
@@ -143,6 +151,7 @@ plot_heatmap <- inherit_default_params(
   }
 
   # plot velocity
+  if(isFALSE(plot_velocity)) plot_velocity <- "none"
   if(first(plot_velocity) != "none") {
     c(annotation_velocity, legend_velocity) %<-% annotate_velocity(
       dataset,
@@ -162,19 +171,37 @@ plot_heatmap <- inherit_default_params(
   }
 
   # plot milestone percentages
+  if(isFALSE(plot_milestone_percentages)) plot_milestone_percentages <- "none"
   if(first(plot_milestone_percentages) != "none") {
     c(annotation_milestone_percentages, legend_milestone_id) %<-% annotate_milestone_percentages(
       dataset, trajectory, milestones,
       linearised
     )
 
-    if (first(plot_milestone_percentages) == "top") {
-      top_annotation$`Milestone percentages` <- annotation_milestone_percentages
-    } else {
+    if (first(plot_milestone_percentages) == "bottom") {
       bottom_annotation$`Milestone percentages` <- annotation_milestone_percentages
+    } else {
+      top_annotation$`Milestone percentages` <- annotation_milestone_percentages
     }
 
     annotation_legends$Milestones <- legend_milestone_id
+  }
+
+  # feature annotation
+  c(
+    annotation_features,
+    legend_features
+  ) %<-% annotate_features(
+    dataset,
+    trajectory,
+    features_oi = features_oi,
+    feature_info = feature_info,
+    feature_annotation = feature_annotation
+  )
+
+  if(!is.null(annotation_features)) {
+    right_annotation[names(annotation_features)] <- annotation_features
+    annotation_legends[names(legend_features)] <- legend_features
   }
 
   # feature labels
@@ -196,24 +223,10 @@ plot_heatmap <- inherit_default_params(
     right_annotation$Features <- annotation_feature_labels
   }
 
-  # feature annotation
-  c(
-    annotation_features,
-    legend_features
-  ) %<-% annotate_features(
-    dataset,
-    trajectory,
-    features_oi = features_oi,
-    feature_info = feature_info,
-    feature_annotation = feature_annotation
-  )
-
-  if(!is.null(annotation_features)) {
-    right_annotation[names(annotation_features)] <- annotation_features
-    annotation_legends[names(legend_features)] <- legend_features
-  }
-
   # cell annotation
+  assert_that(!is.null(cell_info))
+  assert_that(!is.null(cell_info$cell_id))
+
   c(
     annotation_cells,
     legend_cells
@@ -248,7 +261,7 @@ plot_heatmap <- inherit_default_params(
   }
 
   heatmap <- ComplexHeatmap::Heatmap(
-    Matrix::t(dynutils::scale_quantile(expression_matrix)),
+    expression_matrix,
     name = "Expression",
 
     cluster_rows = clust,
