@@ -75,14 +75,13 @@ layer_cells <- dynutils::inherit_default_params(
         geom_cell_point(aes(color = grouping), size = size_cells, alpha = alpha_cells)
 
       current_plot <- current_plot +
-        ggnewscale::new_scale_color() +
         get_scale_color_grouping(groups)
     } else {
       current_plot <- current_plot +
+        ggnewscale::new_scale_fill() +
         geom_cell_hex(aes(fill = grouping), bins = hex_cells)
 
       current_plot <- current_plot +
-        ggnewscale::new_scale_fill() +
         get_scale_fill_grouping(groups)
     }
   } else if(color_cells == "feature") {
