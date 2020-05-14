@@ -68,7 +68,7 @@ plot_heatmap <- function(
 
   # cluster features
   if (is.character(clust)) {
-    clust <- hclust(as.dist(correlation_distance(t(expression))), method = clust)
+    clust <- hclust(as.dist(calculate_distance(t(expression), method = "pearson")), method = clust)
   }
   feature_order <- colnames(expression)[clust$order]
 
