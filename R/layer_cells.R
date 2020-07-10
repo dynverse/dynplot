@@ -63,8 +63,8 @@ layer_cells <- dynutils::inherit_default_params(
     milestones <- check_milestones(trajectory, milestones, milestone_percentages, check_color = TRUE, color_milestones = color_milestones)
 
   } else if (color_cells == "pseudotime") {
-    pseudotime <- check_pseudotime(trajectory, pseudotime)
-    pseudotime <- pseudotime[dataset$cell_ids]
+    pseudotimes <- check_pseudotime(trajectory, pseudotime)
+    pseudotimes <- pseudotimes[dataset$cell_ids]
   }
 
   #
@@ -127,15 +127,15 @@ layer_cells <- dynutils::inherit_default_params(
     # add cells/hexes
     if (isFALSE(hex_cells)) {
       current_plot <- current_plot +
-        ggnewscale::new_scale_color() +
-        geom_cell_point(aes(color = pseudotime[dataset$cell_ids]), size = size_cells, alpha = alpha_cells) +
+        # ggnewscale::new_scale_color() +
+        geom_cell_point(aes(color = pseudotimes[dataset$cell_ids]), size = size_cells, alpha = alpha_cells) +
         viridis::scale_color_viridis("Pseudotime")
 
     } else {
       if(current_plot$scales$has_scale("fill")) {current_plot <- current_plot + ggnewscale::new_scale_fill()}
       current_plot <- current_plot +
         ggnewscale::new_scale_color() +
-        geom_cell_hex(aes(fill = pseudotime[dataset$cell_ids]), bins = hex_cells) +
+        geom_cell_hex(aes(fill = pseudotimes[dataset$cell_ids]), bins = hex_cells) +
         viridis::scale_fill_viridis("Pseudotime")
     }
   }
