@@ -4,6 +4,3 @@
 \name{dynplot}
 \alias{dynplot}
 \title{Plot all the trajectories}
-\description{
-Plot all the trajectories
-}
