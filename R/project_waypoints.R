@@ -5,7 +5,7 @@
 #' @param color_trajectory How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"
 #' @param edge_positions The positions of the edges
 #'
-#' @importFrom stats dnorm
+#' @importFrom stats dnorm approx
 project_waypoints <- function(
   trajectory,
   cell_positions,

@@ -3,6 +3,7 @@
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
 #' @inheritParams ggraph::ggraph
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @keywords plot_trajectory
 #'
@@ -20,7 +21,8 @@ plot_topology <- dynutils::inherit_default_params(
     trajectory,
     color_milestones,
     milestones,
-    layout = NULL
+    layout = NULL,
+    arrow = grid::arrow(type = "closed", length = unit(0.4, "cm"))
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
@@ -54,16 +56,17 @@ plot_topology <- dynutils::inherit_default_params(
       vertices = milestone_positions %>% select(-x, -y)
     ) %>% as_tbl_graph()
 
-    arrow <-
+    # add arrow if directed
+    my_arrow <-
       if (any(trajectory$milestone_network$directed)) {
-        arrow(type = "closed", length = unit(0.4, "cm"))
+        arrow
       } else {
         NULL
       }
 
     ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
       geom_edge_fan() +
-      geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow) +
+      geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = my_arrow) +
       geom_node_label(aes(fill = color, label = milestone_id)) +
       scale_fill_identity() +
       theme_graph()

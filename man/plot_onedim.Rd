@@ -23,7 +23,8 @@ plot_onedim(
   linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
   quasirandom_width = 0.2,
   plot_cells = TRUE,
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
+  arrow = grid::arrow(type = "closed")
 )
 }
 \arguments{
@@ -64,6 +65,8 @@ plot_onedim(
 \item{plot_cells}{Whether to plot the cells}
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
+
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }
 \description{
 Plot onedim

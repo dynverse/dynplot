@@ -6,7 +6,7 @@
 #' @inheritParams plot_dimred
 #' @param size_trajectory The size of the transition lines between milestones.
 #' @param size_milestones The size of milestones.
-#' @param arrow_length length of the arrow.
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #' @param plot_milestones Whether to plot the milestones.
 #' @param alpha_cells The alpha of the cells.
 #' @param size_cells The size of the cells.
@@ -54,7 +54,7 @@ plot_graph <- dynutils::inherit_default_params(
     alpha_cells = 1,
     size_cells = 2.5,
     border_radius_percentage = .1,
-    arrow_length = grid::unit(1, "cm"),
+    arrow = grid::arrow(length = grid::unit(1, "cm"), type = "closed"),
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
     plot_milestones = FALSE,
     adjust_weights = FALSE
@@ -131,6 +131,14 @@ plot_graph <- dynutils::inherit_default_params(
         geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray")
     }
 
+    # add arrow if directed
+    my_arrow <-
+      if (any(trajectory$milestone_network$directed)) {
+        arrow
+      } else {
+        NULL
+      }
+
       # Transition gray border
     plot <- plot +
       geom_segment(
@@ -146,7 +154,7 @@ plot_graph <- dynutils::inherit_default_params(
         dimred_segments %>% filter(directed, length > 0),
         size = 1,
         colour = "grey",
-        arrow = arrow(length = arrow_length, type = "closed")
+        arrow = my_arrow
       ) +
 
       # Transition white tube

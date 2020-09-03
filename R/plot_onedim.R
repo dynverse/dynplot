@@ -7,6 +7,7 @@
 #' @param alpha_cells The alpha of the cells
 #' @param size_cells The size of the cells
 #' @param border_radius_percentage The fraction of the radius that is used for the border
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
@@ -46,7 +47,8 @@ plot_onedim <- dynutils::inherit_default_params(
     linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
+    arrow = grid::arrow(type = "closed")
   ) {
     milestone_network <- trajectory$milestone_network
     progressions <- trajectory$progressions
@@ -94,20 +96,35 @@ plot_onedim <- dynutils::inherit_default_params(
         end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
       )
 
-    plot <- ggplot() +
+    # add arrow if directed
+    my_arrow <-
+      if (any(trajectory$milestone_network$directed)) {
+        arrow
+      } else {
+        NULL
+      }
+
+    # construct plot
+    plot <-
+      ggplot() +
       geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
       theme_graph() +
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
-    if (any(milestones$start & milestones$type == "from"))
-      plot <- plot + geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = arrow(type = "closed"))
+    if (any(milestones$start & milestones$type == "from")) {
+      plot <- plot +
+        geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = my_arrow)
+    }
 
-    if (any(milestones$end & milestones$type == "to"))
-      plot <- plot + geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
+    if (any(milestones$end & milestones$type == "to")) {
+      plot <- plot +
+      geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
+    }
 
     # add connections
     if (nrow(linearised$connections)) {
-      plot <- plot + geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
+      plot <- plot +
+        geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_from, 0, xend = x_from, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
         geom_segment(aes(x_to, 0, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666")
     }

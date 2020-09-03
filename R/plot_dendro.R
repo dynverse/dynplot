@@ -5,6 +5,7 @@
 #' @param alpha_cells The alpha of the cells
 #' @param size_cells The size of the cells
 #' @param border_radius_percentage The fraction of the radius that is used for the border
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @inheritParams add_cell_coloring
 #'
@@ -38,7 +39,8 @@ plot_dendro <- dynutils::inherit_default_params(
     size_cells = 2.5,
     border_radius_percentage = .1,
     diag_offset = 0.05,
-    y_offset = 0.2
+    y_offset = 0.2,
+    arrow = grid::arrow(type = "closed")
   ) {
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
@@ -178,9 +180,9 @@ plot_dendro <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # determine arrow
-    arrow <-
+    my_arrow <-
       if (any(trajectory$milestone_network$directed)) {
-        arrow(type = "closed")
+        arrow
       } else {
         NULL
       }
@@ -193,7 +195,7 @@ plot_dendro <- dynutils::inherit_default_params(
       # the main edges
       ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
       # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
+      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = my_arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
       # the node labels
       # ggraph::geom_node_label(aes(label = node_id)) +
 

@@ -8,7 +8,8 @@ plot_topology(
   trajectory,
   color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
   milestones = NULL,
-  layout = NULL
+  layout = NULL,
+  arrow = grid::arrow(type = "closed", length = unit(0.4, "cm"))
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ plot_topology(
 
 \item{layout}{The type of layout to create. Either a valid string, a
 function, a matrix, or a data.frame (see Details)}
+
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }
 \description{
 Plot the topology of a trajectory

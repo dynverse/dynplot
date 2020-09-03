@@ -15,6 +15,7 @@ check_feature <- function(expression, feature_oi) {
   feature_oi
 }
 
+#' @importFrom utils tail
 check_features_oi <- function(trajectory, expression, features_oi, cell_feature_importances = NULL) {
   if (length(features_oi) == 1 && is.numeric(features_oi) && features_oi > 0) {
     # make sure features_oi is not larger than the number of features
@@ -35,7 +36,7 @@ check_features_oi <- function(trajectory, expression, features_oi, cell_feature_
         pull(feature_id) %>%
         as.character()
 
-    } else if ("dynfeature" %in% rownames(installed.packages())) {
+    } else if (requireNamespace("dynfeature", quietly = TRUE)) {
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 

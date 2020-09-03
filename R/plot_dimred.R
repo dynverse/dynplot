@@ -3,15 +3,16 @@
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the projected milestone network on the dimensionality reduction
 #' @param plot_trajectory Whether to plot the projected trajectory on the dimensionality reduction
-#' @param trajectory_projection_sd The standard deviation of the gaussian kernel to be used for projecting the trajectory.
-#'   This is in the order of maginature as the lengths of the milestone_network.
-#'   The lower, the more closely the trajectory will follow the cells
+#' @param trajectory_projection_sd The standard deviation of the Gaussian kernel to be used for projecting the trajectory.
+#'   This is in the order of magnitude as the lengths of the milestone_network.
+#'   The lower, the more closely the trajectory will follow the cells.
 #' @param alpha_cells The alpha of the cells
 #' @param size_cells The size of the cells
 #' @param border_radius_percentage The fraction of the radius that is used for the border
 #' @param size_milestones The size of the milestones
 #' @param size_transitions The size of the trajectory segments
-#' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000
+#' @param hex_cells The number of hexes to use, to avoid overplotting points. Default is FALSE if number of cells <= 10000.
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
@@ -72,6 +73,7 @@ plot_dimred <- dynutils::inherit_default_params(
     milestone_percentages,
     pseudotime,
     expression_source = "expression",
+    arrow = grid::arrow(type = "closed", length = unit(0.1, "inches")),
 
     # density params
     color_density = NULL,
@@ -269,16 +271,16 @@ plot_dimred <- dynutils::inherit_default_params(
         )
 
       # add arrow if directed
-      arrow <-
+      my_arrow <-
         if (any(trajectory$milestone_network$directed)) {
-          arrow(type = "closed", length = unit(0.1, "inches"))
+          arrow
         } else {
           NULL
         }
 
       plot <- plot +
         ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network) +
-        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = arrow)
+        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = my_arrow)
 
       if (color_cells == "milestone") {
         plot <- plot +
@@ -312,9 +314,9 @@ plot_dimred <- dynutils::inherit_default_params(
         filter(!is.na(milestone_id))
 
       # add arrow if directed
-      arrow <-
+      my_arrow <-
         if (any(trajectory$milestone_network$directed)) {
-          arrow(type = "closed", length = unit(0.1, "inches"))
+          arrow
         } else {
           NULL
         }
@@ -326,7 +328,7 @@ plot_dimred <- dynutils::inherit_default_params(
           aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
           data = waypoint_projection$edges %>% filter(arrow),
           color = "#333333",
-          arrow = arrow,
+          arrow = my_arrow,
           size = 1,
           linejoin = "mitre",
           lineend = "butt"
@@ -339,7 +341,7 @@ plot_dimred <- dynutils::inherit_default_params(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
             data = waypoint_projection$edges %>% filter(arrow),
             color = "#333333",
-            arrow = arrow,
+            arrow = my_arrow,
             size = 2,
             linejoin = "mitre",
             lineend = "butt"
@@ -358,7 +360,7 @@ plot_dimred <- dynutils::inherit_default_params(
           geom_segment(
             aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
             data = waypoint_projection$edges %>% filter(arrow),
-            arrow = arrow,
+            arrow = my_arrow,
             size = 1,
             linejoin = "mitre",
             lineend = "butt"

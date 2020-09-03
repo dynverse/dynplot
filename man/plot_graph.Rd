@@ -21,7 +21,7 @@ plot_graph(
   alpha_cells = 1,
   size_cells = 2.5,
   border_radius_percentage = 0.1,
-  arrow_length = grid::unit(1, "cm"),
+  arrow = grid::arrow(length = grid::unit(1, "cm"), type = "closed"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
   plot_milestones = FALSE,
   adjust_weights = FALSE
@@ -58,7 +58,7 @@ plot_graph(
 
 \item{border_radius_percentage}{The fraction of the radius that is used for the border.}
 
-\item{arrow_length}{length of the arrow.}
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 

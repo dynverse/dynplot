@@ -19,7 +19,8 @@ plot_dendro(
   size_cells = 2.5,
   border_radius_percentage = 0.1,
   diag_offset = 0.05,
-  y_offset = 0.2
+  y_offset = 0.2,
+  arrow = grid::arrow(type = "closed")
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ plot_dendro(
 \item{diag_offset}{The x-offset (percentage of the edge lenghts) between milestones}
 
 \item{y_offset}{The size of the quasirandom cell spreading in the y-axis}
+
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }
 \description{
 Plot a trajectory as a dendrogram
