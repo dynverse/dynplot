@@ -1,5 +1,9 @@
 #' Plot all the trajectories
 #'
+#' Create ggplot2 plots of single-cell trajectories. This can be
+#' the trajectory topology itself, projected onto a dimensionality reduction,
+#' using a heatmap, or a comparison between two trajectories.
+#'
 #' @import dplyr
 #' @import tidyr
 #' @importFrom stats as.dist hclust as.dendrogram dist runif
