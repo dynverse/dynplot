@@ -179,13 +179,7 @@ plot_dendro <- dynutils::inherit_default_params(
     cell_positions <- cell_coloring_output$cell_positions
     color_scale <- cell_coloring_output$color_scale
 
-    # determine arrow
-    my_arrow <-
-      if (any(trajectory$milestone_network$directed)) {
-        arrow
-      } else {
-        NULL
-      }
+
 
     # generate layout
     layout <- ggraph::create_layout(milestone_tree, "manual", x = milestone_positions$x, y = milestone_positions$y)
@@ -193,11 +187,13 @@ plot_dendro <- dynutils::inherit_default_params(
     # start plotting!
     dendro <- ggplot(layout) +
       # the main edges
-      ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey") +
-      # the arrows
-      ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = my_arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
-      # the node labels
-      # ggraph::geom_node_label(aes(label = node_id)) +
+      ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey")
+
+    # determine arrow
+    if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
+      dendro <- dendro +
+        ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
+    }
 
     # cell border, if needed
     if (border_radius_percentage > 0) {

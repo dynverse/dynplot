@@ -209,7 +209,7 @@ add_density_coloring <- function(
     group_density <- cell_positions %>%
       mutate(group_id = grouping[cell_id]) %>%
       select(comp_1, comp_2, group_id) %>%
-      nest(comp_1, comp_2, .key = "positions") %>%
+      nest(positions = c(comp_1, comp_2)) %>%
       mutate(contour = map2(positions, group_id, function(positions, group_id) {
         density <- MASS::kde2d(positions$comp_1, positions$comp_2, h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
         level <- max(density$z) * density_cutoff

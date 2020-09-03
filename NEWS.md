@@ -1,3 +1,9 @@
+# dynplot 1.0.3
+
+ * MINOR CHANGE: Add `arrow` parameter to all plot functions.
+ 
+ * BUG FIX: Apply fixes for new versions of tibble, tidyr, and ggraph.
+
 # dynplot 1.0.2 (04-07-2019) 
 
  * BUG FIX: Fix weird ceiling warning.

@@ -175,7 +175,8 @@ plot_dimred <- dynutils::inherit_default_params(
     )
 
     # base plot without cells
-    plot <- ggplot(cell_positions, aes(comp_1, comp_2)) +
+    plot <-
+      ggplot(cell_positions, aes(comp_1, comp_2)) +
       theme_graph() +
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
@@ -220,8 +221,8 @@ plot_dimred <- dynutils::inherit_default_params(
     if (plot_milestone_network) {
       # calculate position of milestones
       milestone_positions <-
-        if (!is.null(extra$dimred_milestones)) {
-          extra$dimred_milestones %>%
+        if (!is.null(dimred_extra$dimred_milestones)) {
+          dimred_extra$dimred_milestones %>%
             as.data.frame() %>%
             rownames_to_column("milestone_id")
         } else {
@@ -270,22 +271,19 @@ plot_dimred <- dynutils::inherit_default_params(
           comp_2_mid = comp_2_from + (comp_2_to - comp_2_from) /2
         )
 
-      # add arrow if directed
-      my_arrow <-
-        if (any(trajectory$milestone_network$directed)) {
-          arrow
-        } else {
-          NULL
-        }
-
       plot <- plot +
-        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network) +
-        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network, arrow = my_arrow)
+        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network %>% mutate(edge.id = row_number()))
+
+      # add arrow if directed
+      if (any(trajectory$milestone_network$directed)) {
+        plot <- plot +
+          ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network %>% mutate(edge.id = row_number()), arrow = arrow)
+      }
 
       if (color_cells == "milestone") {
         plot <- plot +
           geom_point(color = "black", data = milestone_positions, size = size_milestones) +
-          geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = size_milestone*.75)
+          geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = size_milestones*.75)
       } else {
         plot <- plot +
           geom_point(color = "#333333", data = milestone_positions, size = size_milestones, alpha = 1)
@@ -315,7 +313,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       # add arrow if directed
       my_arrow <-
-        if (any(trajectory$milestone_network$directed)) {
+        if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
           arrow
         } else {
           NULL

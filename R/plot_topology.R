@@ -57,16 +57,16 @@ plot_topology <- dynutils::inherit_default_params(
     ) %>% as_tbl_graph()
 
     # add arrow if directed
-    my_arrow <-
-      if (any(trajectory$milestone_network$directed)) {
-        arrow
-      } else {
-        NULL
-      }
 
-    ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
-      geom_edge_fan() +
-      geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = my_arrow) +
+
+    plot <- ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
+      geom_edge_fan()
+
+    if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
+      plot <- plot + geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow)
+    }
+
+    plot +
       geom_node_label(aes(fill = color, label = milestone_id)) +
       scale_fill_identity() +
       theme_graph()
