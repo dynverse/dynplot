@@ -311,11 +311,12 @@ plot_dimred <- dynutils::inherit_default_params(
       )
 
       wp_segments <- waypoint_projection$segments
+      milestone_positions <- wp_segments %>% filter(!is.na(milestone_id))
 
       # plot milestones
       plot <- plot +
         geom_point(
-          data = wp_segments %>% filter(!is.na(milestone_id)),
+          data = milestone_positions,
           color = "#333333",
           size = size_milestones
         ) +
@@ -358,7 +359,7 @@ plot_dimred <- dynutils::inherit_default_params(
         ) +
         geom_point(
           aes(color = color),
-          data = wp_segments %>% filter(!is.na(milestone_id)),
+          data = milestone_positions,
           size = size_milestones - 1
         )
     }
@@ -375,8 +376,9 @@ plot_dimred <- dynutils::inherit_default_params(
     }
 
     # add density labels
-    if (!is.null(density_plots$labels))
+    if (!is.null(density_plots$labels)) {
       plot <- plot + density_plots$labels
+    }
 
     plot + coord_equal()
   }
