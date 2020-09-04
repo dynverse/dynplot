@@ -19,7 +19,9 @@
 #' @inheritParams add_density_coloring
 #' @inheritParams dynwrap::get_milestone_labelling
 #' @inheritParams dynwrap::get_dimred
-#' @inheritParams project_waypoints
+#' @inheritParams project_waypoints_coloured
+#'
+#' @importFrom ggforce geom_link2
 #'
 #' @include project_waypoints.R
 #'
@@ -48,12 +50,12 @@ plot_dimred <- dynutils::inherit_default_params(
     add_cell_coloring,
     add_milestone_coloring,
     add_density_coloring,
-    project_waypoints
+    project_waypoints_coloured
   ),
   function(
     trajectory,
     color_cells,
-    dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds)),
+    dimred = dyndimred::dimred_landmark_mds,
     plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) && !plot_milestone_network,
     plot_milestone_network = FALSE,
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
@@ -88,7 +90,7 @@ plot_dimred <- dynutils::inherit_default_params(
     trajectory_projection_sd,
     color_trajectory
   ) {
-    # defaults
+    # # defaults
     # color_cells = "auto"
     # plot_milestone_network = FALSE
     # dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds))
@@ -99,7 +101,8 @@ plot_dimred <- dynutils::inherit_default_params(
     # border_radius_percentage = .1
     # size_transitions = 1
     # hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE)
-    # groups <- grouping <- feature_oi <- NULL;  color_milestones <- "auto"; milestones <- milestone_percentages <- pseudotime <- NULL; expression_source <- "expression"; color_density <- "none"; padding <- .1; nbins <- 1000; bw = .2; density_cutoff <- .3; density_cutoff_label <- .03; waypoints <- dynwrap::select_waypoints(trajectory); trajectory_projection_sd <- sum(trajectory$milestone_network$length) * .05; color_trajectory <- "none"
+    # groups <- grouping <- feature_oi <- NULL;  color_milestones <- "auto"; milestones <- milestone_percentages <- pseudotime <- NULL; expression_source <- "expression"; color_density <- "none"; padding <- .1; nbins <- 1000; bw = .2; denswaypointity_cutoff <- .3; density_cutoff_label <- .03; waypoints <- dynwrap::select_waypoints(trajectory); trajectory_projection_sd <- sum(trajectory$milestone_network$length) * .05; color_trajectory <- "none"
+    # arrow = grid::arrow(type = "closed", length = unit(0.1, "inches"))
 
     # make sure a trajectory was provided
     testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
@@ -298,7 +301,7 @@ plot_dimred <- dynutils::inherit_default_params(
         } else {
           NULL
         }
-      waypoint_projection <- project_waypoints(
+      waypoint_projection <- project_waypoints_coloured(
         trajectory = trajectory,
         cell_positions = cell_positions,
         waypoints = waypoints,
@@ -307,72 +310,57 @@ plot_dimred <- dynutils::inherit_default_params(
         edge_positions = edge_positions
       )
 
-      milestone_positions <-
-        waypoint_projection$positions %>%
-        filter(!is.na(milestone_id))
+      wp_segments <- waypoint_projection$segments
 
-      # add arrow if directed
-      my_arrow <-
-        if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
-          arrow
-        } else {
-          NULL
-        }
-
-      # plot milestones and arrows
+      # plot milestones
       plot <- plot +
-        geom_point(color = "#333333", data = milestone_positions, size = size_milestones, alpha = 1) +
-        geom_segment(
-          aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
-          data = waypoint_projection$edges %>% filter(arrow),
+        geom_point(
+          data = wp_segments %>% filter(!is.na(milestone_id)),
           color = "#333333",
-          arrow = my_arrow,
-          size = 1,
-          linejoin = "mitre",
-          lineend = "butt"
+          size = size_milestones
+        ) +
+        geom_path(
+          aes(comp_1, comp_2, group = group),
+          data = wp_segments,
+          size = size_transitions,
+          color = "#333333"
         )
 
-      # plot segment, depends on whether the trajectory should be colored
-      if ("color_from" %in% colnames(waypoint_projection$edges)) {
+      # add arrow if directed
+      if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
         plot <- plot +
-          geom_segment(
-            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
-            data = waypoint_projection$edges %>% filter(arrow),
+          geom_path(
+            aes(comp_1, comp_2, group = group),
+            data = wp_segments %>% filter(arrow),
             color = "#333333",
-            arrow = my_arrow,
-            size = 2,
-            linejoin = "mitre",
-            lineend = "butt"
-          ) +
-          geom_segment(
-            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
-            data = waypoint_projection$edges,
-            size = size_transitions + 1,
-            color = "#333333"
-          ) +
-          geom_segment(
-            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
-            data = waypoint_projection$edges,
-            size = size_transitions
-          ) +
-          geom_segment(
-            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to, color = color_from),
-            data = waypoint_projection$edges %>% filter(arrow),
-            arrow = my_arrow,
-            size = 1,
-            linejoin = "mitre",
-            lineend = "butt"
-          ) +
-          geom_point(aes(color = color), data = milestone_positions, size = size_milestones*.75, alpha = 1)
-      } else {
-        plot <- plot +
-          geom_segment(
-            aes(comp_1_from, comp_2_from, xend = comp_1_to, yend = comp_2_to),
-            data = waypoint_projection$edges,
+            arrow = arrow,
             size = size_transitions,
-            color = "#333333"
+            linejoin = "mitre",
+            lineend = "butt"
+          ) +
+          geom_path(
+            aes(comp_1, comp_2, group = group, colour = color),
+            data = wp_segments %>% filter(arrow) %>% group_by(group) %>% mutate(color = first(color)) %>% ungroup(),
+            arrow = arrow,
+            size = size_transitions - 1,
+            linejoin = "mitre",
+            lineend = "butt"
           )
       }
+
+      # plot segment, depends on whether the trajectory should be colored
+      plot <- plot +
+        ggforce::geom_link2(
+          aes(comp_1, comp_2, group = group, color = color),
+          data = wp_segments,
+          size = size_transitions - 1,
+          alpha = 1
+        ) +
+        geom_point(
+          aes(color = color),
+          data = wp_segments %>% filter(!is.na(milestone_id)),
+          size = size_milestones - 1
+        )
     }
 
     # add milestone labels

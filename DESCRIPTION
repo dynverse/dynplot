@@ -27,6 +27,7 @@ Imports:
   dynwrap (>= 1.0.0),
   GA,
   ggbeeswarm,
+  ggforce,
   ggplot2 (>= 3.0),
   ggraph (>= 2.0),
   ggrepel,
