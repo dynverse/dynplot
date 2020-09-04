@@ -4,7 +4,9 @@
 \name{example_bifurcating}
 \alias{example_bifurcating}
 \title{An example bifurcating dataset}
-\format{An object of class \code{dynwrap::with_prior} (inherits from \code{dynwrap::with_expression}, \code{dynwrap::with_cell_waypoints}, \code{dynwrap::with_trajectory}, \code{dynwrap::data_wrapper}, \code{list}) of length 20.}
+\format{
+An object of class \code{dynwrap::with_prior} (inherits from \code{dynwrap::with_expression}, \code{dynwrap::with_cell_waypoints}, \code{dynwrap::with_trajectory}, \code{dynwrap::data_wrapper}, \code{list}) of length 20.
+}
 \usage{
 example_bifurcating
 }

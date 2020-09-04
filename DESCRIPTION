@@ -1,17 +1,17 @@
 Package: dynplot
 Type: Package
-Title: Plotting functions for the dynverse
+Title: One-Line Functions for Visualising Trajectories
 Version: 1.0.1.9000
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "rcannood@gmail.com", role = c("aut")),
   person("Wouter", "Saelens", email = "wouter.saelens@gmail.com", role = c("aut", "cre")))
-Description: Package that create ggplot2 plots of single-cell trajectories. This can be
+Description: Package that create `ggplot2` plots of single-cell trajectories. This can be
             the trajectory topology itself, projected onto a dimensionality reduction,
             using a heatmap, or a comparison between two trajectories.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 SystemRequirements: libudunits2-dev (deb) or udunits2-devel (rpm)
 Depends:
   R (>= 3.0.0)
@@ -44,7 +44,8 @@ Imports:
   tidyr,
   tidygraph,
   vipor,
-  viridis
+  viridis,
+  zeallot
 Suggests:
   cobs,
   ComplexHeatmap,
@@ -84,6 +85,7 @@ Collate:
     'plot_heatmap.R'
     'plot_heatmap_annotations_helpers.R'
     'plot_heatmap_mappers.R'
+    'plot_heatmap_utils.R'
     'plot_topology.R'
     'preprocess.R'
     'process_dynplot.R'

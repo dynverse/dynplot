@@ -3,7 +3,9 @@
 \docType{package}
 \name{dynplot}
 \alias{dynplot}
-\title{Plot all the trajectories}
+\title{One-Line Functions for Visualising Trajectories}
 \description{
-Plot all the trajectories
+Package that create ggplot2 plots of single-cell trajectories. This can be
+the trajectory topology itself, projected onto a dimensionality reduction,
+using a heatmap, or a comparison between two trajectories.
 }

@@ -1,4 +1,8 @@
-#' Plot all the trajectories
+#' One-Line Functions for Visualising Trajectories
+#'
+#' Package that create ggplot2 plots of single-cell trajectories. This can be
+#' the trajectory topology itself, projected onto a dimensionality reduction,
+#' using a heatmap, or a comparison between two trajectories.
 #'
 #' @import dplyr
 #' @import tidyr

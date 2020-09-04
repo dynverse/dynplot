@@ -25,7 +25,7 @@ plot_graph(
 )
 }
 \arguments{
-\item{trajectory}{The trajectory as created by \code{\link[dynwrap:infer_trajectory]{infer_trajectory()}} or \code{\link[dynwrap:add_trajectory]{add_trajectory()}}}
+\item{trajectory}{The trajectory as created by \code{\link[dynwrap:infer_trajectories]{infer_trajectory()}} or \code{\link[dynwrap:add_trajectory]{add_trajectory()}}}
 
 \item{color_cells}{How to color the cells}
 
