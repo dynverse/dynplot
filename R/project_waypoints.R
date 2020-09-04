@@ -87,23 +87,6 @@ project_waypoints_coloured <- function(
     waypoint_positions$color <- "#333333"
   }
 
-  # positions of different edges
-  waypoint_edges <-
-    waypoints$waypoint_network %>%
-    left_join(waypoint_positions %>% rename_all(~paste0(., "_from")) %>% select(-milestone_id_from), c("from" = "waypoint_id_from")) %>%
-    left_join(waypoint_positions %>% rename_all(~paste0(., "_to")) %>% select(-milestone_id_to), c("to" = "waypoint_id_to")) %>%
-    mutate(length = sqrt((comp_1_to - comp_1_from)**2 + (comp_2_to - comp_2_from)**2))
-
-  # add arrows to every milestone to milestone edge
-  # an arrow is placed at the waypoint which is in the middle from the start and end
-  waypoint_edges <- waypoint_edges %>%
-    group_by(milestone_id_from, milestone_id_to) %>%
-    mutate(
-      distance_to_center = (comp_1_to - mean(c(max(comp_1_from), min(comp_1_from))))^2 + (comp_2_to - mean(c(max(comp_2_from), min(comp_2_from))))^2,
-      arrow = row_number() == which.min(distance_to_center)
-    ) %>%
-    ungroup()
-
   segments <- left_join(
     waypoint_positions,
     waypoints$progressions,
@@ -119,8 +102,6 @@ project_waypoints_coloured <- function(
     select(-closest)
 
   lst(
-    positions = waypoint_positions,
-    edges = waypoint_edges,
     segments = segments
   )
 }

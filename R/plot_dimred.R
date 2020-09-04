@@ -63,7 +63,7 @@ plot_dimred <- dynutils::inherit_default_params(
     size_cells = 2.5,
     border_radius_percentage = .1,
     size_milestones = 6,
-    size_transitions = 1,
+    size_transitions = 2,
     hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
 
     # trajectory information
@@ -90,7 +90,7 @@ plot_dimred <- dynutils::inherit_default_params(
     trajectory_projection_sd,
     color_trajectory
   ) {
-    # # defaults
+    # defaults
     # color_cells = "auto"
     # plot_milestone_network = FALSE
     # dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, ifelse(length(trajectory$cell_ids) > 500, dimred_pca, dimred_mds))
@@ -99,7 +99,8 @@ plot_dimred <- dynutils::inherit_default_params(
     # alpha_cells = 1
     # size_cells = 2.5
     # border_radius_percentage = .1
-    # size_transitions = 1
+    # size_transitions = 2
+    # size_milestones <- 6
     # hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE)
     # groups <- grouping <- feature_oi <- NULL;  color_milestones <- "auto"; milestones <- milestone_percentages <- pseudotime <- NULL; expression_source <- "expression"; color_density <- "none"; padding <- .1; nbins <- 1000; bw = .2; denswaypointity_cutoff <- .3; density_cutoff_label <- .03; waypoints <- dynwrap::select_waypoints(trajectory); trajectory_projection_sd <- sum(trajectory$milestone_network$length) * .05; color_trajectory <- "none"
     # arrow = grid::arrow(type = "closed", length = unit(0.1, "inches"))
@@ -184,10 +185,12 @@ plot_dimred <- dynutils::inherit_default_params(
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # add density polygon
-    if (!is.null(density_plots$polygon))
+    if (!is.null(density_plots$polygon)) {
       plot <- plot + density_plots$polygon
-    if (!is.null(density_plots$scale))
+    }
+    if (!is.null(density_plots$scale)) {
       plot <- plot + density_plots$scale
+    }
 
     # add cells
     if (is.numeric(hex_cells)) {

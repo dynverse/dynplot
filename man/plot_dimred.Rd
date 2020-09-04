@@ -16,7 +16,7 @@ plot_dimred(
   size_cells = 2.5,
   border_radius_percentage = 0.1,
   size_milestones = 6,
-  size_transitions = 1,
+  size_transitions = 2,
   hex_cells = ifelse(length(trajectory$cell_ids) > 10000, 100, FALSE),
   grouping = NULL,
   groups = NULL,
