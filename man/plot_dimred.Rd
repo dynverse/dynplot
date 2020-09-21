@@ -7,7 +7,8 @@
 plot_dimred(
   trajectory,
   color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
-  dimred = dyndimred::dimred_landmark_mds,
+  dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA,
+    dyndimred::dimred_landmark_mds),
   plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) &&
     !plot_milestone_network,
   plot_milestone_network = FALSE,

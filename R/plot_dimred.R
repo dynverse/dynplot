@@ -55,7 +55,7 @@ plot_dimred <- dynutils::inherit_default_params(
   function(
     trajectory,
     color_cells,
-    dimred = dyndimred::dimred_landmark_mds,
+    dimred = ifelse(dynwrap::is_wrapper_with_dimred(trajectory), NA, dyndimred::dimred_landmark_mds),
     plot_trajectory = dynwrap::is_wrapper_with_trajectory(trajectory) && !plot_milestone_network,
     plot_milestone_network = FALSE,
     label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
