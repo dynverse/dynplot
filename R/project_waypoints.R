@@ -83,8 +83,6 @@ project_waypoints_coloured <- function(
         closest_cell_id = colnames(weights)[closest_cell_ix],
         color = cpv[closest_cell_id]
       )
-  } else {
-    waypoint_positions$color <- "#333333"
   }
 
   segments <- left_join(

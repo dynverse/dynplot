@@ -196,13 +196,6 @@ plot_dimred <- dynutils::inherit_default_params(
     if (is.numeric(hex_cells)) {
       hex_coordinates <- calculate_hex_coords(cell_positions, hex_cells)
 
-      plot +
-        geom_polygon(
-          aes(group = group, fill = color),
-          data = hex_coordinates,
-        ) +
-        cell_coloring_output$fill_scale
-
       plot <- plot +
         geom_polygon(
           aes(group = group, fill = color),
@@ -341,30 +334,61 @@ plot_dimred <- dynutils::inherit_default_params(
             size = size_transitions,
             linejoin = "mitre",
             lineend = "butt"
-          ) +
-          geom_path(
-            aes(comp_1, comp_2, group = group, colour = color),
-            data = wp_segments %>% filter(arrow) %>% group_by(group) %>% mutate(color = first(color)) %>% ungroup(),
-            arrow = arrow,
-            size = size_transitions - 1,
-            linejoin = "mitre",
-            lineend = "butt"
           )
+
+        if (color_trajectory == "none") {
+          plot <- plot +
+            geom_path(
+              aes(comp_1, comp_2, group = group),
+              data = wp_segments %>% filter(arrow),
+              colour = "#333333",
+              arrow = arrow,
+              size = size_transitions - 1,
+              linejoin = "mitre",
+              lineend = "butt"
+            )
+        } else {
+          plot <- plot +
+            geom_path(
+              aes(comp_1, comp_2, group = group, colour = color),
+              data = wp_segments %>% filter(arrow) %>% group_by(group) %>% mutate(color = first(color)) %>% ungroup(),
+              arrow = arrow,
+              size = size_transitions - 1,
+              linejoin = "mitre",
+              lineend = "butt"
+            )
+        }
       }
 
       # plot segment, depends on whether the trajectory should be colored
-      plot <- plot +
-        ggforce::geom_link2(
-          aes(comp_1, comp_2, group = group, color = color),
-          data = wp_segments,
-          size = size_transitions - 1,
-          alpha = 1
-        ) +
-        geom_point(
-          aes(color = color),
-          data = milestone_positions,
-          size = size_milestones - 1
-        )
+      if (color_trajectory == "none") {
+        plot <- plot +
+          ggforce::geom_link2(
+            aes(comp_1, comp_2, group = group),
+            colour = "#333333",
+            data = wp_segments,
+            size = size_transitions - 1,
+            alpha = 1
+          )+
+          geom_point(
+            data = milestone_positions,
+            color = "#333333",
+            size = size_milestones - 1
+          )
+      } else {
+        plot <- plot +
+          ggforce::geom_link2(
+            aes(comp_1, comp_2, group = group, color = color),
+            data = wp_segments,
+            size = size_transitions - 1,
+            alpha = 1
+          ) +
+          geom_point(
+            aes(color = color),
+            data = milestone_positions,
+            size = size_milestones - 1
+          )
+      }
     }
 
     # add milestone labels
