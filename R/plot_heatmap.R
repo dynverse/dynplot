@@ -96,11 +96,12 @@ plot_heatmap <- inherit_default_params(
 
   # cluster features & order from highest to lowest expression
   clust <- hclust(as.dist(dynutils::correlation_distance(t(expression_matrix))), method = "average")
+  clust <- as.dendrogram(clust)
 
   expression_matrix <- Matrix::t(dynutils::scale_quantile(expression_matrix))
 
   feature_scores <- rank_features_quantile(expression_matrix)
-  clust <- reorder(clust, feature_scores)
+  clust <- stats::reorder(clust, feature_scores)
 
   # order of cells
   cell_ids <- rownames(expression_matrix)
