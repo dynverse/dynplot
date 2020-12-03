@@ -32,7 +32,8 @@ linearise_cells <- function(
     milestone_network <- progressions %>%
       group_by(from, to) %>%
       summarise(length = n()) %>%
-      right_join(milestone_network %>% select(-length), c("from", "to")) %>%
+      right_join(milestone_network %>% select(-length) %>% mutate(order = row_number()), c("from", "to")) %>%
+      arrange(order) %>% select(-order) %>%
       mutate(length = ifelse(is.na(length), 1e-6, length)) %>% # add length of edges with no cells
       ungroup()
   } else {
