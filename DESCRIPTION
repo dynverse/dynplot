@@ -19,46 +19,35 @@ Depends:
   R (>= 3.0.0)
 Imports:
   assertthat,
-  cowplot,
   dplyr,
   dynutils (>= 1.0.2),
   dynfeature (>= 1.0.0),
   dyndimred (>= 1.0.0),
   dynwrap (>= 1.0.0),
   GA,
-  ggbeeswarm,
   ggforce,
   ggplot2 (>= 3.0),
   ggraph (>= 2.0),
   ggrepel,
   igraph,
   MASS,
-  magrittr,
   methods,
   patchwork,
   pdist,
   purrr,
-  rje,
-  RColorBrewer,
   reshape2,
-  testthat,
   tibble,
   tidyr,
   tidygraph,
   vipor,
   viridis
 Suggests:
-  cobs,
   hexbin,
-  destiny,
   knitr,
-  rmarkdown
-Remotes: 
-    thomasp85/patchwork,
-    dynverse/dynutils@devel,
-    dynverse/dyndimred@devel,
-    dynverse/dynwrap@devel,
-    dynverse/dynfeature@devel
+  RColorBrewer,
+  rje,
+  rmarkdown,
+  testthat
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
