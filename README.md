@@ -1,9 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a>
-<a href="https://codecov.io/gh/dynverse/dynplot">
-<img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>
+<a href="https://github.com/dynverse/dynplot/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/dynverse/dynplot/workflows/R-CMD-check/badge.svg" align="left"></a>
+<a href="https://codecov.io/gh/dynverse/dynplot"><img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  
 [**ℹ️ Tutorials**](https://dynverse.org)     [**ℹ️ Reference
 documentation**](https://dynverse.org/reference/dynplot)
 <br><img src="man/figures/logo.png" align="right" />
@@ -26,30 +25,26 @@ On linux, udunits2 has to be installed:
 The package provides different ways to plot both the topology and
 cellular properties of a trajectory:
 
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
     
-    #> Warning: Unknown or uninitialised column: 'group_id'.
+    #> Warning: Unknown or uninitialised column: `group_id`.
 
 <img src="man/figures/cells-1.png" width="100%" />
 
 And to plot the expression and feature importances of many genes along
-the
-    trajectory
-
-    #> Warning: Column `waypoint_id` joining factors with different levels,
-    #> coercing to character vector
+the trajectory
 
 <img src="man/figures/heatmap-1.png" width="100%" />
 
@@ -60,6 +55,20 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynplot 1.0.3
+
+  - MINOR CHANGE: Add `arrow` parameter to all plot functions.
+
+  - BUG FIX: Apply fixes for new versions of tibble, tidyr, and ggraph.
+
+  - BUG FIX `optimise_order()`: Fix problem where GA::ga() wouldn’t run
+    on milestone networks with 4 edges.
+
+  - BUG FIX `linearise_cells()`: Fix ordering issue when
+    `equal_cell_width` is `TRUE`.
+
+  - MINOR CHANGE: Clean imports and supposed undefined variables.
+
 ### Recent changes in dynplot 1.0.2 (04-07-2019)
 
   - BUG FIX: Fix weird ceiling warning.
@@ -69,11 +78,6 @@ list of changes.
   - MINOR CHANGE: Added parameters `size_cells`, `alpha_cells` and
     `border_radius_percentage` to plotting functions that plot cells
     (\#40).
-
-### Recent changes in dynplot 1.0.1 (07-05-2019)
-
-  - BUG FIX: Remove dependency on shades, fixing rgb2hsv
-bug
 
 ## Dynverse dependencies
 

@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a> 
+<a href="https://github.com/dynverse/dynplot/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/dynverse/dynplot/workflows/R-CMD-check/badge.svg" align="left"></a> 
 <a href="https://codecov.io/gh/dynverse/dynplot"><img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  
 [**ℹ️ Tutorials**](https://dynverse.org)  &nbsp;  &nbsp; 
 [**ℹ️ Reference documentation**](https://dynverse.org/reference/dynplot) <br><img src="man/figures/logo.png" align="right" />
@@ -37,12 +37,9 @@ On linux, udunits2 has to be installed:
 
 The package provides different ways to plot both the topology and cellular properties of a trajectory:
 
-```{r, echo=FALSE}
-library(dplyr)
-library(dynplot)
-library(dynutils)
-library(dynwrap)
+```{r, echo=FALSE, warning=FALSE}
 library(tidyverse)
+library(dyno)
 
 library(patchwork)
 

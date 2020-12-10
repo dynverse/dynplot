@@ -3,3 +3,4 @@ packrat/lib*/
 .Rhistory
 inst/doc
 .DS_Store
+.RData

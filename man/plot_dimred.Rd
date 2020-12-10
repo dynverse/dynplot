@@ -113,12 +113,18 @@ Plot a trajectory on dimensionality reduction
 \donttest{
 data(example_bifurcating)
 plot_dimred(example_bifurcating)
-plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
 
-dimred <- dyndimred::dimred_dm_destiny(example_bifurcating$expression)
+# plotting with umap
+# plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+
+# using a custom dimred
+dimred <- dyndimred::dimred_mds(example_bifurcating$expression)
 plot_dimred(example_bifurcating, dimred = dimred)
 
+# coloring cells by pseudotime
 plot_dimred(example_bifurcating, color_cells = "pseudotime")
+
+# coloring cells by cluster
 plot_dimred(
   example_bifurcating,
   color_density = "grouping",
