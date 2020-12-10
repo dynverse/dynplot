@@ -3,6 +3,13 @@
  * MINOR CHANGE: Add `arrow` parameter to all plot functions.
  
  * BUG FIX: Apply fixes for new versions of tibble, tidyr, and ggraph.
+ 
+ * BUG FIX `optimise_order()`: Fix problem where GA::ga() wouldn't run on 
+   milestone networks with 4 edges.
+
+ * BUG FIX `linearise_cells()`: Fix ordering issue when `equal_cell_width` is `TRUE`.
+ 
+ * MINOR CHANGE: Clean imports and supposed undefined variables.
 
 # dynplot 1.0.2 (04-07-2019) 
 
