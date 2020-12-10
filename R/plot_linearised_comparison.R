@@ -20,8 +20,10 @@ plot_linearised_comparison <- function(
   reorder_second_by = c("mapping", "optimisation")
 ) {
   # make sure a trajectory was provided
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj1))
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj2))
+  assert_that(
+    dynwrap::is_wrapper_with_trajectory(traj1),
+    dynwrap::is_wrapper_with_trajectory(traj2)
+  )
 
   reorder_second_by <- match.arg(reorder_second_by)
   if (reorder) {

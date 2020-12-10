@@ -33,7 +33,7 @@ project_waypoints_coloured <- function(
 
   # weights <- waypoints$geodesic_distances %>% stats::dexp(rate = 5)
   weights <- waypoints$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
-  testthat::expect_true(all(!is.na(weights)))
+  assert_that(all(!is.na(weights)))
   # weights <- waypoints$geodesic_distances < dist_cutoff
   # weights[weights < weight_cutoff] <- 0
 
@@ -74,7 +74,7 @@ project_waypoints_coloured <- function(
 
   # add color of closest cell
   if (color_trajectory == "nearest") {
-    testthat::expect_true("color" %in% colnames(cell_positions))
+    assert_that("color" %in% colnames(cell_positions))
 
     cpv <- cell_positions %>% select(cell_id, color) %>% deframe()
     waypoint_positions <- waypoint_positions %>%

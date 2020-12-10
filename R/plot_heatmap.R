@@ -41,7 +41,7 @@ plot_heatmap <- function(
   label_milestones = TRUE
 ) {
   # make sure a trajectory was provided
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+  assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
   heatmap_type <- match.arg(heatmap_type)
 

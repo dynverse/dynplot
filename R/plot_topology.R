@@ -25,7 +25,7 @@ plot_topology <- dynutils::inherit_default_params(
     arrow = grid::arrow(type = "closed", length = unit(0.4, "cm"))
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+    assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # determine optimal layout
     if (is.null(layout)) {
@@ -63,11 +63,11 @@ plot_topology <- dynutils::inherit_default_params(
       geom_edge_fan()
 
     if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
-      plot <- plot + geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow)
+      plot <- plot + geom_edge_fan(aes_string(xend = "x + (xend-x)/1.5", yend = "y + (yend-y)/1.5"), arrow = arrow)
     }
 
     plot +
-      geom_node_label(aes(fill = color, label = milestone_id)) +
+      geom_node_label(aes_string(fill = "color", label = "milestone_id")) +
       scale_fill_identity() +
       theme_graph()
   }

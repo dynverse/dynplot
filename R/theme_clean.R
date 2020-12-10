@@ -27,7 +27,7 @@ theme_graph <- function() {
 #'
 #' @export
 empty_plot <- function() {
-  ggplot(tibble(x = character())) + geom_point(aes(x, x)) + theme_graph()
+  ggplot(tibble(x = character())) + geom_point(aes_string("x", "x")) + theme_graph()
 }
 
 

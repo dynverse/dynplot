@@ -31,12 +31,18 @@
 #' \donttest{
 #' data(example_bifurcating)
 #' plot_dimred(example_bifurcating)
-#' plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
 #'
-#' dimred <- dyndimred::dimred_dm_destiny(example_bifurcating$expression)
+#' # plotting with umap
+#' # plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+#'
+#' # using a custom dimred
+#' dimred <- dyndimred::dimred_mds(example_bifurcating$expression)
 #' plot_dimred(example_bifurcating, dimred = dimred)
 #'
+#' # coloring cells by pseudotime
 #' plot_dimred(example_bifurcating, color_cells = "pseudotime")
+#'
+#' # coloring cells by cluster
 #' plot_dimred(
 #'   example_bifurcating,
 #'   color_density = "grouping",
@@ -106,7 +112,7 @@ plot_dimred <- dynutils::inherit_default_params(
     # arrow = grid::arrow(type = "closed", length = unit(0.1, "inches"))
 
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+    assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     color_cells <- match.arg(color_cells)
 
@@ -180,7 +186,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
     # base plot without cells
     plot <-
-      ggplot(cell_positions, aes(comp_1, comp_2)) +
+      ggplot(cell_positions, aes_string("comp_1", "comp_2")) +
       theme_graph() +
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
@@ -198,7 +204,7 @@ plot_dimred <- dynutils::inherit_default_params(
 
       plot <- plot +
         geom_polygon(
-          aes(group = group, fill = color),
+          aes_string(group = "group", fill = "color"),
           data = hex_coordinates,
         ) +
         cell_coloring_output$fill_scale
@@ -212,7 +218,7 @@ plot_dimred <- dynutils::inherit_default_params(
           geom_point(size = size_cells * (1 - border_radius_percentage), color = "white")
       }
       plot <- plot +
-        geom_point(aes(color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells) +
+        geom_point(aes_string(color = "color"), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells) +
         cell_coloring_output$color_scale
     }
 
@@ -271,18 +277,18 @@ plot_dimred <- dynutils::inherit_default_params(
         )
 
       plot <- plot +
-        ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_to, yend = comp_2_to), data = milestone_network %>% mutate(edge.id = row_number()))
+        ggraph::geom_edge_link(aes_string(x = "comp_1_from", y = "comp_2_from", xend = "comp_1_to", yend = "comp_2_to"), data = milestone_network %>% mutate(edge.id = row_number()))
 
       # add arrow if directed
       if (any(trajectory$milestone_network$directed)) {
         plot <- plot +
-          ggraph::geom_edge_link(aes(x = comp_1_from, y = comp_2_from, xend = comp_1_mid, yend = comp_2_mid), data = milestone_network %>% mutate(edge.id = row_number()), arrow = arrow)
+          ggraph::geom_edge_link(aes_string(x = "comp_1_from", y = "comp_2_from", xend = "comp_1_mid", yend = "comp_2_mid"), data = milestone_network %>% mutate(edge.id = row_number()), arrow = arrow)
       }
 
       if (color_cells == "milestone") {
         plot <- plot +
           geom_point(color = "black", data = milestone_positions, size = size_milestones) +
-          geom_point(aes(color = color), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = size_milestones*.75)
+          geom_point(aes_string(color = "color"), data = milestone_positions %>% left_join(milestones, "milestone_id"), size = size_milestones*.75)
       } else {
         plot <- plot +
           geom_point(color = "#333333", data = milestone_positions, size = size_milestones, alpha = 1)
@@ -317,7 +323,7 @@ plot_dimred <- dynutils::inherit_default_params(
           size = size_milestones
         ) +
         geom_path(
-          aes(comp_1, comp_2, group = group),
+          aes_string("comp_1", "comp_2", group = "group"),
           data = wp_segments,
           size = size_transitions,
           color = "#333333"
@@ -327,7 +333,7 @@ plot_dimred <- dynutils::inherit_default_params(
       if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
         plot <- plot +
           geom_path(
-            aes(comp_1, comp_2, group = group),
+            aes_string("comp_1", "comp_2", group = "group"),
             data = wp_segments %>% filter(arrow),
             color = "#333333",
             arrow = arrow,
@@ -339,7 +345,7 @@ plot_dimred <- dynutils::inherit_default_params(
         if (color_trajectory == "none") {
           plot <- plot +
             geom_path(
-              aes(comp_1, comp_2, group = group),
+              aes_string("comp_1", "comp_2", group = "group"),
               data = wp_segments %>% filter(arrow),
               colour = "#333333",
               arrow = arrow,
@@ -350,7 +356,7 @@ plot_dimred <- dynutils::inherit_default_params(
         } else {
           plot <- plot +
             geom_path(
-              aes(comp_1, comp_2, group = group, colour = color),
+              aes_string("comp_1", "comp_2", group = "group", colour = "color"),
               data = wp_segments %>% filter(arrow) %>% group_by(group) %>% mutate(color = first(color)) %>% ungroup(),
               arrow = arrow,
               size = size_transitions - 1,
@@ -364,7 +370,7 @@ plot_dimred <- dynutils::inherit_default_params(
       if (color_trajectory == "none") {
         plot <- plot +
           ggforce::geom_link2(
-            aes(comp_1, comp_2, group = group),
+            aes_string("comp_1", "comp_2", group = "group"),
             colour = "#333333",
             data = wp_segments,
             size = size_transitions - 1,
@@ -378,7 +384,7 @@ plot_dimred <- dynutils::inherit_default_params(
       } else {
         plot <- plot +
           ggforce::geom_link2(
-            aes(comp_1, comp_2, group = group, color = color),
+            aes_string(comp_1, comp_2, group = group, color = color),
             data = wp_segments,
             size = size_transitions - 1,
             alpha = 1
@@ -422,7 +428,7 @@ calculate_hex_coords <- function(cell_positions, hex_cells) {
 
   # expand the smallest range so that both are equal
   shape <- diff(xrange) / diff(yrange) * sqrt(3) / 2 * 1.15
-  if(shape > 1) {
+  if (shape > 1) {
     yrange <- c(yrange[1], yrange[2] + diff(yrange) * (shape - 1))
   } else {
     xrange <- c(xrange[1], xrange[2] + diff(xrange) * (1/shape - 1))
@@ -441,11 +447,11 @@ calculate_hex_coords <- function(cell_positions, hex_cells) {
 
   cell_positions$bin <- hexbin@cID
   bin_positions <- cell_positions %>%
-    group_by(bin) %>%
-    summarise(color = last(color)) %>%
+    group_by(.data$bin) %>%
+    summarise(color = last(.data$color)) %>%
     mutate(
-      comp_1 = xy$x[match(bin, hexbin@cell)],
-      comp_2 = xy$y[match(bin, hexbin@cell)]
+      comp_1 = xy$x[match(.data$bin, hexbin@cell)],
+      comp_2 = xy$y[match(.data$bin, hexbin@cell)]
     )
 
   hexcoords <- hexbin::hexcoords(
@@ -457,7 +463,7 @@ calculate_hex_coords <- function(cell_positions, hex_cells) {
     comp_1 = rep.int(hexcoords$x, nrow(bin_positions)) + rep(bin_positions$comp_1, each = 6),
     comp_2 = rep.int(hexcoords$y, nrow(bin_positions)) + rep(bin_positions$comp_2, each = 6),
     group = rep(seq_len(nrow(bin_positions)), each = 6),
-    color = bin_positions$color[group]
+    color = bin_positions$color[.data$group]
   )
 
   hex_coords

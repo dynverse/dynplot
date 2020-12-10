@@ -25,6 +25,14 @@ add_milestone_coloring <- function(
 formals(add_milestone_coloring)$color_milestones <- unique(c("auto", "given", get_milestone_palette_names()))
 
 
+#' @importFrom grDevices rgb
+mix_colors <- function(milid, milpct, milestone_colors) {
+  color_rgb <- apply(milestone_colors[milid,,drop = FALSE], 2, function(x) sum(x * milpct))
+  color_rgb[color_rgb < 0] <- 0
+  color_rgb[color_rgb > 256] <- 256
+  do.call(grDevices::rgb, as.list(c(color_rgb, maxColorValue = 256)))
+}
+
 #' Add coloring
 #' @param cell_positions The positions of the cells
 #' @param color_cells How to color the cells
@@ -106,7 +114,10 @@ add_cell_coloring <- dynutils::inherit_default_params(
       fill_scale <- scale_fill_manual(NULL, values = c("trajectories_are_awesome" = color_cells), guide = "none")
     } else if (color_cells == "milestone") {
       if (is.null(milestones)) {
-        testthat::expect_true(all(milestone_percentages$milestone_id %in% trajectory$milestone_ids), "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately.")
+        assert_that(
+          milestone_percentages$milestone_id %in% trajectory$milestone_ids,
+          msg = "Not all milestones were found in milestones tibble. Supply milestones tibble if supplying milestone_percentages separately."
+        )
         milestones <- tibble(milestone_id = trajectory$milestone_ids)
       }
       if (!"color" %in% names(milestones)) {
@@ -115,16 +126,10 @@ add_cell_coloring <- dynutils::inherit_default_params(
 
       milestone_colors <- set_names(milestones$color, milestones$milestone_id) %>% col2rgb %>% t
 
-      mix_colors <- function(milid, milpct) {
-        color_rgb <- apply(milestone_colors[milid,,drop = FALSE], 2, function(x) sum(x * milpct))
-        color_rgb[color_rgb < 0] <- 0
-        color_rgb[color_rgb > 256] <- 256
-        do.call(rgb, as.list(c(color_rgb, maxColorValue = 256)))
-      }
-
-      cell_colors <- milestone_percentages %>%
-        group_by(cell_id) %>%
-        summarise(color = mix_colors(milestone_id, percentage))
+      cell_colors <-
+        milestone_percentages %>%
+        group_by(.data$cell_id) %>%
+        summarise(color = mix_colors(.data$milestone_id, .data$percentage, milestone_colors))
 
       cell_positions <- left_join(cell_positions, cell_colors, "cell_id")
 
@@ -189,13 +194,13 @@ add_density_coloring <- function(
 
   # calculate blank space
   kde <- MASS::kde2d(cell_positions$comp_1, cell_positions$comp_2, h = c(xbw, ybw), lims = c(xlims, ylims), n = 100)
-  blank_space <- reshape2::melt(kde$z, value.name = "density") %>%
-    filter(density < max(density) * density_cutoff_label) %>%
-    mutate(
-      comp_1 = kde$x[as.numeric(Var1)],
-      comp_2 = kde$y[as.numeric(Var2)]
-    ) %>%
-    select(comp_1, comp_2)
+  blank_space <-
+    reshape2::melt(kde$z, value.name = "density") %>%
+    filter(.data$density < max(.data$density) * density_cutoff_label) %>%
+    transmute(
+      comp_1 = kde$x[as.numeric(.data$Var1)],
+      comp_2 = kde$y[as.numeric(.data$Var2)]
+    )
 
   # will contain the different plots and scales
   density_plots <- list()
@@ -207,10 +212,10 @@ add_density_coloring <- function(
 
     # plot density
     group_density <- cell_positions %>%
-      mutate(group_id = grouping[cell_id]) %>%
-      select(comp_1, comp_2, group_id) %>%
-      nest(positions = c(comp_1, comp_2)) %>%
-      mutate(contour = map2(positions, group_id, function(positions, group_id) {
+      mutate(group_id = grouping[.data$cell_id]) %>%
+      select(.data$comp_1, .data$comp_2, .data$group_id) %>%
+      nest(positions = c(.data$comp_1, .data$comp_2)) %>%
+      mutate(contour = map2(.data$positions, .data$group_id, function(positions, group_id) {
         density <- MASS::kde2d(positions$comp_1, positions$comp_2, h = c(xbw, ybw), lims = c(xlims, ylims), n = n_bins)
         level <- max(density$z) * density_cutoff
         contour <- with(density, contourLines(x, y, z, levels = level))
@@ -222,10 +227,10 @@ add_density_coloring <- function(
           )
         })
       })) %>%
-      unnest(contour)
+      unnest(.data$contour)
 
     density_plots$polygon <- geom_polygon(
-      aes(comp_1, comp_2, fill = group_id, group = contour_id),
+      aes_string("comp_1", "comp_2", fill = "group_id", group = "contour_id"),
       data = group_density,
       alpha = 0.4
     )
@@ -233,7 +238,7 @@ add_density_coloring <- function(
     density_plots$scale <- scale_fill_manual(color_density, values = set_names(groups$color, groups$group_id), guide = guide_legend(ncol = 5))
 
     # plot group labels
-    centers <- group_density %>% group_by(group_id) %>% summarise_if(is.numeric, mean)
+    centers <- group_density %>% group_by(.data$group_id) %>% summarise_if(is.numeric, mean)
 
     # find closest empty position to put label
     group_label_positions <- crossing(
@@ -241,23 +246,13 @@ add_density_coloring <- function(
         blank_space
       ) %>%
       mutate(
-        distance = sqrt((comp_1_center - comp_1)**2 + abs(comp_2_center - comp_2)**2)
+        distance = sqrt((.data$comp_1_center - .data$comp_1)**2 + abs(.data$comp_2_center - .data$comp_2)**2)
       ) %>%
-      group_by(group_id) %>%
-      top_n(1, -distance)
-
-    # group_label_positions <- group_density %>%
-    #   left_join(centers %>% rename_if(is.numeric, ~paste0(., "_center")), "group_id") %>%
-    #   mutate(distance = abs(comp_1_center - comp_1) + abs(comp_2_center - comp_2)) %>%
-    #   group_by(group_id) %>%
-    #   top_n(1, -distance) %>%
-    #   ungroup()
-
-    # plot +
-    #   geom_label(aes(comp_1, comp_2, label = group_id, fill = group_id), group_label_positions)
+      group_by(.data$group_id) %>%
+      top_n(1, -.data$distance)
 
     density_plots$labels <- ggrepel::geom_label_repel(
-      aes(comp_1, comp_2, label = group_id, fill = group_id),
+      aes_string("comp_1", "comp_2", label = "group_id", fill = "group_id"),
       group_label_positions,
       min.segment.length = Inf,
       show.legend = FALSE
@@ -271,7 +266,7 @@ add_density_coloring <- function(
 
     # positions of each cell and their expression
     expression_positions <- cell_positions %>%
-      mutate(expression = expression_oi[cell_id])
+      mutate(expression = expression_oi[.data$cell_id])
 
     # calculate smoothed expression
     smoothed_expression <- smooth_2d(
@@ -307,10 +302,10 @@ add_density_coloring <- function(
         expression = contour$level
       )
     }) %>%
-      mutate(contour_id = factor(contour_id, levels = unique(contour_id)))
+      mutate(contour_id = factor(.data$contour_id, levels = unique(.data$contour_id)))
 
 
-    density_plots$polygon <- geom_polygon(aes(comp_1, comp_2, fill = expression, group = contour_id), contour_expression)
+    density_plots$polygon <- geom_polygon(aes_string("comp_1", "comp_2", fill = "expression", group = "contour_id"), contour_expression)
     density_plots$scale <- scale_fill_distiller(palette = "RdBu", limits = expression_range)
   }
 
@@ -330,7 +325,7 @@ smooth_2d <- function(x, y, h, e, n, lims) {
   dist <- as.matrix(pdist::pdist(points, as.matrix(data.frame(x = x, y = y))))
 
   # contributions of each point
-  contributions <- dnorm(dist, sd = mean(h)/4)
+  contributions <- stats::dnorm(dist, sd = mean(h)/4)
 
   # calculate the weights based on the data
   weights <- matrix(rep(e, nrow(dist)), nrow = nrow(dist), byrow = TRUE)

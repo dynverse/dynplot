@@ -43,7 +43,7 @@ plot_dendro <- dynutils::inherit_default_params(
     arrow = grid::arrow(type = "closed")
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+    assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # root if necessary
     if ("root_milestone_id" %in% names(trajectory)) {
@@ -187,29 +187,29 @@ plot_dendro <- dynutils::inherit_default_params(
     # start plotting!
     dendro <- ggplot(layout) +
       # the main edges
-      ggraph::geom_edge_link(aes(linetype = node2.node_type, edge_width = node2.node_type), colour = "grey")
+      ggraph::geom_edge_link(aes_string(linetype = "node2.node_type", edge_width = "node2.node_type"), colour = "grey")
 
     # determine arrow
     if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
       dendro <- dendro +
-        ggraph::geom_edge_link(aes(xend = x + (xend-x)/2, alpha = node1.node_type), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
+        ggraph::geom_edge_link(aes_string(xend = "x + (xend-x)/2", alpha = "node1.node_type"), arrow = arrow, colour = "grey", data = get_edges()(layout) %>% filter(node1.node_type != "milestone"))
     }
 
     # cell border, if needed
     if (border_radius_percentage > 0) {
       dendro <- dendro +
-        geom_point(aes(x, y), color = "black", size = size_cells, data = cell_positions)
+        geom_point(aes_string("x", "y"), color = "black", size = size_cells, data = cell_positions)
     }
 
     # cell white background, if alpha < 1
     if (alpha_cells < 1) {
       dendro <- dendro +
-        geom_point(aes(x, y), color = "white", size = size_cells * (1 - border_radius_percentage), data = cell_positions)
+        geom_point(aes_string("x", "y"), color = "white", size = size_cells * (1 - border_radius_percentage), data = cell_positions)
     }
 
     dendro <- dendro +
       # the cells
-      geom_point(aes(x, y, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
+      geom_point(aes_string("x", "y", color = "color"), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
       color_scale +
       # theme graph
       theme_graph() +

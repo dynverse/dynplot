@@ -60,7 +60,7 @@ plot_graph <- dynutils::inherit_default_params(
     adjust_weights = FALSE
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+    assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # TODO: 'milestones', in this function, is both used as the colouring of the cells (which could be from a different trajectory),
     # and plotting the milestones in the same dimred as the cells.
