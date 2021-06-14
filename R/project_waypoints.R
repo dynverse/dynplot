@@ -44,11 +44,9 @@ project_waypoints_coloured <- function(
   }
 
   if (!is.null(edge_positions)) {
-    comp_names <- colnames(edge_positions) %>% keep(~grepl("comp_", .))
-
     approx_funs <-
       edge_positions %>%
-      gather(.data$comp_name, .data$comp_value, !!comp_names) %>%
+      gather(.data$comp_name, .data$comp_value, starts_with("comp_")) %>%
       group_by(.data$from, .data$to, .data$comp_name) %>%
       summarise(
         approx_fun = {
@@ -66,7 +64,7 @@ project_waypoints_coloured <- function(
           comp_value = map2_dbl(.data$approx_fun, .data$percentage, function(f, pct) f(pct))
         ) %>%
         spread(.data$comp_name, .data$comp_value) %>%
-        select(!!comp_names, .data$waypoint_id) %>%
+        select(.data$waypoint_id, starts_with("comp_")) %>%
         left_join(waypoints$waypoints, "waypoint_id")
   } else {
     waypoint_positions <- (weights %*% positions) %>%

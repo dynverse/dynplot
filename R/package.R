@@ -7,7 +7,7 @@
 #' @importFrom dplyr bind_rows filter group_by mutate mutate_all n pull sample_n select transmute ungroup do left_join last .data
 #' @importFrom dplyr row_number bind_cols full_join summarise inner_join slice rename case_when arrange first mutate_at vars n rename_all
 #' @importFrom dplyr summarise_if rename_if top_n lag right_join desc mutate_if rename_at summarise_at
-#' @importFrom tidyr gather unnest everything one_of crossing spread nest
+#' @importFrom tidyr gather unnest everything one_of crossing spread nest starts_with
 #' @importFrom stats as.dist hclust as.dendrogram runif approx dnorm sd
 #' @import methods
 #' @importFrom tibble as_tibble tibble enframe deframe lst tribble rownames_to_column column_to_rownames
