@@ -12,7 +12,6 @@
 #'
 #' @keywords plot_trajectory
 #'
-#' @import tidygraph
 #' @import ggraph
 #' @importFrom patchwork wrap_plots
 #'
@@ -68,7 +67,7 @@ plot_heatmap <- function(
 
   # cluster features
   if (is.character(clust)) {
-    clust <- hclust(as.dist(calculate_distance(t(expression), method = "pearson")), method = clust)
+    clust <- stats::hclust(stats::as.dist(dynutils::calculate_distance(t(expression), method = "pearson")), method = clust)
   }
   feature_order <- colnames(expression)[clust$order]
 
@@ -83,7 +82,7 @@ plot_heatmap <- function(
   molten <- expression %>%
     reshape2::melt(varnames = c("cell_id", "feature_id"), value.name = "expression") %>%
     mutate_if(is.factor, as.character) %>%
-    mutate(feature_position = as.numeric(factor(feature_id, feature_order))) %>%
+    mutate(feature_position = as.numeric(factor(.data$feature_id, feature_order))) %>%
     left_join(linearised$progressions, "cell_id")
 
   # check importances
@@ -103,7 +102,7 @@ plot_heatmap <- function(
     if (heatmap_type == "tiled") {
       if (is.null(cell_feature_importances)) {
         ggplot(molten) +
-          geom_tile(aes(cumpercentage, feature_position, fill = expression)) +
+          geom_tile(aes(.data$cumpercentage, .data$feature_position, fill = .data$expression)) +
           scale_fill_distiller(palette = "RdBu") +
           scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
           scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
@@ -111,7 +110,13 @@ plot_heatmap <- function(
       } else {
         ggplot(molten) +
           # geom_tile(aes(cumpercentage, feature_position, alpha = importance), fill = "black") +
-          geom_rect(aes(xmin = cumpercentage-0.5, xmax = cumpercentage+0.5, ymin = feature_position+scale_minmax(importance)/10*5, ymax = feature_position-scale_minmax(importance)/10*5, fill = expression)) +
+          geom_rect(aes(
+            xmin = .data$cumpercentage-0.5,
+            xmax = .data$cumpercentage+0.5,
+            ymin = .data$feature_position+scale_minmax(.data$importance)/10*5,
+            ymax = .data$feature_position-scale_minmax(.data$importance)/10*5,
+            fill = .data$expression
+          )) +
           scale_fill_distiller(palette = "RdBu") +
           scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
           scale_y_continuous(NULL, expand = c(0, 0), breaks = seq_along(feature_order), labels = feature_order, position = "left", limits = y_limits) +
@@ -121,7 +126,7 @@ plot_heatmap <- function(
     } else if (heatmap_type == "dotted") {
       if (is.null(cell_feature_importances)) {
         ggplot(molten) +
-          geom_point(aes(cumpercentage, feature_position, color = expression, size = expression)) +
+          geom_point(aes(.data$cumpercentage, .data$feature_position, color = .data$expression, size = .data$expression)) +
           scale_color_distiller(palette = "RdBu") +
           scale_size_continuous(range = c(0, 6)) +
           scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
@@ -129,7 +134,7 @@ plot_heatmap <- function(
           theme(legend.position = "none", plot.margin = margin(), plot.background = element_blank(), panel.background = element_blank())
       } else {
         ggplot(molten) +
-          geom_point(aes(cumpercentage, feature_position, color = expression, size = importance**2)) +
+          geom_point(aes(.data$cumpercentage, .data$feature_position, color = .data$expression, size = .data$importance**2)) +
           scale_color_distiller(palette = "RdBu") +
           scale_size_continuous(range = c(0, 6)) +
           scale_x_continuous(NULL, breaks = NULL, expand = c(0, 0), limits = x_limits) +
@@ -157,7 +162,7 @@ plot_heatmap <- function(
     theme(plot.margin = margin())
 
   # plot dendrogram
-  dendrogram <- ggraph::ggraph(as.dendrogram(clust), "dendrogram") +
+  dendrogram <- ggraph::ggraph(stats::as.dendrogram(clust), "dendrogram") +
     ggraph::geom_edge_elbow() +
     scale_x_continuous(limits = c(-0.5, length(feature_order)-0.5), expand = c(0, 0)) +
     scale_y_reverse() +
@@ -185,11 +190,12 @@ plot_heatmap <- function(
         milestone_percentages = milestone_percentages,
         trajectory = trajectory,
         milestones = milestones
-        )
+      )
     }
 
-  cell_annotation <- ggplot(cell_annotation_positions$cell_positions) +
-    geom_point(aes(cumpercentage, 1, color = color)) +
+  cell_annotation <-
+    ggplot(cell_annotation_positions$cell_positions) +
+    geom_point(aes(.data$cumpercentage, 1, color = .data$color)) +
     cell_annotation_positions$color_scale +
     scale_x_continuous(expand = c(0, 0), limits = x_limits) +
     theme_graph() +

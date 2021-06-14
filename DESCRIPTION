@@ -39,8 +39,7 @@ Imports:
   tibble,
   tidyr,
   tidygraph,
-  vipor,
-  viridis
+  vipor
 Suggests:
   covr,
   hexbin,
@@ -70,5 +69,4 @@ Collate:
     'plot_onedim.R'
     'plot_strip.R'
     'plot_topology.R'
-    'process_dynplot.R'
     'theme_clean.R'

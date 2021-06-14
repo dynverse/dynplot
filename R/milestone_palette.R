@@ -24,7 +24,7 @@ milestone_palette_list <- list(
     if (n <= 12) {
       milestone_palette_list$Set3(n)
     } else {
-      all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = T)]
+      all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = TRUE)]
       all_colors <- sort_by_hue(all_colors)[-c(1:2)] # sort and remove white/black
       ix <- ceiling(seq(0, length(all_colors), length(all_colors)/(n+1)))
       all_colors[head(ix, -1)]

@@ -9,7 +9,7 @@ plot_edge_flips(oldadj, newadj)
 \arguments{
 \item{oldadj}{Old adjacency matrix}
 
-\item{newadj}{New adjancency matrix}
+\item{newadj}{New adjacency matrix}
 }
 \description{
 Utility plotting function for analysing the edge-flip metric from dyneval.

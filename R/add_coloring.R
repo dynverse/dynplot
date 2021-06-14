@@ -137,8 +137,10 @@ add_cell_coloring <- dynutils::inherit_default_params(
       fill_scale <- scale_fill_identity(NULL, guide = "none")
     } else if (color_cells == "pseudotime") {
       cell_positions$color <- cell_positions$pseudotime
-      color_scale <- viridis::scale_color_viridis("pseudotime")
-      fill_scale <- viridis::scale_fill_viridis("pseudotime")
+      # color_scale <- viridis::scale_color_viridis("pseudotime")
+      # fill_scale <- viridis::scale_fill_viridis("pseudotime")
+      color_scale <- ggplot2::scale_color_viridis_c("pseudotime")
+      fill_scale <- ggplot2::scale_fill_viridis_c("pseudotime")
     } else if (color_cells == "none") {
       cell_positions$color <- "black"
       color_scale <- scale_color_identity()
@@ -230,7 +232,7 @@ add_density_coloring <- function(
       unnest(.data$contour)
 
     density_plots$polygon <- geom_polygon(
-      aes_string("comp_1", "comp_2", fill = "group_id", group = "contour_id"),
+      aes(.data$comp_1, .data$comp_2, fill = .data$group_id, group = .data$contour_id),
       data = group_density,
       alpha = 0.4
     )
@@ -252,7 +254,7 @@ add_density_coloring <- function(
       top_n(1, -.data$distance)
 
     density_plots$labels <- ggrepel::geom_label_repel(
-      aes_string("comp_1", "comp_2", label = "group_id", fill = "group_id"),
+      aes(.data$comp_1, .data$comp_2, label = .data$group_id, fill = .data$group_id),
       group_label_positions,
       min.segment.length = Inf,
       show.legend = FALSE
@@ -305,7 +307,7 @@ add_density_coloring <- function(
       mutate(contour_id = factor(.data$contour_id, levels = unique(.data$contour_id)))
 
 
-    density_plots$polygon <- geom_polygon(aes_string("comp_1", "comp_2", fill = "expression", group = "contour_id"), contour_expression)
+    density_plots$polygon <- geom_polygon(aes(.data$comp_1, .data$comp_2, fill = .data$expression, group = .data$contour_id), contour_expression)
     density_plots$scale <- scale_fill_distiller(palette = "RdBu", limits = expression_range)
   }
 

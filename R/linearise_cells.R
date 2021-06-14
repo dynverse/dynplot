@@ -80,9 +80,9 @@ linearise_cells <- function(
 # Put every cell on only one edge
 progressions_one_edge <- function(progressions) {
   progressions %>%
-    group_by(cell_id) %>%
-    arrange(-percentage) %>%
-    filter(dplyr::row_number() == 1) %>%
+    group_by(.data$cell_id) %>%
+    arrange(-.data$percentage) %>%
+    filter(row_number() == 1) %>%
     ungroup()
 }
 

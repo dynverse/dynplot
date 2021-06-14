@@ -18,4 +18,8 @@ plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 \description{
 Plot strip
 }
+\examples{
+data(example_bifurcating)
+plot_strip(example_bifurcating, example_bifurcating)
+}
 \keyword{compare_trajectory}

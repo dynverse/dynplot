@@ -11,7 +11,10 @@
 #'
 #' @export
 #' @importFrom patchwork wrap_plots
-#' @export
+#'
+#' @examples
+#' data(example_bifurcating)
+#' plot_linearised_comparison(example_bifurcating, example_bifurcating)
 plot_linearised_comparison <- function(
   traj1,
   traj2,
@@ -36,7 +39,13 @@ plot_linearised_comparison <- function(
     }
   }
 
-  empty_max <- function(x) {if (length(x) > 0) {max(x)} else {0}}
+  empty_max <- function(x) {
+    if (length(x) > 0) {
+      max(x)
+    } else {
+      0
+    }
+  }
 
   strip_plot <- plot_strip(traj1, traj2, reorder = FALSE, margin = margin)
 

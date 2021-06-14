@@ -17,30 +17,21 @@ project_waypoints_coloured <- function(
 ) {
   waypoints$waypoint_network <- waypoints$waypoint_network %>%
     rename(
-      milestone_id_from = from_milestone_id,
-      milestone_id_to = to_milestone_id
+      milestone_id_from = .data$from_milestone_id,
+      milestone_id_to = .data$to_milestone_id
     )
 
   assert_that(color_trajectory %in% c("nearest", "none"))
   assert_that(setequal(cell_positions$cell_id, colnames(waypoints$geodesic_distances)))
 
   # project waypoints to dimensionality reduction using kernel and geodesic distances
-  # rate <- 5
-  # trajectory_projection_sd <- sum(trajectory$milestone_network$length) * 0.05
-  # dist_cutoff <- sum(milestone_network$length) * 0.05
-  # k <- 3
-  # weight_cutoff <- 0.01
-
-  # weights <- waypoints$geodesic_distances %>% stats::dexp(rate = 5)
   weights <- waypoints$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
   assert_that(all(!is.na(weights)))
-  # weights <- waypoints$geodesic_distances < dist_cutoff
-  # weights[weights < weight_cutoff] <- 0
 
   weights <- weights / rowSums(weights)
   positions <- cell_positions %>%
-    select(cell_id, comp_1, comp_2) %>%
-    slice(match(colnames(weights), cell_id)) %>%
+    select(.data$cell_id, .data$comp_1, .data$comp_2) %>%
+    slice(match(colnames(weights), .data$cell_id)) %>%
     column_to_rownames("cell_id") %>%
     as.matrix()
 
@@ -48,23 +39,37 @@ project_waypoints_coloured <- function(
   assert_that(all.equal(colnames(weights), rownames(positions)))
 
   # calculate positions
-  matrix_to_tibble <- function(x, rownames_column) {y <- as_tibble(x);y[[rownames_column]] <- rownames(x);y}
+  matrix_to_tibble <- function(x, rownames_column) {
+    y <- as_tibble(x)
+    y[[rownames_column]] <- rownames(x)
+    y
+  }
+
   if (!is.null(edge_positions)) {
     comp_names <- colnames(edge_positions) %>% keep(~grepl("comp_", .))
-    waypoint_positions <-
+
+    approx_funs <-
+      edge_positions %>%
+      gather(.data$comp_name, .data$comp_value, !!comp_names) %>%
+      group_by(.data$from, .data$to, .data$comp_name) %>%
+      summarise(
+        approx_fun = {
+          pct <- .data$percentage
+          cv <- .data$comp_value
+          list(function(x) stats::approx(pct, cv, x)$y)
+        },
+        .groups = "drop"
+      )
+
+    waypoint_position <-
       waypoints$progressions %>%
-      group_by(from, to) %>%
-      do({
-        df <- .
-        rel_edge_pos <- edge_positions %>% filter(from == df$from[[1]], to == df$to[[1]])
-        for (cn in comp_names) {
-          df[[cn]] <- approx(rel_edge_pos$percentage, rel_edge_pos[[cn]], df$percentage)$y
-        }
-        df
-      }) %>%
-      ungroup() %>%
-      select(!!comp_names, waypoint_id) %>%
-      left_join(waypoints$waypoints, "waypoint_id")
+        left_join(approx_funs, by = c("from", "to")) %>%
+        mutate(
+          comp_value = map2_dbl(.data$approx_fun, .data$percentage, function(f, pct) f(pct))
+        ) %>%
+        spread(.data$comp_name, .data$comp_value) %>%
+        select(!!comp_names, .data$waypoint_id) %>%
+        left_join(waypoints$waypoints, "waypoint_id")
   } else {
     waypoint_positions <- (weights %*% positions) %>%
       matrix_to_tibble("waypoint_id") %>%
@@ -76,12 +81,12 @@ project_waypoints_coloured <- function(
   if (color_trajectory == "nearest") {
     assert_that("color" %in% colnames(cell_positions))
 
-    cpv <- cell_positions %>% select(cell_id, color) %>% deframe()
+    cpv <- cell_positions %>% select(.data$cell_id, .data$color) %>% deframe()
     waypoint_positions <- waypoint_positions %>%
       mutate(
-        closest_cell_ix = (weights %>% apply(1, which.max))[waypoint_id],
-        closest_cell_id = colnames(weights)[closest_cell_ix],
-        color = cpv[closest_cell_id]
+        closest_cell_ix = (weights %>% apply(1, which.max))[.data$waypoint_id],
+        closest_cell_id = colnames(weights)[.data$closest_cell_ix],
+        color = cpv[.data$closest_cell_id]
       )
   }
 
@@ -90,14 +95,14 @@ project_waypoints_coloured <- function(
     waypoints$progressions,
     by = "waypoint_id"
   ) %>%
-    mutate(group = factor(paste0(from, "---", to))) %>%
-    group_by(group) %>%
+    mutate(group = factor(paste0(.data$from, "---", .data$to))) %>%
+    group_by(.data$group) %>%
     mutate(
-      closest = which.min(abs(percentage - 0.5)),
-      arrow = row_number() == closest | row_number() - 1 == closest
+      closest = which.min(abs(.data$percentage - 0.5)),
+      arrow = row_number() == .data$closest | row_number() - 1 == .data$closest
     ) %>%
     ungroup() %>%
-    select(-closest)
+    select(-.data$closest)
 
   lst(
     segments = segments

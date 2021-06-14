@@ -26,4 +26,8 @@ plot_linearised_comparison(
 \description{
 Plot strip onedim
 }
+\examples{
+data(example_bifurcating)
+plot_linearised_comparison(example_bifurcating, example_bifurcating)
+}
 \keyword{compare_trajectory}

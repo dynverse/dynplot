@@ -3,6 +3,11 @@
 #' @keywords plot_helpers
 #'
 #' @export
+#'
+#' @examples
+#' data(example_bifurcating)
+#' g <- plot_dimred(example_bifurcating)
+#' g + theme_clean()
 theme_clean <- function() {
   theme_bw() +
   theme(
@@ -16,6 +21,11 @@ theme_clean <- function() {
 #' @keywords plot_helpers
 #'
 #' @export
+#'
+#' @examples
+#' data(example_bifurcating)
+#' g <- plot_dimred(example_bifurcating)
+#' g + theme_graph()
 theme_graph <- function() {
   theme_void()
 }
@@ -26,6 +36,9 @@ theme_graph <- function() {
 #' @keywords plot_helpers
 #'
 #' @export
+#'
+#' @examples
+#' empty_plot()
 empty_plot <- function() {
   ggplot(tibble(x = character())) + geom_point(aes_string("x", "x")) + theme_graph()
 }

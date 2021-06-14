@@ -100,7 +100,7 @@ plot_graph <- dynutils::inherit_default_params(
     if (cell_coloring_output$color_cells == "milestone") {
       milestone_positions <- left_join(milestone_positions, milestones, "milestone_id")
     } else {
-      milestone_positions$color <- NA
+      milestone_positions$color <- NA_character_
     }
 
     # get information of segments
@@ -113,14 +113,14 @@ plot_graph <- dynutils::inherit_default_params(
 
       # Divergence gray backgrounds
       geom_polygon(
-        aes(x = comp_1, y = comp_2, group = triangle_id),
+        aes(x = .data$comp_1, y = .data$comp_2, group = .data$triangle_id),
         dimred_traj$divergence_polygon_positions,
         fill = "#eeeeee"
       ) +
 
       # Divergence dashed lines
       geom_segment(
-        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
+        aes(x = .data$comp_1_from, xend = .data$comp_1_to, y = .data$comp_2_from, yend = .data$comp_2_to),
         dimred_traj$divergence_edge_positions,
         colour = "darkgray",
         linetype = "dashed"
@@ -128,7 +128,12 @@ plot_graph <- dynutils::inherit_default_params(
 
     if (plot_milestones) {
       plot <- plot +
-        geom_point(aes(comp_1, comp_2), size = 12, data = milestone_positions, colour = "gray")
+        geom_point(
+          aes(.data$comp_1, .data$comp_2),
+          size = 12,
+          data = milestone_positions,
+          colour = "gray"
+        )
     }
 
     # add arrow if directed
@@ -142,7 +147,7 @@ plot_graph <- dynutils::inherit_default_params(
       # Transition gray border
     plot <- plot +
       geom_segment(
-        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
+        aes(x = .data$comp_1_from, xend = .data$comp_1_to, y = .data$comp_2_from, yend = .data$comp_2_to),
         dimred_segments,
         size = size_trajectory + 2,
         colour = "grey"
@@ -150,8 +155,13 @@ plot_graph <- dynutils::inherit_default_params(
 
       # Transition halfway arrow
       geom_segment(
-        aes(x = comp_1_from, xend = comp_1_from + (comp_1_to - comp_1_from) / 1.5, y = comp_2_from, yend = comp_2_from + (comp_2_to - comp_2_from) / 1.5),
-        dimred_segments %>% filter(directed, length > 0),
+        aes(
+          x = .data$comp_1_from,
+          xend = .data$comp_1_from + (.data$comp_1_to - .data$comp_1_from) / 1.5,
+          y = .data$comp_2_from,
+          yend = .data$comp_2_from + (.data$comp_2_to - .data$comp_2_from) / 1.5
+        ),
+        dimred_segments %>% filter(.data$directed, .data$length > 0),
         size = 1,
         colour = "grey",
         arrow = my_arrow
@@ -159,7 +169,7 @@ plot_graph <- dynutils::inherit_default_params(
 
       # Transition white tube
       geom_segment(
-        aes(x = comp_1_from, xend = comp_1_to, y = comp_2_from, yend = comp_2_to),
+        aes(x = .data$comp_1_from, xend = .data$comp_1_to, y = .data$comp_2_from, yend = .data$comp_2_to),
         dimred_segments,
         size = size_trajectory,
         colour = "white"
@@ -168,26 +178,31 @@ plot_graph <- dynutils::inherit_default_params(
     if (plot_milestones) {
       plot <- plot +
         # Milestone white bowl
-        geom_point(aes(comp_1, comp_2), size = size_milestones, data = milestone_positions, colour = "white") +
+        geom_point(aes(.data$comp_1, .data$comp_2), size = size_milestones, data = milestone_positions, colour = "white") +
 
         # Milestone fill
-        geom_point(aes(comp_1, comp_2, colour = color), size = size_milestones * .8, data = milestone_positions %>% filter(!is.na(color)), alpha = .5)
+        geom_point(
+          aes(.data$comp_1, .data$comp_2, colour = .data$color),
+          size = size_milestones * .8,
+          data = milestone_positions %>% filter(!is.na(.data$color)),
+          alpha = .5
+        )
     }
 
     # plot the cells
     if (border_radius_percentage > 0) {
       plot <- plot +
-        geom_point(aes(comp_1, comp_2), size = size_cells, color = "black", data = cell_positions)
+        geom_point(aes(.data$comp_1, .data$comp_2), size = size_cells, color = "black", data = cell_positions)
     }
 
     if (alpha_cells < 1) {
       plot <- plot +
-        geom_point(aes(comp_1, comp_2), size = size_cells * (1 - border_radius_percentage), color = "white", data = cell_positions)
+        geom_point(aes(.data$comp_1, .data$comp_2), size = size_cells * (1 - border_radius_percentage), color = "white", data = cell_positions)
     }
 
     plot <- plot +
       # Cell fills
-      geom_point(aes(comp_1, comp_2, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
+      geom_point(aes(.data$comp_1, .data$comp_2, color = .data$color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
 
       color_scale +
       theme_graph() +
@@ -198,10 +213,10 @@ plot_graph <- dynutils::inherit_default_params(
 
     if (length(label_milestones)) {
       milestone_labels <- milestone_positions %>%
-        mutate(label = label_milestones[milestone_id]) %>%
-        filter(!is.na(label))
+        mutate(label = label_milestones[.data$milestone_id]) %>%
+        filter(!is.na(.data$label))
 
-      plot <- plot + geom_label(aes(comp_1, comp_2, label = label), data = milestone_labels)
+      plot <- plot + geom_label(aes(.data$comp_1, .data$comp_2, label = .data$label), data = milestone_labels)
     }
 
     plot

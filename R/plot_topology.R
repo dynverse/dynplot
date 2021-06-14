@@ -45,7 +45,7 @@ plot_topology <- dynutils::inherit_default_params(
     milestone_graph <- as_tbl_graph(trajectory$milestone_network)
     milestone_positions <- milestone_graph %>%
       create_layout(layout) %>%
-      mutate(milestone_id = as.character(name))
+      mutate(milestone_id = as.character(.data$name))
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(trajectory, milestones) %>% add_milestone_coloring(color_milestones)
@@ -53,21 +53,27 @@ plot_topology <- dynutils::inherit_default_params(
 
     milestone_graph <- igraph::graph_from_data_frame(
       trajectory$milestone_network,
-      vertices = milestone_positions %>% select(-x, -y)
-    ) %>% as_tbl_graph()
+      vertices = milestone_positions %>% select(-.data$x, -.data$y)
+    ) %>%
+      as_tbl_graph()
 
     # add arrow if directed
-
-
     plot <- ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
       geom_edge_fan()
 
     if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
-      plot <- plot + geom_edge_fan(aes_string(xend = "x + (xend-x)/1.5", yend = "y + (yend-y)/1.5"), arrow = arrow)
+      plot <- plot +
+        geom_edge_fan(
+          aes(
+            xend = .data$x + (.data$xend-.data$x)/1.5,
+            yend = .data$y + (.data$yend-.data$y)/1.5
+          ),
+          arrow = arrow
+        )
     }
 
     plot +
-      geom_node_label(aes_string(fill = "color", label = "milestone_id")) +
+      geom_node_label(aes(fill = .data$color, label = .data$milestone_id)) +
       scale_fill_identity() +
       theme_graph()
   }
