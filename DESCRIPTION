@@ -42,6 +42,7 @@ Imports:
   vipor,
   viridis
 Suggests:
+  covr,
   hexbin,
   knitr,
   RColorBrewer,
