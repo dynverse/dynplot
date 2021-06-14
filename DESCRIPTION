@@ -33,7 +33,6 @@ Imports:
   MASS,
   methods,
   patchwork,
-  pdist,
   purrr,
   reshape2,
   tibble,

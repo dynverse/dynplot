@@ -324,7 +324,8 @@ smooth_2d <- function(x, y, h, e, n, lims) {
   colnames(points) <- c("x", "y")
 
   # distance between points and original points
-  dist <- as.matrix(pdist::pdist(points, as.matrix(data.frame(x = x, y = y))))
+  orig_points <- cbind(x, y)
+  dist <- dynutils::calculate_distance(points, orig_points, method = "euclidean")
 
   # contributions of each point
   contributions <- stats::dnorm(dist, sd = mean(h)/4)
