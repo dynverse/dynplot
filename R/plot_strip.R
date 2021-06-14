@@ -8,6 +8,8 @@
 #'
 #' @inheritParams linearise_cells
 #'
+#' @returns A scatterplot comparison ggplot of two linearised trajectories.
+#'
 #' @export
 #'
 #' @examples

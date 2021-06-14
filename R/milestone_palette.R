@@ -27,7 +27,7 @@ milestone_palette_list <- list(
       all_colors <- grDevices::colors()[grep('gr(a|e)y', grDevices::colors(), invert = TRUE)]
       all_colors <- sort_by_hue(all_colors)[-c(1:2)] # sort and remove white/black
       ix <- ceiling(seq(0, length(all_colors), length(all_colors)/(n+1)))
-      all_colors[head(ix, -1)]
+      all_colors[utils::head(ix, -1)]
     }
   }
 )
@@ -44,7 +44,12 @@ milestone_palette <- function(name, n) {
 #'
 #' @keywords plot_helpers
 #'
+#' @returns The names of supported palettes.
+#'
 #' @export
+#'
+#' @examples
+#' get_milestone_palette_names()
 get_milestone_palette_names <- function() {
   names(milestone_palette_list)
 }

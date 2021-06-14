@@ -66,6 +66,9 @@ plot_graph(
 
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
 }
+\value{
+A graph ggplot of a trajectory.
+}
 \description{
 Plot a trajectory and cellular positions as a graph
 }

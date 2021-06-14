@@ -50,13 +50,13 @@ plot_heatmap(
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
+\value{
+A heatmap ggplot of an expression dataset with trajectory.
+}
 \description{
 When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 }
 \examples{
-data(example_linear)
-plot_heatmap(example_linear)
-
 data(example_bifurcating)
 plot_heatmap(example_bifurcating)
 

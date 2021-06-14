@@ -24,6 +24,8 @@
 #'
 #' @export
 #'
+#' @returns A graph ggplot of a trajectory.
+#'
 #' @examples
 #' data(example_disconnected)
 #' plot_graph(example_disconnected)
@@ -222,6 +224,3 @@ plot_graph <- dynutils::inherit_default_params(
     plot
   }
 )
-
-#' @export
-plot_default <- plot_graph

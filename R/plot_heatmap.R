@@ -12,13 +12,11 @@
 #'
 #' @keywords plot_trajectory
 #'
-#' @import ggraph
 #' @importFrom patchwork wrap_plots
 #'
-#' @examples
-#' data(example_linear)
-#' plot_heatmap(example_linear)
+#' @returns A heatmap ggplot of an expression dataset with trajectory.
 #'
+#' @examples
 #' data(example_bifurcating)
 #' plot_heatmap(example_bifurcating)
 #'

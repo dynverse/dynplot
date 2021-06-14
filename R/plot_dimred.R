@@ -27,13 +27,17 @@
 #'
 #' @keywords plot_trajectory
 #'
+#' @returns A dimensionality reduction ggplot of the data.
+#'
 #' @examples
-#' \donttest{
 #' data(example_bifurcating)
 #' plot_dimred(example_bifurcating)
 #'
+#' \donttest{
 #' # plotting with umap
-#' # plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+#' if (requireNamespace("uwot", quietly = TRUE)) {
+#'   plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+#' }
 #'
 #' # using a custom dimred
 #' dimred <- dyndimred::dimred_mds(example_bifurcating$expression)

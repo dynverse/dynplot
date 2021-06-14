@@ -5,8 +5,6 @@
 #' @param trajectory_projection_sd The standard deviation of the gaussian kernel
 #' @param color_trajectory How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"
 #' @param edge_positions The positions of the edges
-#'
-#' @importFrom stats dnorm approx
 project_waypoints_coloured <- function(
   trajectory,
   cell_positions,

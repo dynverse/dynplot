@@ -68,6 +68,9 @@ plot_onedim(
 
 \item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }
+\value{
+A linearised (non-)linear trajectory.
+}
 \description{
 Plot onedim
 }

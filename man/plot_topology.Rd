@@ -19,10 +19,12 @@ plot_topology(
 
 \item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
 
-\item{layout}{The type of layout to create. Either a valid string, a
-function, a matrix, or a data.frame (see Details)}
+\item{layout}{The type of layout to create. See [ggraph::ggraph()] for more info.}
 
 \item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
+}
+\value{
+A topology ggplot of a trajectory.
 }
 \description{
 Plot the topology of a trajectory

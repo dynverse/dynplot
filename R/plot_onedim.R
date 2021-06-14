@@ -19,6 +19,8 @@
 #'
 #' @importFrom ggrepel geom_label_repel
 #'
+#' @returns A linearised (non-)linear trajectory.
+#'
 #' @examples
 #' data(example_linear)
 #' plot_onedim(example_linear)

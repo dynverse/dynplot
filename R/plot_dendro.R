@@ -11,6 +11,8 @@
 #'
 #' @keywords plot_trajectory
 #'
+#' @returns A dendrogram ggplot of the trajectory.
+#'
 #' @export
 #'
 #' @examples
@@ -208,7 +210,7 @@ plot_dendro <- dynutils::inherit_default_params(
           ),
           arrow = arrow,
           colour = "grey",
-          data = get_edges()(layout) %>% filter(.data$node1.node_type != "milestone")
+          data = ggraph::get_edges()(layout) %>% filter(.data$node1.node_type != "milestone")
         )
     }
 

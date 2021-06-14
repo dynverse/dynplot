@@ -46,7 +46,8 @@ Suggests:
   RColorBrewer,
   rje,
   rmarkdown,
-  testthat
+  testthat,
+  uwot
 VignetteBuilder: knitr
 Collate: 
     'milestone_palette.R'
@@ -61,7 +62,6 @@ Collate:
     'project_waypoints.R'
     'plot_dimred.R'
     'plot_edge_flips.R'
-    'plot_generic.R'
     'plot_graph.R'
     'plot_heatmap.R'
     'plot_linearised_comparison.R'

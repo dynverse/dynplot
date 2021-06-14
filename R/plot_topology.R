@@ -2,12 +2,14 @@
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
-#' @inheritParams ggraph::ggraph
 #' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
+#' @param layout The type of layout to create. See [ggraph::ggraph()] for more info.
 #'
 #' @keywords plot_trajectory
 #'
 #' @export
+#'
+#' @returns A topology ggplot of a trajectory.
 #'
 #' @examples
 #' data(example_disconnected)
@@ -44,7 +46,7 @@ plot_topology <- dynutils::inherit_default_params(
 
     milestone_graph <- as_tbl_graph(trajectory$milestone_network)
     milestone_positions <- milestone_graph %>%
-      create_layout(layout) %>%
+      ggraph::create_layout(layout) %>%
       mutate(milestone_id = as.character(.data$name))
 
     # check milestones, make sure it's a data_frame
@@ -58,12 +60,12 @@ plot_topology <- dynutils::inherit_default_params(
       as_tbl_graph()
 
     # add arrow if directed
-    plot <- ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
-      geom_edge_fan()
+    plot <- ggraph::ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
+      ggraph::geom_edge_fan()
 
     if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
       plot <- plot +
-        geom_edge_fan(
+        ggraph::geom_edge_fan(
           aes(
             xend = .data$x + (.data$xend-.data$x)/1.5,
             yend = .data$y + (.data$yend-.data$y)/1.5
@@ -73,7 +75,7 @@ plot_topology <- dynutils::inherit_default_params(
     }
 
     plot +
-      geom_node_label(aes(fill = .data$color, label = .data$milestone_id)) +
+      ggraph::geom_node_label(aes(fill = .data$color, label = .data$milestone_id)) +
       scale_fill_identity() +
       theme_graph()
   }

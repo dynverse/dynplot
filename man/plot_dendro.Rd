@@ -56,6 +56,9 @@ plot_dendro(
 
 \item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }
+\value{
+A dendrogram ggplot of the trajectory.
+}
 \description{
 Plot a trajectory as a dendrogram
 }

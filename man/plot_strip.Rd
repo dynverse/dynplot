@@ -15,6 +15,9 @@ plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 
 \item{reorder}{Whether to reorder}
 }
+\value{
+A scatterplot comparison ggplot of two linearised trajectories.
+}
 \description{
 Plot strip
 }

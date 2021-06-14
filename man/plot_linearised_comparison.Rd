@@ -23,6 +23,9 @@ plot_linearised_comparison(
 
 \item{reorder_second_by}{How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)}
 }
+\value{
+A scatterplot comparison ggplot of two linearised trajectories.
+}
 \description{
 Plot strip onedim
 }

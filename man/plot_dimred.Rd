@@ -106,16 +106,21 @@ The lower, the more closely the trajectory will follow the cells.}
 
 \item{color_trajectory}{How to color the trajectory, can be "nearest" for coloring to nearest cell, or "none"}
 }
+\value{
+A dimensionality reduction ggplot of the data.
+}
 \description{
 Plot a trajectory on dimensionality reduction
 }
 \examples{
-\donttest{
 data(example_bifurcating)
 plot_dimred(example_bifurcating)
 
+\donttest{
 # plotting with umap
-# plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+if (requireNamespace("uwot", quietly = TRUE)) {
+  plot_dimred(example_bifurcating, dimred = dyndimred::dimred_umap)
+}
 
 # using a custom dimred
 dimred <- dyndimred::dimred_mds(example_bifurcating$expression)

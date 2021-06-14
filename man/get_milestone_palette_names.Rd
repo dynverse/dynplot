@@ -14,7 +14,13 @@ get_milestone_palette_names()
 
 \item{n}{The number of colours to be in the palette.}
 }
+\value{
+The names of supported palettes.
+}
 \description{
 Get the names of valid color palettes
+}
+\examples{
+get_milestone_palette_names()
 }
 \keyword{plot_helpers}

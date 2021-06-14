@@ -12,6 +12,8 @@
 #' @export
 #' @importFrom patchwork wrap_plots
 #'
+#' @returns A scatterplot comparison ggplot of two linearised trajectories.
+#'
 #' @examples
 #' data(example_bifurcating)
 #' plot_linearised_comparison(example_bifurcating, example_bifurcating)
