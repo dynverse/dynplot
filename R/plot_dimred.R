@@ -384,13 +384,13 @@ plot_dimred <- dynutils::inherit_default_params(
       } else {
         plot <- plot +
           ggforce::geom_link2(
-            aes_string(comp_1, comp_2, group = group, color = color),
+            aes_string("comp_1", "comp_2", group = "group", color = "color"),
             data = wp_segments,
             size = size_transitions - 1,
             alpha = 1
           ) +
           geom_point(
-            aes(color = color),
+            aes(color = .data$color),
             data = milestone_positions,
             size = size_milestones - 1
           )
