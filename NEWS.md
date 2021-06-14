@@ -1,5 +1,7 @@
 # dynplot 1.1.0
 
+Initial release on CRAN.
+
  * MINOR CHANGE: Add `arrow` parameter to all plot functions.
  
  * BUG FIX: Apply fixes for new versions of tibble, tidyr, and ggraph.
