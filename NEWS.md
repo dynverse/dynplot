@@ -1,4 +1,4 @@
-# dynplot 1.0.3
+# dynplot 1.1.0
 
  * MINOR CHANGE: Add `arrow` parameter to all plot functions.
  
