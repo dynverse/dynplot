@@ -1,6 +1,6 @@
-#' Plot all the trajectories
+#' dynplot: Plotting Single-Cell Trajectories
 #'
-#' Create ggplot2 plots of single-cell trajectories. This can be
+#' Visualising single-cell trajectories. This can be
 #' the trajectory topology itself, projected onto a dimensionality reduction,
 #' using a heatmap, or a comparison between two trajectories.
 #'

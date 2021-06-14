@@ -1,4 +1,4 @@
-dynplot: Common visualisation tools for single-cell trajectories
+dynplot: Plotting Single-Cell Trajectories
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -9,8 +9,10 @@ dynplot: Common visualisation tools for single-cell trajectories
 documentation**](https://dynverse.org/reference/dynplot)
 <br><img src="man/figures/logo.png" align="right" />
 
-The package provides different ways of plotting the topology and/or
-cellular properties of a trajectory.
+The package provides different ways of visualising single-cell
+trajectories. This can be the trajectory topology itself, projected onto
+a dimensionality reduction, using a heatmap, or a comparison between two
+trajectories.
 
 Here’s a summary of the provided plotting functions.
 
