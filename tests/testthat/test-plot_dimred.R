@@ -6,7 +6,7 @@ test_datasets(load_test_datasets("toy_datasets_connected"), function(dataset) {
     expect_ggplot(g)
   })
 
-  space <- dimred_pca(dataset$expression)
+  space <- dyndimred::dimred_pca(dataset$expression)
   feature_oi <- first(colnames(dataset$expression))
   grouping <- dataset$prior_information$grouping_assignment
 
