@@ -48,12 +48,11 @@ plot_dendro <- dynutils::inherit_default_params(
     assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # root if necessary
-    if ("root_milestone_id" %in% names(trajectory)) {
-      root <- trajectory$root_milestone_id
-    } else {
+    if (!"root_milestone_id" %in% names(trajectory)) {
       trajectory <- dynwrap::add_root(trajectory)
-      root <- trajectory$root_milestone_id
     }
+
+    root <- trajectory$root_milestone_id
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(trajectory, milestones)
@@ -87,6 +86,12 @@ plot_dendro <- dynutils::inherit_default_params(
     # max_x_per_root <- apply(max_xs, 1, max, na.rm = TRUE)
     diag_offset_ <- max_x * diag_offset
     # diag_offset_per_root <- max_x_per_root * diag_offset
+
+    is_reachable <- apply(max_xs, 2, function(x) any(is.finite(x)))
+    assert_that(all(is_reachable), msg = paste0(
+      "All milestones need to be reachable from root(s) ", paste0(root, collapse = "; "), ".\n",
+      "Non reachable milestones: ", paste0(names(is_reachable)[!is_reachable], collapse = "; "), ".\n",
+      "Specify root milestones with `dynwrap::add_root(trajectory, root_milestone_ids = c(...))` to solve this issue."))
 
     # now recursively go from root to leaves
     # each time adding the x and the y
