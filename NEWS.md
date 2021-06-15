@@ -12,6 +12,9 @@ Initial release on CRAN.
  * BUG FIX `linearise_cells()`: Fix ordering issue when `equal_cell_width` is `TRUE`.
  
  * MINOR CHANGE: Clean imports and supposed undefined variables.
+ 
+ * MINOR CHANGE `plot_dendro()`: Allow plotting of disconnected graphs (#32). 
+   This assumes that `dynwrap::add_root(traj, root_milestone_id = c(...))` has been called properly.
 
 # dynplot 1.0.2 (04-07-2019) 
 

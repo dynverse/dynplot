@@ -67,7 +67,7 @@ plot_dendro <- dynutils::inherit_default_params(
 
     # determine leaves & position the leaves evenly
     leaves <- setdiff(milestone_network$to, milestone_network$from)
-    node_order <- milestone_graph %>% igraph::dfs(root) %>% `[`("order") %>% names # use dfs to find order of final nodes
+    node_order <- milestone_graph %>% igraph::dfs(root) %>% `[[`("order") %>% names # use dfs to find order of final nodes
     leaves <- leaves[order(match(leaves, node_order))]
     leaves_y <- set_names(seq_along(leaves), leaves)
 
@@ -81,32 +81,52 @@ plot_dendro <- dynutils::inherit_default_params(
       set_names(trajectory$milestone_ids)
 
     # calculate diag offset based on largest distances between root and leaf
-    max_x <- igraph::distances(milestone_graph, root, leaves, weights = igraph::E(milestone_graph)$length) %>% max
-    diag_offset <- max_x * diag_offset
+    max_xs <- igraph::distances(milestone_graph, root, leaves, weights = igraph::E(milestone_graph)$length)
+    max_xs[is.infinite(max_xs)] <- NA_real_
+    max_x <- max(max_xs, na.rm = TRUE)
+    # max_x_per_root <- apply(max_xs, 1, max, na.rm = TRUE)
+    diag_offset_ <- max_x * diag_offset
+    # diag_offset_per_root <- max_x_per_root * diag_offset
 
     # now recursively go from root to leaves
     # each time adding the x and the y
-    searchfun <- function(from, milestone_positions = tibble(node_id = from, x = 0, y = mean(leaves_y[descendants[[from]]]))) {
-      milestone_network_to <- milestone_network %>% filter(.data$from %in% !!from, !.data$to %in% milestone_positions$node_id)
+    searchfun <- function(from, milestone_positions = NULL) {
+      if (is.null(milestone_positions)) {
+        # initialise
+        milestone_positions <- tibble(
+          node_id = from,
+          x = 0,
+          y = mean(leaves_y[descendants[[from]]])
+        )
+      }
+
+      # find reachable milestones which are not in milestone positions
+      milestone_network_to <-
+        milestone_network %>%
+        filter(.data$from %in% !!from) %>%
+        left_join(milestone_positions %>% select(from = node_id, prev_x = x), by = "from") %>%
+        transmute(
+          node_id = .data$to,
+          x = .data$prev_x + .data$length + diag_offset_,
+          y = map_dbl(.data$to, function(node) mean(leaves_y[descendants[[node]]])),
+          parent_node_id = .data$from,
+          edge_id = .data$edge_id
+        )
+
+
       milestone_positions <- bind_rows(
         milestone_positions,
-        tibble(
-          node_id = milestone_network_to$to,
-          x = milestone_positions$x[match(milestone_network_to$from, milestone_positions$node_id)] + milestone_network_to$length + diag_offset,
-          y = map_dbl(milestone_network_to$to, ~mean(leaves_y[descendants[[.]]])),
-          parent_node_id = milestone_network_to$from,
-          edge_id = milestone_network_to$edge_id
-        )
+        milestone_network_to
       )
 
       if (nrow(milestone_network_to) > 0) {
-        milestone_positions <- searchfun(milestone_network_to$to, milestone_positions)
+        searchfun(milestone_network_to$node_id, milestone_positions)
+      } else {
+        milestone_positions
       }
-
-      milestone_positions
     }
 
-    milestone_positions_to <- searchfun(root)
+    milestone_positions_to <- map_df(root, searchfun)
 
     # extract positions of fake milestones
     milestone_positions_from <-
@@ -193,12 +213,24 @@ plot_dendro <- dynutils::inherit_default_params(
     color_scale <- cell_coloring_output$color_scale
 
     # generate layout
-    layout <- ggraph::create_layout(milestone_tree, "manual", x = milestone_positions$x, y = milestone_positions$y)
+    layout <- ggraph::create_layout(
+      milestone_tree, "manual",
+      x = milestone_positions$x,
+      y = milestone_positions$y
+    )
 
     # start plotting!
-    dendro <- ggplot(layout) +
+    dendro <-
+      ggplot(layout) +
       # the main edges
-      ggraph::geom_edge_link(aes(linetype = .data$node2.node_type, edge_width = .data$node2.node_type), colour = "grey")
+      ggraph::geom_edge_link(aes(linetype = factor(.data$node2.node_type), edge_width = factor(.data$node2.node_type)), colour = "grey") +
+      # theming
+      color_scale +
+      theme_graph() +
+      ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
+      ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
+      ggraph::scale_edge_alpha_discrete(guide = "none") +
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
     # determine arrow
     if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
@@ -243,15 +275,7 @@ plot_dendro <- dynutils::inherit_default_params(
         size = size_cells * (1 - border_radius_percentage),
         alpha = alpha_cells,
         data = cell_positions
-      ) +
-      color_scale +
-      # theme graph
-      theme_graph() +
-      ggraph::scale_edge_linetype_manual(values = c("milestone" = "solid", "fake_milestone" = "dotted"), guide = "none") +
-      ggraph::scale_edge_width_manual(values = c("milestone" = 3, "fake_milestone" = 1), guide = "none") +
-      ggraph::scale_edge_alpha_discrete(guide = "none") +
-
-      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+      )
 
     dendro
   }
