@@ -1,5 +1,5 @@
 load_test_datasets <- function(name) {
-  readr::read_rds(paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
+  readRDS(paste0(rprojroot::find_testthat_root_file(), "/", name, ".rds"))
 }
 
 test_datasets <- function(datasets, func) {
