@@ -53,26 +53,28 @@ Suggests:
   RColorBrewer,
   rje,
   rmarkdown,
-  testthat,
+  testthat (>= 3.0.0),
   uwot
 VignetteBuilder: knitr
 Collate: 
-    'milestone_palette.R'
-    'add_coloring.R'
-    'data.R'
-    'dummy_proofing.R'
-    'is_colour_vector.R'
-    'linearise_cells.R'
-    'optimize_order.R'
-    'package.R'
-    'plot_dendro.R'
-    'project_waypoints.R'
-    'plot_dimred.R'
-    'plot_edge_flips.R'
-    'plot_graph.R'
-    'plot_heatmap.R'
-    'plot_linearised_comparison.R'
-    'plot_onedim.R'
-    'plot_strip.R'
-    'plot_topology.R'
-    'theme_clean.R'
+  'milestone_palette.R'
+  'add_coloring.R'
+  'data.R'
+  'dummy_proofing.R'
+  'expect_ggplot.R'
+  'is_colour_vector.R'
+  'linearise_cells.R'
+  'optimize_order.R'
+  'package.R'
+  'plot_dendro.R'
+  'project_waypoints.R'
+  'plot_dimred.R'
+  'plot_edge_flips.R'
+  'plot_graph.R'
+  'plot_heatmap.R'
+  'plot_linearised_comparison.R'
+  'plot_onedim.R'
+  'plot_strip.R'
+  'plot_topology.R'
+  'theme_clean.R'
+Config/testthat/edition: 3
