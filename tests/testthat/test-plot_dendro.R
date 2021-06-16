@@ -23,7 +23,11 @@ test_that(paste0("plot_dendro on ", dataset$id, " with milestone"), {
 })
 
 test_that(paste0("plot_dendro on ", dataset$id, " with milestones from different trajectory"), {
-  pred <- dynwrap::infer_trajectory(dataset, method = "comp1")
+  pseudotime <- dataset$counts %>% stats::prcomp() %>% {.$x[, 1]}
+  pred <-
+    dynwrap::wrap_data("dummy_prediction", dataset$cell_ids) %>%
+    dynwrap::add_linear_trajectory(pseudotime) %>%
+    dynwrap::add_root()
 
   g <- plot_dendro(
     pred,

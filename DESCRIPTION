@@ -77,4 +77,3 @@ Collate:
   'plot_strip.R'
   'plot_topology.R'
   'theme_clean.R'
-Config/testthat/edition: 3
