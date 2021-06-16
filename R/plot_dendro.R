@@ -109,7 +109,7 @@ plot_dendro <- dynutils::inherit_default_params(
       milestone_network_to <-
         milestone_network %>%
         filter(.data$from %in% !!from) %>%
-        left_join(milestone_positions %>% select(from = node_id, prev_x = x), by = "from") %>%
+        left_join(milestone_positions %>% select(from = .data$node_id, prev_x = .data$x), by = "from") %>%
         transmute(
           node_id = .data$to,
           x = .data$prev_x + .data$length + diag_offset_,
