@@ -7,7 +7,7 @@
 # )
 
 permutations <- function(n){
-  if (n==1){
+  if (n == 1){
     matrix(1)
   } else {
     sp <- permutations(n-1)
@@ -36,23 +36,26 @@ optimize_order <- function(milestone_network) {
     )
   }
 
-  if (n > 4) {
-    result <- GA::ga(
-      type = "permutation",
-      fitness = score_order,
-      lower = 2,
-      upper = n,
-      maxiter = 30*nrow(milestone_network),
-      popSize = 20,
-      maxFitness = 0,
-      elitism = 5
-    )
-    ordered <- c(1, result@solution[1, ])
-  } else {
-    comb <- permutations(n-1)+1
-    scores <- apply(comb, 1, score_order)
-    ordered <- c(1, comb[which.max(scores), , drop = TRUE])
-  }
+  ordered <-
+    if (n == 1) {
+      1
+    } else if (n > 4) {
+      result <- GA::ga(
+        type = "permutation",
+        fitness = score_order,
+        lower = 2,
+        upper = n,
+        maxiter = 30*nrow(milestone_network),
+        popSize = 20,
+        maxFitness = 0,
+        elitism = 5
+      )
+      ordered <- c(1, result@solution[1, ])
+    } else {
+      comb <- permutations(n-1)+1
+      scores <- apply(comb, 1, score_order)
+      ordered <- c(1, comb[which.max(scores), , drop = TRUE])
+    }
 
   milestone_network[ordered, ]
 }
@@ -92,5 +95,8 @@ map_order <- function(traj, rel_dataset) {
     right_join(traj$milestone_network, by = c("from", "to")) %>%
     mutate(mean_mincumpercentage = ifelse(is.na(.data$mean_mincumpercentage), Inf, .data$mean_mincumpercentage))
 
-  milestone_network_ordered %>% arrange(.data$mean_mincumpercentage) %>% select(.data$from, .data$to, .data$length) %>% ungroup()
+  milestone_network_ordered %>%
+    arrange(.data$mean_mincumpercentage) %>%
+    select(.data$from, .data$to, .data$length, .data$directed) %>%
+    ungroup()
 }
