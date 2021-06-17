@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_linearised_comparison.R
 \name{plot_linearised_comparison}
 \alias{plot_linearised_comparison}
-\title{Plot strip onedim}
+\title{Compare two trajectories as a pseudotime scatterplot}
 \usage{
 plot_linearised_comparison(
   traj1,
@@ -27,7 +27,7 @@ plot_linearised_comparison(
 A scatterplot comparison ggplot of two linearised trajectories.
 }
 \description{
-Plot strip onedim
+Compare two trajectories as a pseudotime scatterplot
 }
 \examples{
 data(example_bifurcating)

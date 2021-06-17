@@ -1,4 +1,4 @@
-#' Plot a trajectory and cellular positions as a graph
+#' Plot a trajectory as a graph
 #'
 #' @inheritParams dynwrap::calculate_trajectory_dimred
 #' @inheritParams add_cell_coloring

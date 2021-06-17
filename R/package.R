@@ -1,8 +1,9 @@
 #' dynplot: Plotting Single-Cell Trajectories
 #'
-#' Visualising single-cell trajectories. This can be
-#' the trajectory topology itself, projected onto a dimensionality reduction,
-#' using a heatmap, or a comparison between two trajectories.
+#' Visualise a single-cell trajectory as a graph or dendrogram,
+#' as a dimensionality reduction or heatmap of the expression data,
+#' or a comparison between two trajectories as a pairwise scatterplot
+#' or dimensionality reduction projection.
 #'
 #' @importFrom dplyr bind_rows filter group_by mutate mutate_all n pull sample_n select transmute ungroup do left_join last .data
 #' @importFrom dplyr row_number bind_cols full_join summarise inner_join slice rename case_when arrange first mutate_at vars n rename_all

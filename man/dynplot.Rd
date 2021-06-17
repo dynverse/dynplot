@@ -5,7 +5,8 @@
 \alias{dynplot}
 \title{dynplot: Plotting Single-Cell Trajectories}
 \description{
-Visualising single-cell trajectories. This can be
-the trajectory topology itself, projected onto a dimensionality reduction,
-using a heatmap, or a comparison between two trajectories.
+Visualise a single-cell trajectory as a graph or dendrogram,
+as a dimensionality reduction or heatmap of the expression data,
+or a comparison between two trajectories as a pairwise scatterplot
+or dimensionality reduction projection.
 }

@@ -3,7 +3,7 @@
 \name{plot_graph}
 \alias{plot_graph}
 \alias{plot_default}
-\title{Plot a trajectory and cellular positions as a graph}
+\title{Plot a trajectory as a graph}
 \usage{
 plot_graph(
   trajectory,
@@ -70,7 +70,7 @@ plot_graph(
 A graph ggplot of a trajectory.
 }
 \description{
-Plot a trajectory and cellular positions as a graph
+Plot a trajectory as a graph
 }
 \examples{
 data(example_disconnected)

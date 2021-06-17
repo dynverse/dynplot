@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Plot the expression across a trajectory in a heatmap}
+\title{Plot expression data along a trajectory}
 \usage{
 plot_heatmap(
   trajectory,
@@ -54,7 +54,7 @@ plot_heatmap(
 A heatmap ggplot of an expression dataset with trajectory.
 }
 \description{
-When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
+`NOTE:` When using RStudio, the heatmap might not show inside the plot area, but will be visible once you click the 'Zoom' button.
 }
 \examples{
 data(example_bifurcating)

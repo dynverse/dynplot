@@ -1,4 +1,4 @@
-#' Plot a trajectory on dimensionality reduction
+#' Plot a trajectory in a (given) dimensionality reduction
 #'
 #' @param expression_source Source of the expression
 #' @param plot_milestone_network Whether to plot the projected milestone network on the dimensionality reduction
