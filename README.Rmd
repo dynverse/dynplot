@@ -1,5 +1,10 @@
 ---
-output: github_document
+title: "dynplot: Plotting Single-Cell Trajectories"
+output:
+  github_document:
+    html_preview: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -13,36 +18,25 @@ knitr::opts_chunk$set(
   message = FALSE,
   dpi = 300
 )
+set.seed(1)
 ```
 
-<a href="https://travis-ci.org/dynverse/dynplot"><img src="https://travis-ci.org/dynverse/dynplot.svg" align="left"></a> 
+<a href="https://github.com/dynverse/dynplot/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/dynverse/dynplot/workflows/R-CMD-check/badge.svg" align="left"></a> 
 <a href="https://codecov.io/gh/dynverse/dynplot"><img src="https://codecov.io/gh/dynverse/dynplot/branch/master/graph/badge.svg" align="left" /></a>  
 [**ℹ️ Tutorials**](https://dynverse.org)  &nbsp;  &nbsp; 
 [**ℹ️ Reference documentation**](https://dynverse.org/reference/dynplot) <br><img src="man/figures/logo.png" align="right" />
 
-# Common visualisation tools for single-cell trajectories
 
-## Installation
+The package provides different ways of visualising single-cell trajectories. This can be
+the trajectory topology itself, projected onto a dimensionality reduction,
+using a heatmap, or a comparison between two trajectories.
 
-```r
-devtools::install_github("dynverse/dynplot")
-```
+Here's a summary of the provided plotting functions.
 
-On linux, udunits2 has to be installed:
 
-* Debian / Ubuntu / Linux mint: `sudo apt-get install libudunits2-dev`
-* Fedora / CentOS: `sudo dnf install udunits2-devel`
-
-## Usage
-
-The package provides different ways to plot both the topology and cellular properties of a trajectory:
-
-```{r, echo=FALSE}
-library(dplyr)
-library(dynplot)
-library(dynutils)
-library(dynwrap)
+```{r, echo=FALSE, warning=FALSE}
 library(tidyverse)
+library(dyno)
 
 library(patchwork)
 
@@ -58,14 +52,14 @@ feature_oi <- features_oi[[10]]
 ```
 
 
-```{r cells, fig.width=15, fig.height=10, echo=FALSE}
+```{r cells, fig.width=18, fig.height=12, echo=FALSE, warning=FALSE}
 empty <- ggplot() + theme_void()
 question <- empty + geom_text(aes(0, 0, label="????"))
 unavailable <- empty + geom_text(aes(0, 0, label="----"))
 
 title <- list(
-  dynplot:::empty_plot(), 
-  # empty + geom_label(aes(0, 0, label="Topology")),
+  dynplot:::empty_plot(),
+  empty + geom_label(aes(0, 0, label="Topology")),
   empty + geom_label(aes(0, 0, label="Ordering")),
   empty + geom_label(aes(0, 0, label="Grouping/clustering")),
   empty + geom_label(aes(0, 0, label="Expression of \n a single gene")), 
@@ -73,8 +67,8 @@ title <- list(
 )
 
 dendro <- list(
-  empty + geom_label(aes(0, 0, label="Dendrogram")),
-  # plot_dendro(trajectory),
+  empty + geom_label(aes(0, 0, label="plot_dendro()")),
+  plot_dendro(trajectory),
   plot_dendro(trajectory, "milestone"),
   plot_dendro(trajectory, grouping=grouping, groups=groups),
   plot_dendro(trajectory, feature_oi=feature_oi),
@@ -82,8 +76,8 @@ dendro <- list(
 )
 
 onedim <- list(
-    empty + geom_label(aes(0, 0, label="Onedim")),
-    # plot_onedim(trajectory),
+    empty + geom_label(aes(0, 0, label="plot_onedim()")),
+    plot_onedim(trajectory),
     plot_onedim(trajectory, "milestone"),
     plot_onedim(trajectory, grouping=grouping, groups=groups),
     plot_onedim(trajectory, feature_oi=feature_oi),
@@ -91,8 +85,8 @@ onedim <- list(
   )
 
 graph <- list(
-  empty + geom_label(aes(0, 0, label="Graph")),
-  # plot_graph(trajectory),
+  empty + geom_label(aes(0, 0, label="plot_graph()")),
+  plot_graph(trajectory),
   plot_graph(trajectory, "milestone"),
   plot_graph(trajectory, grouping=grouping, groups=groups),
   plot_graph(trajectory, feature_oi=feature_oi),
@@ -100,8 +94,8 @@ graph <- list(
 )
 
 dimred <- list(
-  empty + geom_label(aes(0, 0, label="Dimensionality reduction")),
-  # plot_dimred(trajectory),
+  empty + geom_label(aes(0, 0, label="plot_dimred()")),
+  plot_dimred(trajectory),
   plot_dimred(trajectory, "milestone"),
   plot_dimred(trajectory, grouping=grouping, groups=groups),
   plot_dimred(trajectory, feature_oi=feature_oi),
@@ -110,18 +104,23 @@ dimred <- list(
 
 wrap_plots(
   c(title, dendro, onedim, graph, dimred),
-  nrow=5,
-  byrow=TRUE
+  widths = c(1, 3, 3, 3, 3, 3),
+  nrow = 5,
+  byrow = TRUE
 ) & theme(legend.position = "none")
 ```
 
-
-And to plot the expression and feature importances of many genes along the trajectory
+In addition, you can also plot the expression of genes along the trajectory as a heatmap.
 
 ```{r heatmap, echo=FALSE, fig.width=10, fig.height=6}
-cell_feature_importance <- dynfeature::calculate_cell_feature_importance(trajectory %>% dynwrap::add_waypoints())
 plot_heatmap(trajectory, grouping = trajectory$prior_information$grouping_assignment)
 ```
+
+Or create a comparison plot between two trajectories for the same cells.
+```{r scatterplot, echo=FALSE, fig.width=8, fig.height=8}
+plot_linearised_comparison(trajectory, trajectory)
+```
+
 
 ## Latest changes
 
@@ -133,7 +132,3 @@ Check out `news(package = "dynwrap")` or [NEWS.md](NEWS.md) for a full list of c
 cat(dynutils::recent_news())
 ```
 
-## Dynverse dependencies
-
-<!-- Generated by "update_dependency_graphs.R" in the main dynverse repo -->
-![](man/figures/dependencies.png)

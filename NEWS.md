@@ -1,3 +1,22 @@
+# dynplot 1.1.0
+
+Initial release on CRAN.
+
+ * MINOR CHANGE: Add `arrow` parameter to all plot functions.
+ 
+ * BUG FIX: Apply fixes for new versions of tibble, tidyr, and ggraph.
+ 
+ * BUG FIX `optimise_order()`: Fix problem where GA::ga() wouldn't run on 
+   milestone networks with 1 or 4 edges.
+
+ * BUG FIX `linearise_cells()`: Fix ordering issue when `equal_cell_width` is `TRUE`.
+ 
+ * MINOR CHANGE: Clean imports and supposed undefined variables.
+ 
+ * MINOR CHANGE `plot_dendro()`: Allow plotting of disconnected graphs (#32). 
+   This assumes that `dynwrap::add_root(traj, root_milestone_id = c(...))` has been called properly.
+
+
 # dynplot 1.0.2 (04-07-2019) 
 
  * BUG FIX: Fix weird ceiling warning.

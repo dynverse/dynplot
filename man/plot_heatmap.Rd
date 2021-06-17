@@ -4,13 +4,22 @@
 \alias{plot_heatmap}
 \title{Plot the expression across a trajectory in a heatmap}
 \usage{
-plot_heatmap(trajectory, expression_source = "expression",
-  features_oi = 20, clust = "ward.D2", margin = 0.02,
-  color_cells = NULL, milestones = NULL,
+plot_heatmap(
+  trajectory,
+  expression_source = "expression",
+  features_oi = 20,
+  clust = "ward.D2",
+  margin = 0.02,
+  color_cells = NULL,
+  milestones = NULL,
   milestone_percentages = trajectory$milestone_percentages,
-  grouping = NULL, groups = NULL, cell_feature_importances = NULL,
+  grouping = NULL,
+  groups = NULL,
+  cell_feature_importances = NULL,
   heatmap_type = c("tiled", "dotted"),
-  scale = dynutils::scale_quantile, label_milestones = TRUE)
+  scale = dynutils::scale_quantile,
+  label_milestones = TRUE
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}
@@ -41,13 +50,13 @@ plot_heatmap(trajectory, expression_source = "expression",
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 }
+\value{
+A heatmap ggplot of an expression dataset with trajectory.
+}
 \description{
 When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
 }
 \examples{
-data(example_linear)
-plot_heatmap(example_linear)
-
 data(example_bifurcating)
 plot_heatmap(example_bifurcating)
 

@@ -11,12 +11,24 @@
 #'
 #' @export
 #' @importFrom patchwork wrap_plots
-#' @export
-plot_linearised_comparison <- function(traj1, traj2, reorder = TRUE, margin = 0.05, reorder_second_by = c("mapping", "optimisation")) {
+#'
+#' @returns A scatterplot comparison ggplot of two linearised trajectories.
+#'
+#' @examples
+#' data(example_bifurcating)
+#' plot_linearised_comparison(example_bifurcating, example_bifurcating)
+plot_linearised_comparison <- function(
+  traj1,
+  traj2,
+  reorder = TRUE,
+  margin = 0.05,
+  reorder_second_by = c("mapping", "optimisation")
+) {
   # make sure a trajectory was provided
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj1))
-  testthat::expect_true(dynwrap::is_wrapper_with_trajectory(traj2))
-
+  assert_that(
+    dynwrap::is_wrapper_with_trajectory(traj1),
+    dynwrap::is_wrapper_with_trajectory(traj2)
+  )
 
   reorder_second_by <- match.arg(reorder_second_by)
   if (reorder) {
@@ -29,7 +41,13 @@ plot_linearised_comparison <- function(traj1, traj2, reorder = TRUE, margin = 0.
     }
   }
 
-  empty_max <- function(x) {if (length(x) > 0) {max(x)} else {0}}
+  empty_max <- function(x) {
+    if (length(x) > 0) {
+      max(x)
+    } else {
+      0
+    }
+  }
 
   strip_plot <- plot_strip(traj1, traj2, reorder = FALSE, margin = margin)
 

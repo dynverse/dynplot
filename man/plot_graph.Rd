@@ -5,19 +5,30 @@
 \alias{plot_default}
 \title{Plot a trajectory and cellular positions as a graph}
 \usage{
-plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
-  "feature", "milestone", "pseudotime"), color_milestones = c("auto",
-  "given", "cubeHelix", "Set3", "rainbow"), grouping = NULL,
-  groups = NULL, feature_oi = NULL, pseudotime = NULL,
-  expression_source = "expression", milestones = NULL,
-  milestone_percentages = NULL, transition_size = 3,
-  milestone_size = 5, alpha_cells = 1, size_cells = 2.5,
-  border_radius_percentage = 0.1, arrow_length = grid::unit(1, "cm"),
+plot_graph(
+  trajectory,
+  color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  grouping = NULL,
+  groups = NULL,
+  feature_oi = NULL,
+  pseudotime = NULL,
+  expression_source = "expression",
+  milestones = NULL,
+  milestone_percentages = NULL,
+  size_trajectory = 3,
+  size_milestones = 8,
+  alpha_cells = 1,
+  size_cells = 2.5,
+  border_radius_percentage = 0.1,
+  arrow = grid::arrow(length = grid::unit(1, "cm"), type = "closed"),
   label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
-  plot_milestones = FALSE, adjust_weights = FALSE)
+  plot_milestones = FALSE,
+  adjust_weights = FALSE
+)
 }
 \arguments{
-\item{trajectory}{The trajectory as created by \code{\link[=infer_trajectory]{infer_trajectory()}} or \code{\link[=add_trajectory]{add_trajectory()}}}
+\item{trajectory}{The trajectory as created by \code{\link[dynwrap:infer_trajectories]{infer_trajectory()}} or \code{\link[dynwrap:add_trajectory]{add_trajectory()}}}
 
 \item{color_cells}{How to color the cells}
 
@@ -37,9 +48,9 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{milestone_percentages}{The milestone percentages}
 
-\item{transition_size}{The size of the transition lines between milestones.}
+\item{size_trajectory}{The size of the transition lines between milestones.}
 
-\item{milestone_size}{The size of milestones.}
+\item{size_milestones}{The size of milestones.}
 
 \item{alpha_cells}{The alpha of the cells.}
 
@@ -47,13 +58,16 @@ plot_graph(trajectory, color_cells = c("auto", "none", "grouping",
 
 \item{border_radius_percentage}{The fraction of the radius that is used for the border.}
 
-\item{arrow_length}{length of the arrow.}
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
 
 \item{plot_milestones}{Whether to plot the milestones.}
 
 \item{adjust_weights}{Whether or not to rescale the milestone network weights}
+}
+\value{
+A graph ggplot of a trajectory.
 }
 \description{
 Plot a trajectory and cellular positions as a graph

@@ -4,8 +4,13 @@
 \alias{plot_linearised_comparison}
 \title{Plot strip onedim}
 \usage{
-plot_linearised_comparison(traj1, traj2, reorder = TRUE, margin = 0.05,
-  reorder_second_by = c("mapping", "optimisation"))
+plot_linearised_comparison(
+  traj1,
+  traj2,
+  reorder = TRUE,
+  margin = 0.05,
+  reorder_second_by = c("mapping", "optimisation")
+)
 }
 \arguments{
 \item{traj1}{The first trajectory}
@@ -18,7 +23,14 @@ plot_linearised_comparison(traj1, traj2, reorder = TRUE, margin = 0.05,
 
 \item{reorder_second_by}{How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)}
 }
+\value{
+A scatterplot comparison ggplot of two linearised trajectories.
+}
 \description{
 Plot strip onedim
+}
+\examples{
+data(example_bifurcating)
+plot_linearised_comparison(example_bifurcating, example_bifurcating)
 }
 \keyword{compare_trajectory}

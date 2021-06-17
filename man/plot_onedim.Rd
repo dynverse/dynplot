@@ -4,16 +4,28 @@
 \alias{plot_onedim}
 \title{Plot onedim}
 \usage{
-plot_onedim(trajectory, color_cells = c("auto", "none", "grouping",
-  "feature", "milestone", "pseudotime"), grouping = NULL,
-  groups = NULL, feature_oi = NULL, pseudotime = NULL,
-  expression_source = "expression", color_milestones = c("auto",
-  "given", "cubeHelix", "Set3", "rainbow"), milestones = NULL,
-  milestone_percentages = NULL, alpha_cells = 1, size_cells = 2.5,
-  border_radius_percentage = 0.1, orientation = 1, margin = 0.05,
+plot_onedim(
+  trajectory,
+  color_cells = c("auto", "none", "grouping", "feature", "milestone", "pseudotime"),
+  grouping = NULL,
+  groups = NULL,
+  feature_oi = NULL,
+  pseudotime = NULL,
+  expression_source = "expression",
+  color_milestones = c("auto", "given", "cubeHelix", "Set3", "rainbow"),
+  milestones = NULL,
+  milestone_percentages = NULL,
+  alpha_cells = 1,
+  size_cells = 2.5,
+  border_radius_percentage = 0.1,
+  orientation = 1,
+  margin = 0.05,
   linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
-  quasirandom_width = 0.2, plot_cells = TRUE,
-  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory))
+  quasirandom_width = 0.2,
+  plot_cells = TRUE,
+  label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
+  arrow = grid::arrow(type = "closed")
+)
 }
 \arguments{
 \item{trajectory}{The trajectory}
@@ -53,6 +65,11 @@ plot_onedim(trajectory, color_cells = c("auto", "none", "grouping",
 \item{plot_cells}{Whether to plot the cells}
 
 \item{label_milestones}{How to label the milestones. Can be TRUE (in which case the labels within the trajectory will be used), "all" (in which case both given labels and milestone_ids will be used), a named character vector, or FALSE}
+
+\item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
+}
+\value{
+A linearised (non-)linear trajectory.
 }
 \description{
 Plot onedim

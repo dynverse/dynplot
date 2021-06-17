@@ -9,4 +9,9 @@ theme_clean()
 \description{
 We like our plots clean
 }
+\examples{
+data(example_bifurcating)
+g <- plot_dimred(example_bifurcating)
+g + theme_clean()
+}
 \keyword{plot_helpers}

@@ -29,22 +29,22 @@ check_features_oi <- function(trajectory, expression, features_oi, cell_feature_
       message("Selecting features with top maximal feature importance across cells")
 
       cell_feature_importances %>%
-        group_by(feature_id) %>%
-        summarise(importance = max(importance)) %>%
-        top_n(features_oi, importance) %>%
-        pull(feature_id) %>%
+        group_by(.data$feature_id) %>%
+        summarise(importance = max(.data$importance)) %>%
+        top_n(features_oi, .data$importance) %>%
+        pull(.data$feature_id) %>%
         as.character()
 
-    } else if ("dynfeature" %in% rownames(installed.packages())) {
+    } else if (requireNamespace("dynfeature", quietly = TRUE)) {
       message("Using dynfeature for selecting the top ", features_oi, " features")
       requireNamespace("dynfeature")
 
       dynfeature::calculate_overall_feature_importance(trajectory, expression = expression) %>%
-        top_n(features_oi, importance) %>%
-        pull(feature_id) %>%
+        top_n(features_oi, .data$importance) %>%
+        pull(.data$feature_id) %>%
         as.character()
     } else {
-      apply(expression, 2, sd) %>% sort() %>% names() %>% tail(features_oi)
+      apply(expression, 2, stats::sd) %>% sort() %>% names() %>% tail(features_oi)
     }
   } else {
     features_oi
@@ -56,7 +56,7 @@ check_groups <- function(grouping, groups) {
   if (is.null(groups) || !("color" %in% names(groups))) {
     groups <- tibble(
       group_id = unique(grouping),
-      color = milestone_palette("auto", length(group_id))
+      color = milestone_palette("auto", length(.data$group_id))
     )
   }
   groups

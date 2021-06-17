@@ -7,6 +7,7 @@
 #' @param alpha_cells The alpha of the cells
 #' @param size_cells The size of the cells
 #' @param border_radius_percentage The fraction of the radius that is used for the border
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams linearise_cells
@@ -17,6 +18,8 @@
 #' @export
 #'
 #' @importFrom ggrepel geom_label_repel
+#'
+#' @returns A linearised (non-)linear trajectory.
 #'
 #' @examples
 #' data(example_linear)
@@ -46,7 +49,8 @@ plot_onedim <- dynutils::inherit_default_params(
     linearised = linearise_cells(trajectory, margin, one_edge = TRUE),
     quasirandom_width = 0.2,
     plot_cells = TRUE,
-    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory)
+    label_milestones = dynwrap::is_wrapper_with_milestone_labelling(trajectory),
+    arrow = grid::arrow(type = "closed")
   ) {
     milestone_network <- trajectory$milestone_network
     progressions <- trajectory$progressions
@@ -56,9 +60,10 @@ plot_onedim <- dynutils::inherit_default_params(
     linearised <- make_connection_plotdata(linearised)
 
     # cell positions
-    cell_positions <- linearised$progressions %>%
-      rename(x = cumpercentage) %>%
-      mutate(y = vipor::offsetX(x, edge_id, method = "quasirandom", width = quasirandom_width))
+    cell_positions <-
+      linearised$progressions %>%
+      rename(x = .data$cumpercentage) %>%
+      mutate(y = vipor::offsetX(.data$x, .data$edge_id, method = "quasirandom", width = quasirandom_width))
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(trajectory, milestones)
@@ -86,69 +91,120 @@ plot_onedim <- dynutils::inherit_default_params(
     # create begin and end milestones
     milestones <-
       bind_rows(
-        linearised$milestone_network %>% select(milestone_id = from, position = cumstart) %>% mutate(type = "from"),
-        linearised$milestone_network %>% select(milestone_id = to, position = cumend) %>% mutate(type = "to")
+        linearised$milestone_network %>% select(milestone_id = .data$from, position = .data$cumstart) %>% mutate(type = "from"),
+        linearised$milestone_network %>% select(milestone_id = .data$to, position = .data$cumend) %>% mutate(type = "to")
       ) %>%
       mutate(
-        start = milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
-        end = milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
+        start = .data$milestone_id %in% setdiff(linearised$milestone_network$from, linearised$milestone_network$to),
+        end = .data$milestone_id %in% setdiff(linearised$milestone_network$to, linearised$milestone_network$from)
       )
 
-    plot <- ggplot() +
-      geom_segment(aes(cumstart, 0, xend = cumend, yend = 0), data = linearised$milestone_network, color = "black") +
+    # add arrow if directed
+    my_arrow <-
+      if (any(trajectory$milestone_network$directed)) {
+        arrow
+      } else {
+        NULL
+      }
+
+    # construct plot
+    plot <-
+      ggplot() +
+      geom_segment(aes(.data$cumstart, 0, xend = .data$cumend, yend = 0), data = linearised$milestone_network, color = "black") +
       theme_graph() +
       theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
 
-    if (any(milestones$start & milestones$type == "from"))
-      plot <- plot + geom_segment(aes(position, 0, xend = position+1e-10, yend = 0), data = milestones %>% filter(start, type == "from"), color = "black", arrow = arrow(type = "closed"))
+    if (any(milestones$start & milestones$type == "from")) {
+      plot <- plot +
+        geom_segment(
+          aes(.data$position, 0, xend = .data$position+1e-10, yend = 0),
+          data = milestones %>% filter(.data$start, .data$type == "from"),
+          color = "black",
+          arrow = my_arrow
+        )
+    }
 
-    if (any(milestones$end & milestones$type == "to"))
-      plot <- plot + geom_point(aes(position, 0), data = milestones %>% filter(end, type == "to"), shape = "|", color = "black", size = 10)
+    if (any(milestones$end & milestones$type == "to")) {
+      plot <- plot +
+        geom_point(
+        aes(.data$position, 0),
+        data = milestones %>% filter(.data$end, .data$type == "to"),
+        shape = "|",
+        color = "black",
+        size = 10
+      )
+    }
 
     # add connections
     if (nrow(linearised$connections)) {
-      plot <- plot + geom_segment(aes(x_from, level, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
-        geom_segment(aes(x_from, 0, xend = x_from, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666") +
-        geom_segment(aes(x_to, 0, xend = x_to, yend = level), data = linearised$connections, linetype = "longdash", color = "#666666")
+      plot <- plot +
+        geom_segment(
+          aes(.data$x_from, .data$level, xend = .data$x_to, yend = .data$level),
+          data = linearised$connections,
+          linetype = "longdash",
+          color = "#666666"
+        ) +
+        geom_segment(
+          aes(.data$x_from, 0, xend = .data$x_from, yend = .data$level),
+          data = linearised$connections,
+          linetype = "longdash",
+          color = "#666666"
+        ) +
+        geom_segment(
+          aes(.data$x_to, 0, xend = .data$x_to, yend = .data$level),
+          data = linearised$connections,
+          linetype = "longdash",
+          color = "#666666"
+        )
     }
 
     # add the cells
     if (plot_cells) {
       if (border_radius_percentage > 0) {
         plot <- plot +
-          geom_point(aes(x, y), size = size_cells, color = "black", data = cell_positions)
+          geom_point(
+            aes(.data$x, .data$y),
+            size = size_cells,
+            color = "black",
+            data = cell_positions
+          )
       }
       if (alpha_cells < 1) {
         plot <- plot +
-          geom_point(aes(x, y), size = size_cells * (1 - border_radius_percentage), color = "white", data = cell_positions)
+          geom_point(
+            aes(.data$x, .data$y),
+            size = size_cells * (1 - border_radius_percentage),
+            color = "white",
+            data = cell_positions
+          )
       }
       plot <- plot +
-        geom_point(aes(x, y, color = color), size = size_cells * (1 - border_radius_percentage), alpha = alpha_cells, data = cell_positions) +
+        geom_point(
+          aes(.data$x, .data$y, color = .data$color),
+          size = size_cells * (1 - border_radius_percentage),
+          alpha = alpha_cells,
+          data = cell_positions
+        ) +
         color_scale
     }
 
-
-    # if (!is.null(cell_progressions)) {
-    #   plot <- plot + ggrepel::geom_label_repel(aes(position, 0, label = cell_id, fill = color), data = cell_positions, direction = "x", nudge_y = -orientation, min.segment.length = 0) + scale_fill_identity()
-    #   min_limit <- -1
-    # } else {
     min_limit <- -0.2
-    # }
 
     # label milestones
     label_milestones <- get_milestone_labelling(trajectory, label_milestones) %>% discard(is.na)
 
     if (length(label_milestones)) {
       # get for every milestone one position, preferably a "to" position, but if no is available also a "from" position
-      milestones_to_label <- milestones %>%
-        mutate(label = as.character(label_milestones[milestone_id])) %>%
-        filter(!is.na(label)) %>%
-        group_by(milestone_id) %>%
-        arrange(desc(type)) %>%
+      milestones_to_label <-
+        milestones %>%
+        mutate(label = as.character(label_milestones[.data$milestone_id])) %>%
+        filter(!is.na(.data$label)) %>%
+        group_by(.data$milestone_id) %>%
+        arrange(desc(.data$type)) %>%
         filter(dplyr::row_number() == 1)
 
       plot <- plot + ggrepel::geom_label_repel(
-        aes(position, 0, label = label),
+        aes(.data$position, 0, label = .data$label),
         data = milestones_to_label,
         direction = "x",
         force = 0.8,
@@ -170,20 +226,24 @@ plot_onedim <- dynutils::inherit_default_params(
   }
 )
 
-
+#' @importFrom dplyr near
 make_connection_plotdata <- function(linearised) {
   connections <- crossing(
-    linearised$milestone_network %>% select(from, x_from = cumstart),
-    linearised$milestone_network %>% select(to, x_to = cumend)
-  ) %>% filter(
-    from == to,
-    x_from != x_to
-  ) %>% mutate(
-    x_diff = abs(x_to-x_from)
-  ) %>% arrange(x_diff) %>%
-    mutate(level = NA) %>%
-    mutate(direct = near(x_diff, linearised$margin))
-
+    linearised$milestone_network %>% select(.data$from, x_from = .data$cumstart),
+    linearised$milestone_network %>% select(.data$to, x_to = .data$cumend)
+  ) %>%
+    filter(
+      .data$from == .data$to,
+      .data$x_from != .data$x_to
+    ) %>%
+    mutate(
+      x_diff = abs(.data$x_to - .data$x_from)
+    ) %>%
+    arrange(.data$x_diff) %>%
+    mutate(
+      level = NA,
+      direct = near(.data$x_diff, linearised$margin)
+    )
 
   for (i in seq_len(nrow(connections))) {
     connection <- connections %>% extract_row_to_list(i)
@@ -191,8 +251,8 @@ make_connection_plotdata <- function(linearised) {
     overlapping_connections <- connections %>%
       filter(
         dplyr::row_number() < i,
-        pmax(x_from, x_to) > min(connection$x_from, connection$x_to),
-        pmin(x_from, x_to) < max(connection$x_from, connection$x_to)
+        pmax(.data$x_from, .data$x_to) > min(connection$x_from, connection$x_to),
+        pmin(.data$x_from, .data$x_to) < max(connection$x_from, connection$x_to)
       )
 
     if (nrow(overlapping_connections)) {

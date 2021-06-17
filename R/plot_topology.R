@@ -2,11 +2,14 @@
 #'
 #' @inheritParams add_cell_coloring
 #' @inheritParams add_milestone_coloring
-#' @inheritParams ggraph::ggraph
+#' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
+#' @param layout The type of layout to create. See [ggraph::ggraph()] for more info.
 #'
 #' @keywords plot_trajectory
 #'
 #' @export
+#'
+#' @returns A topology ggplot of a trajectory.
 #'
 #' @examples
 #' data(example_disconnected)
@@ -20,10 +23,11 @@ plot_topology <- dynutils::inherit_default_params(
     trajectory,
     color_milestones,
     milestones,
-    layout = NULL
+    layout = NULL,
+    arrow = grid::arrow(type = "closed", length = unit(0.4, "cm"))
   ) {
     # make sure a trajectory was provided
-    testthat::expect_true(dynwrap::is_wrapper_with_trajectory(trajectory))
+    assert_that(dynwrap::is_wrapper_with_trajectory(trajectory))
 
     # determine optimal layout
     if (is.null(layout)) {
@@ -42,8 +46,8 @@ plot_topology <- dynutils::inherit_default_params(
 
     milestone_graph <- as_tbl_graph(trajectory$milestone_network)
     milestone_positions <- milestone_graph %>%
-      create_layout(layout) %>%
-      mutate(milestone_id = as.character(name))
+      ggraph::create_layout(layout) %>%
+      mutate(milestone_id = as.character(.data$name))
 
     # check milestones, make sure it's a data_frame
     milestones <- check_milestones(trajectory, milestones) %>% add_milestone_coloring(color_milestones)
@@ -51,20 +55,27 @@ plot_topology <- dynutils::inherit_default_params(
 
     milestone_graph <- igraph::graph_from_data_frame(
       trajectory$milestone_network,
-      vertices = milestone_positions %>% select(-x, -y)
-    ) %>% as_tbl_graph()
+      vertices = milestone_positions %>% select(-.data$x, -.data$y)
+    ) %>%
+      as_tbl_graph()
 
-    arrow <-
-      if (any(trajectory$milestone_network$directed)) {
-        arrow(type = "closed", length = unit(0.4, "cm"))
-      } else {
-        NULL
-      }
+    # add arrow if directed
+    plot <- ggraph::ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
+      ggraph::geom_edge_fan()
 
-    ggraph(milestone_graph, "manual", x = milestone_positions$x, y = milestone_positions$y) +
-      geom_edge_fan() +
-      geom_edge_fan(aes(xend = x + (xend-x)/1.5, yend = y + (yend-y)/1.5), arrow = arrow) +
-      geom_node_label(aes(fill = color, label = milestone_id)) +
+    if (!is.null(arrow) && any(trajectory$milestone_network$directed)) {
+      plot <- plot +
+        ggraph::geom_edge_fan(
+          aes(
+            xend = .data$x + (.data$xend-.data$x)/1.5,
+            yend = .data$y + (.data$yend-.data$y)/1.5
+          ),
+          arrow = arrow
+        )
+    }
+
+    plot +
+      ggraph::geom_node_label(aes(fill = .data$color, label = .data$milestone_id)) +
       scale_fill_identity() +
       theme_graph()
   }

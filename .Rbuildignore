@@ -11,3 +11,7 @@
 ^tests
 ^_pkgdown\.yml$
 ^data-raw
+^LICENSE\.md$
+^LICENSE\.md$
+^\.github$
+^cran-comments\.md$

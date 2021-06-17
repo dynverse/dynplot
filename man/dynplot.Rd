@@ -3,8 +3,9 @@
 \docType{package}
 \name{dynplot}
 \alias{dynplot}
-\alias{dynplot-package}
-\title{Plot all the trajectories}
+\title{dynplot: Plotting Single-Cell Trajectories}
 \description{
-Plot all the trajectories
+Visualising single-cell trajectories. This can be
+the trajectory topology itself, projected onto a dimensionality reduction,
+using a heatmap, or a comparison between two trajectories.
 }

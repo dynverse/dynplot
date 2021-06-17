@@ -51,6 +51,7 @@ plot_topology(trajectory, layout = "circle")
 
 ```{r}
 plot_dimred(trajectory)
+plot_dimred(trajectory, color_trajectory = "nearest")
 ```
 
 ## Plotting a grouping or clustering
