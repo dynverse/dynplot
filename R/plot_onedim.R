@@ -1,4 +1,4 @@
-#' Plot onedim
+#' Plot a trajectory as a one-dimensional set of connected segments
 #'
 #' @param linearised The linearised milestone network and progressions
 #' @param quasirandom_width The width of the quasirandom cell spreading

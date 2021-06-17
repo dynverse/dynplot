@@ -1,4 +1,4 @@
-#' Plot strip onedim
+#' Compare two trajectories as a pseudotime scatterplot
 #'
 #' @param traj1 The first trajectory
 #' @param traj2 The second trajectory

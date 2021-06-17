@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_dimred.R
 \name{plot_dimred}
 \alias{plot_dimred}
-\title{Plot a trajectory on dimensionality reduction}
+\title{Plot a trajectory in a (given) dimensionality reduction}
 \usage{
 plot_dimred(
   trajectory,
@@ -110,7 +110,7 @@ The lower, the more closely the trajectory will follow the cells.}
 A dimensionality reduction ggplot of the data.
 }
 \description{
-Plot a trajectory on dimensionality reduction
+Plot a trajectory in a (given) dimensionality reduction
 }
 \examples{
 data(example_bifurcating)

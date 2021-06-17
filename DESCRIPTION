@@ -1,6 +1,6 @@
 Package: dynplot
 Type: Package
-Title: Plotting Single-Cell Trajectories
+Title: Visualising Single-Cell Trajectories
 Version: 1.1.0
 Authors@R: 
     c(person(given = "Robrecht",
@@ -13,9 +13,11 @@ Authors@R:
              role = "aut",
              email = "wouter.saelens@ugent.be",
              comment = c(ORCID = "0000-0002-7114-6248")))
-Description: Visualising single-cell trajectories. This can be
-            the trajectory topology itself, projected onto a dimensionality reduction,
-            using a heatmap, or a comparison between two trajectories.
+Description: Visualise a single-cell trajectory as a graph or dendrogram, 
+  as a dimensionality reduction or heatmap of the expression data, 
+  or a comparison between two trajectories as a pairwise scatterplot
+  or dimensionality reduction projection. Saelens and Cannoodt et
+  al. (2019) <doi:10.1038/s41587-019-0071-9>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

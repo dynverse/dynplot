@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_onedim.R
 \name{plot_onedim}
 \alias{plot_onedim}
-\title{Plot onedim}
+\title{Plot a trajectory as a one-dimensional set of connected segments}
 \usage{
 plot_onedim(
   trajectory,
@@ -72,7 +72,7 @@ plot_onedim(
 A linearised (non-)linear trajectory.
 }
 \description{
-Plot onedim
+Plot a trajectory as a one-dimensional set of connected segments
 }
 \examples{
 data(example_linear)

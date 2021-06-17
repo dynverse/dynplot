@@ -1,6 +1,6 @@
-#' Plot the expression across a trajectory in a heatmap
+#' Plot expression data along a trajectory
 #'
-#' When using RStudio: the heatmap will not show inside the plot area, but will be visible once you click the zoom button.
+#' `NOTE:` When using RStudio, the heatmap might not show inside the plot area, but will be visible once you click the 'Zoom' button.
 #'
 #' @param features_oi The features of interest, either the number of features or a vector giving the names of the different features
 #' @param clust The method to cluster the features, or a hclust object
