@@ -14,8 +14,9 @@ Authors@R:
              email = "wouter.saelens@ugent.be",
              comment = c(ORCID = "0000-0002-7114-6248")))
 Description: Visualising single-cell trajectories. This can be
-            the trajectory topology itself, projected onto a dimensionality reduction,
-            using a heatmap, or a comparison between two trajectories.
+    the trajectory topology itself, projected onto a dimensionality reduction,
+    using a heatmap, or a comparison between two trajectories. Saelens and Cannoodt et
+    al. (2019) <doi:10.1038/s41587-019-0071-9>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
