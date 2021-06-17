@@ -7,6 +7,11 @@ First release of dynplot on CRAN.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+```
+── R CMD check results ────────────────────────────────────── dynplot 1.1.0 ────
+Duration: 2m 6.5s
 
-* This is a new release.
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+
+R CMD check succeeded
+```
