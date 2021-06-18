@@ -32,8 +32,9 @@ A named list with values:
  * `margin`: The used margin (numeric).
 }
 \description{
-Prepare a trajectory for linearised visualisation.
+This is an internal function and should probably not be used manually.
 }
 \examples{
 linearise_cells(example_bifurcating)
+
 }

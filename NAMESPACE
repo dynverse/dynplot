@@ -3,6 +3,7 @@
 export(add_milestone_coloring)
 export(empty_plot)
 export(get_milestone_palette_names)
+export(linearise_cells)
 export(plot_dendro)
 export(plot_dimred)
 export(plot_graph)

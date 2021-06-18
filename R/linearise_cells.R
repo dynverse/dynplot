@@ -1,5 +1,7 @@
 #' Prepare a trajectory for linearised visualisation.
 #'
+#' This is an internal function and should probably not be used manually.
+#'
 #' @param trajectory A dynwrap trajectory.
 #' @param margin A margin between trajectory segments.
 #' @param no_margin_between_linear Whether to add a margin only when a branch occurs.
@@ -17,6 +19,8 @@
 #'
 #' @examples
 #' linearise_cells(example_bifurcating)
+#'
+#' @export
 linearise_cells <- function(
   trajectory,
   margin = 0.05,
