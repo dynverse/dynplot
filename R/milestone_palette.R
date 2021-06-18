@@ -32,7 +32,7 @@ milestone_palette_list <- list(
   }
 )
 
-#' @param name The name of the palette. Must be one of \code{"cubeHelix"}, \code{"Set3"}, or \code{"rainbow"}.
+#' @param name The name of the palette. Must be one of `"cubeHelix"`, `"Set3"`, or `"rainbow"`.
 #' @param n The number of colours to be in the palette.
 #'
 #' @rdname get_milestone_palette_names

@@ -20,29 +20,36 @@ add_density_coloring(
 )
 }
 \arguments{
-\item{cell_positions}{The positions of the cells in 2D}
+\item{cell_positions}{The positions of the cells in 2D. Must be a tibble with character column \code{cell_id} and numeric columns \code{comp_1} and \code{comp_2}.}
 
-\item{color_density}{How to color density, can be "none", "grouping", or "feature"}
+\item{color_density}{How to color density, can be "none", "grouping", or "feature".}
 
-\item{trajectory}{The trajectory}
+\item{trajectory}{A dynwrap trajectory.}
 
-\item{grouping}{The grouping of the cells}
+\item{grouping}{A grouping of the cells (e.g. clustering) as a named character vector.}
 
-\item{groups}{Tibble containing information of the cell groups}
+\item{groups}{A tibble containing character columns \code{group_id} and \code{color}. If \code{NULL}, this object is inferred from the \code{grouping} itself.}
 
-\item{feature_oi}{feature to plot expression}
+\item{feature_oi}{The name of a feature to use for colouring the cells.}
 
-\item{expression_source}{Source of the feature expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to \code{get_expression(trajectory)}.}
 
-\item{padding}{The padding in the edges to the plot, relative to the size of the plot}
+\item{padding}{The padding in the edges to the plot, relative to the size of the plot.}
 
-\item{nbins}{Number of bins for calculating the density}
+\item{nbins}{Number of bins for calculating the density.}
 
-\item{bw}{Bandwidth, relative to the size of the plot}
+\item{bw}{Bandwidth, relative to the size of the plot.}
 
-\item{density_cutoff}{Cutoff for density, the lower the larger the areas}
+\item{density_cutoff}{Cutoff for density, the lower the larger the areas.}
 
-\item{density_cutoff_label}{Cutoff for density for labelling, the lower the further way from cells}
+\item{density_cutoff_label}{Cutoff for density for labeling, the lower the further way from cells.}
+}
+\value{
+A named list with objects:
+\itemize{
+\item polygon: A layer to add to the ggplot.
+\item scale: A scale to add to the ggplot.
+}
 }
 \description{
 Color cells using a background density

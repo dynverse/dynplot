@@ -30,32 +30,49 @@ plot_graph(
 \arguments{
 \item{trajectory}{The trajectory as created by \code{\link[dynwrap:infer_trajectories]{infer_trajectory()}} or \code{\link[dynwrap:add_trajectory]{add_trajectory()}}}
 
-\item{color_cells}{How to color the cells}
+\item{color_cells}{How to color the cells.
+\itemize{
+\item \code{"auto"}: Try to figure out how to color cells depending on whether
+one of the \code{grouping}, \code{feature_io}, \code{milestones} or \code{pseudotime} parameters are defined.
+\item \code{"none"}: Cells are not coloured.
+\item \code{"grouping"}: Cells are coloured according to a grouping (e.g. clustering).
+Either the \code{grouping} parameter or \code{trajectory$grouping} must be a named character vector.
+\item \code{"feature"}: Cells are coloured according to the values of a given feature (e.g. gene expression).
+Either the \code{expression_source} parameter or \code{get_expression(trajectory)} must be a matrix.
+Parameter \code{feature_oi} must also be defined.
+\item \code{"milestone"} (recommended): Cells are coloured according their position in the trajectory. The positioning of the
+cells are determined by parameter \code{milestone_percentages} or else by \code{trajectory$milestone_percentages}. The colours
+of the milestones can be determined automatically or can be specified by passing a tibble containing character columns
+\code{milestone_id} and \code{color} (See \code{add_milestone_coloring()} for help in constructing this object).
+\item \code{"pseudotime"}: Cells are coloured according to the pseudotime value from the root.
+}}
 
 \item{color_milestones}{Which palette to use for colouring the milestones
-* `auto`: Determine colours automatically. If `color` is already specified in
-  milestones tibble, this will be used. Otherwise, the colour scheme is determined by
-  `milestone_palette_list$auto`.
-* `given`: The `milestones` object already contains a column `color`.
-* `cubeHelix`: Use the `rje::cubeHelix()` palette.
-* `Set3`: Use the `RColorBrewer::brewer.pal(name = "Set3")` palette.
-* `rainbow`: Use the `grDevices::rainbow()` palette.}
+\itemize{
+\item \code{auto}: Determine colours automatically. If \code{color} is already specified in
+milestones tibble, this will be used. Otherwise, the colour scheme is determined by
+\code{milestone_palette_list$auto}.
+\item \code{given}: The \code{milestones} object already contains a column \code{color}.
+\item \code{cubeHelix}: Use the \code{rje::cubeHelix()} palette.
+\item \code{Set3}: Use the \code{RColorBrewer::brewer.pal(name = "Set3")} palette.
+\item \code{rainbow}: Use the \code{grDevices::rainbow()} palette.
+}}
 
-\item{grouping}{The grouping of the cells}
+\item{grouping}{A grouping of the cells (e.g. clustering) as a named character vector.}
 
-\item{groups}{Tibble containing information of the cell groups}
+\item{groups}{A tibble containing character columns \code{group_id} and \code{color}. If \code{NULL}, this object is inferred from the \code{grouping} itself.}
 
-\item{feature_oi}{feature to plot expression}
+\item{feature_oi}{The name of a feature to use for colouring the cells.}
 
-\item{pseudotime}{The pseudotime}
+\item{pseudotime}{The pseudotime from the root of the trajectory to the cells as a named numeric vector.}
 
-\item{expression_source}{Source of the feature expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to \code{get_expression(trajectory)}.}
 
-\item{milestones}{Tibble containing the column `milestone_id` (character).
-If `color_milestones` is set to `"given"`, this tibble should also contain a column
-`color` (character), containing colour hex codes (e.g. `"#123456"`).}
+\item{milestones}{Tibble containing the column \code{milestone_id} (character).
+If \code{color_milestones} is set to \code{"given"}, this tibble should also contain a column
+\code{color} (character), containing colour hex codes (e.g. \code{"#123456"}).}
 
-\item{milestone_percentages}{The milestone percentages}
+\item{milestone_percentages}{The milestone percentages.}
 
 \item{size_trajectory}{The size of the transition lines between milestones.}
 

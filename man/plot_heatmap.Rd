@@ -22,9 +22,9 @@ plot_heatmap(
 )
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{A dynwrap trajectory.}
 
-\item{expression_source}{Source of the feature expression, defaults to `expression`}
+\item{expression_source}{Source of the feature expression, defaults to \code{get_expression(trajectory)}.}
 
 \item{features_oi}{The features of interest, either the number of features or a vector giving the names of the different features}
 
@@ -32,19 +32,34 @@ plot_heatmap(
 
 \item{margin}{A margin between trajectory segments.}
 
-\item{color_cells}{How to color the cells}
+\item{color_cells}{How to color the cells.
+\itemize{
+\item \code{"auto"}: Try to figure out how to color cells depending on whether
+one of the \code{grouping}, \code{feature_io}, \code{milestones} or \code{pseudotime} parameters are defined.
+\item \code{"none"}: Cells are not coloured.
+\item \code{"grouping"}: Cells are coloured according to a grouping (e.g. clustering).
+Either the \code{grouping} parameter or \code{trajectory$grouping} must be a named character vector.
+\item \code{"feature"}: Cells are coloured according to the values of a given feature (e.g. gene expression).
+Either the \code{expression_source} parameter or \code{get_expression(trajectory)} must be a matrix.
+Parameter \code{feature_oi} must also be defined.
+\item \code{"milestone"} (recommended): Cells are coloured according their position in the trajectory. The positioning of the
+cells are determined by parameter \code{milestone_percentages} or else by \code{trajectory$milestone_percentages}. The colours
+of the milestones can be determined automatically or can be specified by passing a tibble containing character columns
+\code{milestone_id} and \code{color} (See \code{add_milestone_coloring()} for help in constructing this object).
+\item \code{"pseudotime"}: Cells are coloured according to the pseudotime value from the root.
+}}
 
-\item{milestones}{Tibble containing the column `milestone_id` (character).
-If `color_milestones` is set to `"given"`, this tibble should also contain a column
-`color` (character), containing colour hex codes (e.g. `"#123456"`).}
+\item{milestones}{Tibble containing the column \code{milestone_id} (character).
+If \code{color_milestones} is set to \code{"given"}, this tibble should also contain a column
+\code{color} (character), containing colour hex codes (e.g. \code{"#123456"}).}
 
-\item{milestone_percentages}{The milestone percentages}
+\item{milestone_percentages}{The milestone percentages.}
 
-\item{grouping}{The grouping of the cells}
+\item{grouping}{A grouping of the cells (e.g. clustering) as a named character vector.}
 
-\item{groups}{Tibble containing information of the cell groups}
+\item{groups}{A tibble containing character columns \code{group_id} and \code{color}. If \code{NULL}, this object is inferred from the \code{grouping} itself.}
 
-\item{cell_feature_importances}{The importances of every feature in every cell, as returned by [dynfeature::calculate_cell_feature_importance()]}
+\item{cell_feature_importances}{The importances of every feature in every cell, as returned by \code{\link[dynfeature:calculate_overall_feature_importance]{dynfeature::calculate_cell_feature_importance()}}}
 
 \item{heatmap_type}{The type of heatmap, either tiled or dotted}
 
@@ -56,7 +71,7 @@ If `color_milestones` is set to `"given"`, this tibble should also contain a col
 A heatmap ggplot of an expression dataset with trajectory.
 }
 \description{
-`NOTE:` When using RStudio, the heatmap might not show inside the plot area, but will be visible once you click the 'Zoom' button.
+\verb{NOTE:} When using RStudio, the heatmap might not show inside the plot area, but will be visible once you click the 'Zoom' button.
 }
 \examples{
 data(example_bifurcating)

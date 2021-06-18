@@ -1,16 +1,44 @@
 #' Add colouring to a set of cells.
 #'
+#' The cells can be coloured by a grouping (clustering), according to a feature
+#'   (gene expression), closest milestone, or pseudotime from the root of the trajectory.
+#'
 #' @param cell_positions The positions of the cells, represented by a tibble.
 #'   Must contain column `cell_id` (character) and may contain columns `from`,
 #'   `to`, `pseudotime`, depending on the value of `color_cells`.
-#' @param color_cells How to color the cells
-#' @param trajectory The trajectory
-#' @param grouping The grouping of the cells
-#' @param groups Tibble containing information of the cell groups
-#' @param feature_oi feature to plot expression
-#' @param expression_source Source of the feature expression, defaults to `expression`
-#' @param pseudotime The pseudotime
-#' @param milestone_percentages The milestone percentages
+#' @param color_cells How to color the cells.
+#'   * `"auto"`: Try to figure out how to color cells depending on whether
+#'     one of the `grouping`, `feature_io`, `milestones` or `pseudotime` parameters are defined.
+#'   * `"none"`: Cells are not coloured.
+#'   * `"grouping"`: Cells are coloured according to a grouping (e.g. clustering).
+#'     Either the `grouping` parameter or `trajectory$grouping` must be a named character vector.
+#'   * `"feature"`: Cells are coloured according to the values of a given feature (e.g. gene expression).
+#'     Either the `expression_source` parameter or `get_expression(trajectory)` must be a matrix.
+#'     Parameter `feature_oi` must also be defined.
+#'   * `"milestone"` (recommended): Cells are coloured according their position in the trajectory. The positioning of the
+#'     cells are determined by parameter `milestone_percentages` or else by `trajectory$milestone_percentages`. The colours
+#'     of the milestones can be determined automatically or can be specified by passing a tibble containing character columns
+#'     `milestone_id` and `color` (See `add_milestone_coloring()` for help in constructing this object).
+#'   * `"pseudotime"`: Cells are coloured according to the pseudotime value from the root.
+#'
+#' @param trajectory A dynwrap trajectory.
+#' @param grouping A grouping of the cells (e.g. clustering) as a named character vector.
+#' @param groups A tibble containing character columns `group_id` and `color`. If `NULL`, this object is inferred from the `grouping` itself.
+#' @param feature_oi The name of a feature to use for colouring the cells.
+#' @param expression_source Source of the feature expression, defaults to `get_expression(trajectory)`.
+#' @param pseudotime The pseudotime from the root of the trajectory to the cells as a named numeric vector.
+#' @param milestone_percentages The milestone percentages.
+#'
+#' @returns
+#' A named list with following objects:
+#'  * cell_positions: The `trajectory$progressions` object with a `color` column added.
+#'  * color_scale: A ggplot colour scale to add to the downstream ggplot.
+#'  * fill_scale: A ggplot fill scale to add to the downstream ggplot.
+#'  * color_cells: The input `color_cells` value, except `"auto"` will have been replaced depending
+#'    on which other parameters were passed.
+#'
+# @examples
+# add_cell_coloring(example_bifurcating$progressions)
 #'
 #' @inheritParams add_milestone_coloring
 #'

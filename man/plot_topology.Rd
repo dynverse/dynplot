@@ -13,22 +13,24 @@ plot_topology(
 )
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{A dynwrap trajectory.}
 
 \item{color_milestones}{Which palette to use for colouring the milestones
-* `auto`: Determine colours automatically. If `color` is already specified in
-  milestones tibble, this will be used. Otherwise, the colour scheme is determined by
-  `milestone_palette_list$auto`.
-* `given`: The `milestones` object already contains a column `color`.
-* `cubeHelix`: Use the `rje::cubeHelix()` palette.
-* `Set3`: Use the `RColorBrewer::brewer.pal(name = "Set3")` palette.
-* `rainbow`: Use the `grDevices::rainbow()` palette.}
+\itemize{
+\item \code{auto}: Determine colours automatically. If \code{color} is already specified in
+milestones tibble, this will be used. Otherwise, the colour scheme is determined by
+\code{milestone_palette_list$auto}.
+\item \code{given}: The \code{milestones} object already contains a column \code{color}.
+\item \code{cubeHelix}: Use the \code{rje::cubeHelix()} palette.
+\item \code{Set3}: Use the \code{RColorBrewer::brewer.pal(name = "Set3")} palette.
+\item \code{rainbow}: Use the \code{grDevices::rainbow()} palette.
+}}
 
-\item{milestones}{Tibble containing the column `milestone_id` (character).
-If `color_milestones` is set to `"given"`, this tibble should also contain a column
-`color` (character), containing colour hex codes (e.g. `"#123456"`).}
+\item{milestones}{Tibble containing the column \code{milestone_id} (character).
+If \code{color_milestones} is set to \code{"given"}, this tibble should also contain a column
+\code{color} (character), containing colour hex codes (e.g. \code{"#123456"}).}
 
-\item{layout}{The type of layout to create. See [ggraph::ggraph()] for more info.}
+\item{layout}{The type of layout to create. See \code{\link[ggraph:ggraph]{ggraph::ggraph()}} for more info.}
 
 \item{arrow}{The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.}
 }

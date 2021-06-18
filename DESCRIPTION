@@ -82,3 +82,4 @@ Collate:
     'plot_strip.R'
     'plot_topology.R'
     'theme_clean.R'
+Roxygen: list(markdown = TRUE)

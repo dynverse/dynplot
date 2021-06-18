@@ -10,35 +10,25 @@ add_milestone_coloring(
 )
 }
 \arguments{
-\item{milestones}{Tibble containing the column `milestone_id` (character).
-If `color_milestones` is set to `"given"`, this tibble should also contain a column
-`color` (character), containing colour hex codes (e.g. `"#123456"`).}
+\item{milestones}{Tibble containing the column \code{milestone_id} (character).
+If \code{color_milestones} is set to \code{"given"}, this tibble should also contain a column
+\code{color} (character), containing colour hex codes (e.g. \code{"#123456"}).}
 
 \item{color_milestones}{Which palette to use for colouring the milestones
-* `auto`: Determine colours automatically. If `color` is already specified in
-  milestones tibble, this will be used. Otherwise, the colour scheme is determined by
-  `milestone_palette_list$auto`.
-* `given`: The `milestones` object already contains a column `color`.
-* `cubeHelix`: Use the `rje::cubeHelix()` palette.
-* `Set3`: Use the `RColorBrewer::brewer.pal(name = "Set3")` palette.
-* `rainbow`: Use the `grDevices::rainbow()` palette.}
+\itemize{
+\item \code{auto}: Determine colours automatically. If \code{color} is already specified in
+milestones tibble, this will be used. Otherwise, the colour scheme is determined by
+\code{milestone_palette_list$auto}.
+\item \code{given}: The \code{milestones} object already contains a column \code{color}.
+\item \code{cubeHelix}: Use the \code{rje::cubeHelix()} palette.
+\item \code{Set3}: Use the \code{RColorBrewer::brewer.pal(name = "Set3")} palette.
+\item \code{rainbow}: Use the \code{grDevices::rainbow()} palette.
+}}
 }
 \value{
-A tibble containing the input character column `milestone_id` and a character
-  column `color` containing colour hex-codes (e.g. `"#123456"`).
+A tibble containing the input character column \code{milestone_id} and a character
+column \code{color} containing colour hex-codes (e.g. \code{"#123456"}).
 }
 \description{
 Add colouring to a set of milestones.
-}
-\examples{
-milestones <- data.frame(
-  milestone_id = c("A", "B", "C")
-)
-add_milestone_coloring(milestones)
-
-milestones <- data.frame(
-  milestone_id = c("A", "B", "C"),
-  color = c("#111111", "#222222", "#333333")
-)
-add_milestone_coloring(milestones)
 }

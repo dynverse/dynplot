@@ -1,13 +1,22 @@
 #' Color cells using a background density
 #'
-#' @param cell_positions The positions of the cells in 2D
-#' @param color_density How to color density, can be "none", "grouping", or "feature"
-#' @param padding The padding in the edges to the plot, relative to the size of the plot
-#' @param nbins Number of bins for calculating the density
-#' @param bw Bandwidth, relative to the size of the plot
-#' @param density_cutoff Cutoff for density, the lower the larger the areas
-#' @param density_cutoff_label Cutoff for density for labelling, the lower the further way from cells
+#' @param cell_positions The positions of the cells in 2D. Must be a tibble with character column `cell_id` and numeric columns `comp_1` and `comp_2`.
+#' @param color_density How to color density, can be "none", "grouping", or "feature".
+#' @param padding The padding in the edges to the plot, relative to the size of the plot.
+#' @param nbins Number of bins for calculating the density.
+#' @param bw Bandwidth, relative to the size of the plot.
+#' @param density_cutoff Cutoff for density, the lower the larger the areas.
+#' @param density_cutoff_label Cutoff for density for labeling, the lower the further way from cells.
 #' @inheritParams add_cell_coloring
+#'
+#' @returns A named list with objects:
+#' * polygon: A layer to add to the ggplot.
+#' * scale: A scale to add to the ggplot.
+#'
+# @examples
+# pca <- prcomp(example_bifurcating$expression, rank. = 2)$x
+# cell_positions <- pca %>% as.matrix %>% as.data.frame %>% magrittr::set_colnames(c("comp_1", "comp_2")) %>% rownames_to_column("cell_id")
+# add_density_coloring(cell_positions, "feature", trajectory = example_bifurcating, feature_oi = "B1_TF1")
 add_density_coloring <- function(
   cell_positions,
   color_density = c("none", "grouping", "feature"),
@@ -26,7 +35,9 @@ add_density_coloring <- function(
 
   if (color_density == "none") return(list())
 
-  if (any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {stop("Invalid cell positions")}
+  if (any(!c("comp_1", "comp_2", "cell_id") %in% colnames(cell_positions))) {
+    stop("Invalid value for cell_positions. See documentation for more details.")
+  }
 
   xlims <- c(min(cell_positions$comp_1), max(cell_positions$comp_1))
   ylims <- c(min(cell_positions$comp_2), max(cell_positions$comp_2))

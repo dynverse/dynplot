@@ -26,10 +26,12 @@ cell is on a branching point, or in between multiple edges.}
 }
 \value{
 A named list with values:
- * `milestone_network`: A linearised version of `trajectory$milestone_network` with extra columns: `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`.
- * `progressions`: A linearised version of `trajectory$progressions` with extra columns:
-   `percentage2`, `length`, `directed`, `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`, `cumpercentage`.
- * `margin`: The used margin (numeric).
+\itemize{
+\item \code{milestone_network}: A linearised version of \code{trajectory$milestone_network} with extra columns: \code{add_margin}, \code{n_margins}, \code{cumstart}, \code{cumend}, \code{edge_id}.
+\item \code{progressions}: A linearised version of \code{trajectory$progressions} with extra columns:
+\code{percentage2}, \code{length}, \code{directed}, \code{add_margin}, \code{n_margins}, \code{cumstart}, \code{cumend}, \code{edge_id}, \code{cumpercentage}.
+\item \code{margin}: The used margin (numeric).
+}
 }
 \description{
 This is an internal function and should probably not be used manually.

@@ -17,19 +17,17 @@
 #'
 #' @include milestone_palette.R
 #'
-#' @export
-#'
-#' @examples
-#' milestones <- data.frame(
-#'   milestone_id = c("A", "B", "C")
-#' )
-#' add_milestone_coloring(milestones)
-#'
-#' milestones <- data.frame(
-#'   milestone_id = c("A", "B", "C"),
-#'   color = c("#111111", "#222222", "#333333")
-#' )
-#' add_milestone_coloring(milestones)
+# @examples
+# milestones <- data.frame(
+#   milestone_id = c("A", "B", "C")
+# )
+# add_milestone_coloring(milestones)
+#
+# milestones <- data.frame(
+#   milestone_id = c("A", "B", "C"),
+#   color = c("#111111", "#222222", "#333333")
+# )
+# add_milestone_coloring(milestones)
 add_milestone_coloring <- function(
   milestones = NULL,
   color_milestones = c("auto", "given", get_milestone_palette_names())
