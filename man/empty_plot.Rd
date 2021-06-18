@@ -6,6 +6,9 @@
 \usage{
 empty_plot()
 }
+\value{
+An empty ggplot2.
+}
 \description{
 Create an empty plot for spacing
 }

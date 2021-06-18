@@ -21,6 +21,8 @@
 #'
 #' @returns A linearised (non-)linear trajectory.
 #'
+#' @include add_cell_coloring.R
+#'
 #' @examples
 #' data(example_linear)
 #' plot_onedim(example_linear)

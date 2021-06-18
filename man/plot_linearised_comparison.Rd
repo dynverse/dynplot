@@ -19,7 +19,7 @@ plot_linearised_comparison(
 
 \item{reorder}{Whether to reorder the trajectory}
 
-\item{margin}{The margin to add}
+\item{margin}{A margin between trajectory segments.}
 
 \item{reorder_second_by}{How to reorder the second trajectory, either by mapping the milestones from both trajectories (`mapping`), or by trying to correlate the orderings between the two trajectories (`optimisation`)}
 }

@@ -30,11 +30,13 @@ plot_heatmap(
 
 \item{clust}{The method to cluster the features, or a hclust object}
 
-\item{margin}{The margin to add}
+\item{margin}{A margin between trajectory segments.}
 
 \item{color_cells}{How to color the cells}
 
-\item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+\item{milestones}{Tibble containing the column `milestone_id` (character).
+If `color_milestones` is set to `"given"`, this tibble should also contain a column
+`color` (character), containing colour hex codes (e.g. `"#123456"`).}
 
 \item{milestone_percentages}{The milestone percentages}
 

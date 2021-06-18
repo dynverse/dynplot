@@ -8,6 +8,7 @@
 #' @param arrow The type and size of arrow in case of directed trajectories. Set to NULL to remove arrow altogether.
 #'
 #' @inheritParams add_cell_coloring
+#' @include add_cell_coloring.R
 #'
 #' @keywords plot_trajectory
 #'

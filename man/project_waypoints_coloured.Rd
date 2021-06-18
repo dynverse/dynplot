@@ -16,7 +16,9 @@ project_waypoints_coloured(
 \arguments{
 \item{trajectory}{The trajectory}
 
-\item{cell_positions}{The positions of the cells}
+\item{cell_positions}{The positions of the cells, represented by a tibble.
+Must contain column `cell_id` (character) and may contain columns `from`,
+`to`, `pseudotime`, depending on the value of `color_cells`.}
 
 \item{edge_positions}{The positions of the edges}
 

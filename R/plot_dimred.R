@@ -23,6 +23,9 @@
 #'
 #' @importFrom ggforce geom_link2
 #'
+#' @include add_cell_coloring.R
+#' @include add_density_coloring.R
+#' @include add_milestone_coloring.R
 #' @include project_waypoints.R
 #'
 #' @keywords plot_trajectory

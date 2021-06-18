@@ -6,6 +6,9 @@
 \usage{
 theme_graph()
 }
+\value{
+A ggplot2 theme.
+}
 \description{
 We like our plots clean
 }

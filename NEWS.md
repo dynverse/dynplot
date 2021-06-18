@@ -16,6 +16,8 @@ Initial release on CRAN.
  * MINOR CHANGE `plot_dendro()`: Allow plotting of disconnected graphs (#32). 
    This assumes that `dynwrap::add_root(traj, root_milestone_id = c(...))` has been called properly.
 
+ * DOCUMENTATION: Extend documentation on usage of parameters and the expected output values
+   of functions.
 
 # dynplot 1.0.2 (04-07-2019) 
 

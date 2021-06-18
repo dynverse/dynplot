@@ -74,9 +74,18 @@ plot_dimred(
 
 \item{feature_oi}{feature to plot expression}
 
-\item{color_milestones}{How to color the cells}
+\item{color_milestones}{Which palette to use for colouring the milestones
+* `auto`: Determine colours automatically. If `color` is already specified in
+  milestones tibble, this will be used. Otherwise, the colour scheme is determined by
+  `milestone_palette_list$auto`.
+* `given`: The `milestones` object already contains a column `color`.
+* `cubeHelix`: Use the `rje::cubeHelix()` palette.
+* `Set3`: Use the `RColorBrewer::brewer.pal(name = "Set3")` palette.
+* `rainbow`: Use the `grDevices::rainbow()` palette.}
 
-\item{milestones}{Tibble containing the `milestone_id` and a `color` for each milestone}
+\item{milestones}{Tibble containing the column `milestone_id` (character).
+If `color_milestones` is set to `"given"`, this tibble should also contain a column
+`color` (character), containing colour hex codes (e.g. `"#123456"`).}
 
 \item{milestone_percentages}{The milestone percentages}
 

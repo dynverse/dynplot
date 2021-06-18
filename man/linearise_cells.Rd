@@ -2,7 +2,7 @@
 % Please edit documentation in R/linearise_cells.R
 \name{linearise_cells}
 \alias{linearise_cells}
-\title{Linearise a trajectory}
+\title{Prepare a trajectory for linearised visualisation.}
 \usage{
 linearise_cells(
   trajectory,
@@ -13,16 +13,27 @@ linearise_cells(
 )
 }
 \arguments{
-\item{trajectory}{The trajectory}
+\item{trajectory}{A dynwrap trajectory.}
 
-\item{margin}{The margin to add}
+\item{margin}{A margin between trajectory segments.}
 
-\item{no_margin_between_linear}{Whether to add a margin only when}
+\item{no_margin_between_linear}{Whether to add a margin only when a branch occurs.}
 
-\item{one_edge}{If TRUE, assigns each cell to one edge only}
+\item{one_edge}{Whether or not to assign each cell to one cell only. This can occur when a
+cell is on a branching point, or in between multiple edges.}
 
-\item{equal_cell_width}{if TRUE, will give each cell equal width}
+\item{equal_cell_width}{Whether or not to space segments according to cell count.}
+}
+\value{
+A named list with values:
+ * `milestone_network`: A linearised version of `trajectory$milestone_network` with extra columns: `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`.
+ * `progressions`: A linearised version of `trajectory$progressions` with extra columns:
+   `percentage2`, `length`, `directed`, `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`, `cumpercentage`.
+ * `margin`: The used margin (numeric).
 }
 \description{
-Linearise a trajectory
+Prepare a trajectory for linearised visualisation.
+}
+\examples{
+linearise_cells(example_bifurcating)
 }

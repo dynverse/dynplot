@@ -11,7 +11,7 @@ plot_strip(traj1, traj2, margin = 0.05, reorder = TRUE)
 
 \item{traj2}{The second traj}
 
-\item{margin}{The margin to add}
+\item{margin}{A margin between trajectory segments.}
 
 \item{reorder}{Whether to reorder}
 }

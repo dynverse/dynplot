@@ -1,12 +1,22 @@
-#' Linearise a trajectory
+#' Prepare a trajectory for linearised visualisation.
 #'
-#' @param trajectory The trajectory
-#' @param margin The margin to add
-#' @param no_margin_between_linear Whether to add a margin only when
-#' @param one_edge If TRUE, assigns each cell to one edge only
-#' @param equal_cell_width if TRUE, will give each cell equal width
+#' @param trajectory A dynwrap trajectory.
+#' @param margin A margin between trajectory segments.
+#' @param no_margin_between_linear Whether to add a margin only when a branch occurs.
+#' @param one_edge Whether or not to assign each cell to one cell only. This can occur when a
+#'   cell is on a branching point, or in between multiple edges.
+#' @param equal_cell_width Whether or not to space segments according to cell count.
+#'
+#' @returns A named list with values:
+#'  * `milestone_network`: A linearised version of `trajectory$milestone_network` with extra columns: `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`.
+#'  * `progressions`: A linearised version of `trajectory$progressions` with extra columns:
+#'    `percentage2`, `length`, `directed`, `add_margin`, `n_margins`, `cumstart`, `cumend`, `edge_id`, `cumpercentage`.
+#'  * `margin`: The used margin (numeric).
 #'
 #' @importFrom dplyr lead
+#'
+#' @examples
+#' linearise_cells(example_bifurcating)
 linearise_cells <- function(
   trajectory,
   margin = 0.05,

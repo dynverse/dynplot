@@ -11,6 +11,8 @@
 #'
 #' @returns A topology ggplot of a trajectory.
 #'
+#' @include add_milestone_coloring.R
+#'
 #' @examples
 #' data(example_disconnected)
 #' plot_topology(example_disconnected)

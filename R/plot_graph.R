@@ -20,7 +20,8 @@
 #'
 #' @keywords plot_trajectory
 #'
-#' @include add_coloring.R
+#' @include add_cell_coloring.R
+#' @include add_milestone_coloring.R
 #'
 #' @export
 #'

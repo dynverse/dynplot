@@ -4,6 +4,8 @@
 #'
 #' @export
 #'
+#' @returns A ggplot2 theme.
+#'
 #' @examples
 #' data(example_bifurcating)
 #' g <- plot_dimred(example_bifurcating)
@@ -22,6 +24,8 @@ theme_clean <- function() {
 #'
 #' @export
 #'
+#' @returns A ggplot2 theme.
+#'
 #' @examples
 #' data(example_bifurcating)
 #' g <- plot_dimred(example_bifurcating)
@@ -36,6 +40,8 @@ theme_graph <- function() {
 #' @keywords plot_helpers
 #'
 #' @export
+#'
+#' @returns An empty ggplot2.
 #'
 #' @examples
 #' empty_plot()
