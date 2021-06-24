@@ -1,3 +1,7 @@
+# dynplot 1.1.1
+
+* BUG FIX `project_waypoints()`: Fix refactoring issue "Must supply a symbol or a string as argument" (#54).
+
 # dynplot 1.1.0
 
 Initial release on CRAN.

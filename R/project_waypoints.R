@@ -57,7 +57,7 @@ project_waypoints_coloured <- function(
   if (!is.null(edge_positions)) {
     approx_funs <-
       edge_positions %>%
-      gather(.data$comp_name, .data$comp_value, starts_with("comp_")) %>%
+      gather("comp_name", "comp_value", starts_with("comp_")) %>%
       group_by(.data$from, .data$to, .data$comp_name) %>%
       summarise(
         approx_fun = {
@@ -68,7 +68,7 @@ project_waypoints_coloured <- function(
         .groups = "drop"
       )
 
-    waypoint_position <-
+    waypoint_positions <-
       waypoints$progressions %>%
         left_join(approx_funs, by = c("from", "to")) %>%
         mutate(
