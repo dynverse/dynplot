@@ -1,6 +1,8 @@
 # dynplot 1.1.1
 
-* BUG FIX `project_waypoints()`: Fix refactoring issue "Must supply a symbol or a string as argument" (#54).
+* BUG FIX `project_waypoints_coloured()`: Fix refactoring issue "Must supply a symbol or a string as argument" (#54).
+
+* BUG FIX `project_waypoints_coloured()`: Fix wrong results when projecting waypoint segments (#54 bis).
 
 # dynplot 1.1.0
 
