@@ -34,27 +34,7 @@ project_waypoints_coloured <- function(
   assert_that(color_trajectory %in% c("nearest", "none"))
   assert_that(setequal(cell_positions$cell_id, colnames(wps$geodesic_distances)))
 
-  # project wps to dimensionality reduction using kernel and geodesic distances
-  weights <- wps$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
-  assert_that(all(!is.na(weights)))
-
-  weights <- weights / rowSums(weights)
-  positions <- cell_positions %>%
-    select(.data$cell_id, .data$comp_1, .data$comp_2) %>%
-    slice(match(colnames(weights), .data$cell_id)) %>%
-    column_to_rownames("cell_id") %>%
-    as.matrix()
-
-  # make sure weights and positions have the same cell_ids in the same order
-  assert_that(all.equal(colnames(weights), rownames(positions)))
-
   # calculate positions
-  matrix_to_tibble <- function(x, rownames_column) {
-    y <- as_tibble(x)
-    y[[rownames_column]] <- rownames(x)
-    y
-  }
-
   waypoint_positions <-
     if (!is.null(edge_positions)) {
       comp_names <- colnames(edge_positions) %>% keep(function(x) grepl("comp_", x))
@@ -73,9 +53,25 @@ project_waypoints_coloured <- function(
         select(.data$waypoint_id, !!comp_names) %>%
         left_join(wps$waypoints, "waypoint_id")
     } else {
+      # project wps to dimensionality reduction using kernel and geodesic distances
+      weights <- wps$geodesic_distances %>% stats::dnorm(sd = trajectory_projection_sd)
+      assert_that(all(!is.na(weights)))
+
+      weights <- weights / rowSums(weights)
+      positions <- cell_positions %>%
+        select(.data$cell_id, .data$comp_1, .data$comp_2) %>%
+        slice(match(colnames(weights), .data$cell_id)) %>%
+        column_to_rownames("cell_id") %>%
+        as.matrix()
+
+      # make sure weights and positions have the same cell_ids in the same order
+      assert_that(all.equal(colnames(weights), rownames(positions)))
+
       (weights %*% positions) %>%
-        matrix_to_tibble("waypoint_id") %>%
-        left_join(wps$waypoints, "waypoint_id")
+        as.data.frame() %>%
+        rownames_to_column("waypoint_id") %>%
+        left_join(wps$waypoints, "waypoint_id") %>%
+        as_tibble()
     }
 
 
