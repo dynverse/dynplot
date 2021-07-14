@@ -17,7 +17,7 @@
 #' @importFrom dynutils is_sparse list_as_tibble %all_in% calculate_distance scale_minmax
 #' @import dynwrap
 #' @importFrom dyndimred dimred_mds dimred_landmark_mds list_dimred_methods dimred_umap
-#' @importFrom purrr %>% map map_df map_chr keep pmap map2 set_names map_int map_dbl list_modify discard
+#' @importFrom purrr %>% map map_df map_chr keep pmap map2 set_names map_int map_dbl list_modify discard pmap_df
 #' @importFrom purrr map2_df map2_dbl map2_df
 #' @importFrom assertthat assert_that
 #' @importFrom tidygraph as_tbl_graph tbl_graph
