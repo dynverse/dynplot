@@ -119,15 +119,73 @@ scatterplot between the two trajectories.
 
 ``` r
 prediction <- infer_trajectory(trajectory, ti_comp1())
+#> v0.9.9.01: Pulling from dynverse/ti_comp1
+#> 844c33c7e6ea: Pulling fs layer
+#> 4f11e4e30170: Pulling fs layer
+#> a9724dff2655: Pulling fs layer
+#> f5f3a048c9c3: Pulling fs layer
+#> a53c4db932de: Pulling fs layer
+#> bd5da474b8ba: Pulling fs layer
+#> be9b916e18e7: Pulling fs layer
+#> b8b469f67972: Pulling fs layer
+#> e33132a1a81b: Pulling fs layer
+#> 32bd550d2fc1: Pulling fs layer
+#> a828ddf00b38: Pulling fs layer
+#> d97023e2f782: Pulling fs layer
+#> 84d8340a282e: Pulling fs layer
+#> be9b916e18e7: Waiting
+#> e33132a1a81b: Waiting
+#> 32bd550d2fc1: Waiting
+#> a828ddf00b38: Waiting
+#> a53c4db932de: Waiting
+#> b8b469f67972: Waiting
+#> f5f3a048c9c3: Waiting
+#> bd5da474b8ba: Waiting
+#> d97023e2f782: Waiting
+#> 844c33c7e6ea: Verifying Checksum
+#> 844c33c7e6ea: Download complete
+#> 844c33c7e6ea: Pull complete
+#> f5f3a048c9c3: Verifying Checksum
+#> f5f3a048c9c3: Download complete
+#> a53c4db932de: Verifying Checksum
+#> a53c4db932de: Download complete
+#> bd5da474b8ba: Verifying Checksum
+#> bd5da474b8ba: Download complete
+#> be9b916e18e7: Download complete
+#> 4f11e4e30170: Verifying Checksum
+#> 4f11e4e30170: Download complete
+#> 4f11e4e30170: Pull complete
+#> e33132a1a81b: Verifying Checksum
+#> e33132a1a81b: Download complete
+#> a9724dff2655: Verifying Checksum
+#> a9724dff2655: Download complete
+#> 32bd550d2fc1: Verifying Checksum
+#> 32bd550d2fc1: Download complete
+#> a9724dff2655: Pull complete
+#> f5f3a048c9c3: Pull complete
+#> a53c4db932de: Pull complete
+#> bd5da474b8ba: Pull complete
+#> be9b916e18e7: Pull complete
+#> a828ddf00b38: Verifying Checksum
+#> a828ddf00b38: Download complete
+#> 84d8340a282e: Verifying Checksum
+#> 84d8340a282e: Download complete
+#> d97023e2f782: Download complete
+#> b8b469f67972: Verifying Checksum
+#> b8b469f67972: Download complete
+#> b8b469f67972: Pull complete
+#> e33132a1a81b: Pull complete
+#> 32bd550d2fc1: Pull complete
+#> a828ddf00b38: Pull complete
+#> d97023e2f782: Pull complete
+#> 84d8340a282e: Pull complete
+#> Digest: sha256:012b3bfef2250767bcd3f3b389ebff82d4a2dc23d39b1bdadf7076e23b833680
+#> Status: Downloaded newer image for dynverse/ti_comp1:v0.9.9.01
+#> docker.io/dynverse/ti_comp1:v0.9.9.01
 
 trajectory$id <- "Bifurcating"
 prediction$id <- "Linear"
 plot_linearised_comparison(trajectory, prediction)
-#> Warning: Unknown or uninitialised column: `directed`.
-
-#> Warning: Unknown or uninitialised column: `directed`.
-
-#> Warning: Unknown or uninitialised column: `directed`.
 ```
 
 <img src="man/figures/scatterplot-1.png" width="100%" />
@@ -163,6 +221,14 @@ list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md -->
 
+### Recent changes in dynplot 1.1.1
+
+-   BUG FIX `project_waypoints_coloured()`: Fix refactoring issue “Must
+    supply a symbol or a string as argument” (\#54).
+
+-   BUG FIX `project_waypoints_coloured()`: Fix wrong results when
+    projecting waypoint segments (\#54 bis).
+
 ### Recent changes in dynplot 1.1.0
 
 Initial release on CRAN.
@@ -184,12 +250,5 @@ Initial release on CRAN.
     `dynwrap::add_root(traj, root_milestone_id = c(...))` has been
     called properly.
 
-### Recent changes in dynplot 1.0.2 (04-07-2019)
-
--   BUG FIX: Fix weird ceiling warning.
-
--   BUG FIX: Fix for new select waypoints (\#41).
-
--   MINOR CHANGE: Added parameters `size_cells`, `alpha_cells` and
-    `border_radius_percentage` to plotting functions that plot cells
-    (\#40).
+-   DOCUMENTATION: Extend documentation on usage of parameters and the
+    expected output values of functions.
