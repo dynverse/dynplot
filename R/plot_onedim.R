@@ -230,10 +230,9 @@ plot_onedim <- dynutils::inherit_default_params(
 
 #' @importFrom dplyr near
 make_connection_plotdata <- function(linearised) {
-  connections <- crossing(
-    linearised$milestone_network %>% select(.data$from, x_from = .data$cumstart),
-    linearised$milestone_network %>% select(.data$to, x_to = .data$cumend)
-  ) %>%
+  from <- linearised$milestone_network %>% select(.data$from, x_from = .data$cumstart)
+  to <- linearised$milestone_network %>% select(.data$to, x_to = .data$cumend)
+  connections <- crossing(from, to) %>%
     filter(
       .data$from == .data$to,
       .data$x_from != .data$x_to
