@@ -1,3 +1,7 @@
+# dynplot 1.1.2
+
+* BUG FIX: Implemented workaround for dplyr 1.0.8 (#57, thanks @romainfrancois!)
+
 # dynplot 1.1.1
 
 * BUG FIX `project_waypoints_coloured()`: Fix refactoring issue "Must supply a symbol or a string as argument" (#54).
